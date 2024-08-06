@@ -1,0 +1,32 @@
+/*
+* FileName:          #SCRIPTNAME#
+* CompanyName:  #CompanyName#
+* Author:            #Author#
+* CreateTime:        #CreateTime#
+* UnityVersion:      #UnityVersion#
+* Version:           #Version#
+* Description:
+* 
+*/
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace #NameSpace#
+{
+    public class #SCRIPTNAME# : MonoBehaviour
+    {
+        // Start is called before the first frame update
+        void Start()
+        {
+        #NOTRIM#
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+        #NOTRIM#
+        }
+    }
+}

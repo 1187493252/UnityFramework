@@ -1,0 +1,23 @@
+/*
+* FileName:          #SCRIPTNAME#
+* CompanyName:       #CompanyName#
+* Author:            #Author#
+* CreateTime:        #CreateTime#
+* UnityVersion:      #UnityVersion#
+* Version:           #Version#
+* Description:       #Description#
+* 
+*/
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace #NameSpace#
+{
+    public #ScriptType# #SCRIPTNAME# #BASE#
+    {
+       
+    }
+}

@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5dde0fd3bba412d428228aa65623aa80, type: 3}
+  m_Name: TaskGoalConf_2
+  m_EditorClassIdentifier: 
+  GoalName: 
+  GoalMode: 0
+  Priority: 0
+  isAutoPlayStartAudio: 1
+  isRepeatPlay: 0
+  RepeatTime: 30
+  RepeatNum: 3
+  goalTrainingStartAudioKeys: []
+  goalTrainingErrorAudioKeys: []
+  goalExaminationStartAudioKeys: []
+  goalExaminationErrorAudioKeys: []
+  playDeltTime: 5
+  isFinalGoal: 0
+  examinaLimit: 0
+  goalFailureJumpTask: 0
+  taskTime: 120
+  notCalculate: 1

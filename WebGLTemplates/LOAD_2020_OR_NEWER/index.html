@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>#Title#</title>
+	<link rel="shortcut icon" href="TemplateData/favicon.ico">
+	<link rel="stylesheet" href="TemplateData/style.css">
+</head>
+
+<body>
+	<div id="unity-container" class="unity-desktop">
+		<canvas id="unity-canvas"></canvas>
+		<div id="unity-loading-bar">
+			<div id="unity-progress-bar-empty">
+				<div id="unity-progress-bar-full"></div>
+				<div style="font-size: 35px; color: white;">
+					<p id="loadText"></p>
+				</div>
+			</div>
+		</div>
+		<div id="browerHint">推荐使用Edge、火狐、谷歌浏览器</div>
+		<div id="unity-warning"> </div>
+		<div id="unity-footer">
+		</div>
+	</div>
+	
+	<input type="file" id="files" style="display:none" onchange="FileImport()">
+	
+	<div id="urlWindow"
+		style="display:none;width:90%;height:90%;top: 50%;left:50%;transform: translate(-50%,-50%);position:absolute;border:0; margin: 0; padding: 0">
+		<iframe id="iframe" src="" style="width: 100%;height: 100%;"></iframe>
+	</div>
+	
+	<script>
+		var container = document.querySelector("#unity-container");
+		var canvas = document.querySelector("#unity-canvas");
+		var browerHint = document.querySelector("#browerHint");
+		var loadingBar = document.querySelector("#unity-loading-bar");
+		var progressBarFull = document.querySelector("#unity-progress-bar-full");
+		var warningBanner = document.querySelector("#unity-warning");
+
+		function unityShowBanner(msg, type) {
+			function updateBannerVisibility() {
+				warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+			}
+			var div = document.createElement('div');
+			div.innerHTML = msg;
+			warningBanner.appendChild(div);
+			if (type == 'error') div.style = 'background: red; padding: 10px;';
+			else {
+				if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+				setTimeout(function () {
+					warningBanner.removeChild(div);
+					updateBannerVisibility();
+				}, 5000);
+			}
+			updateBannerVisibility();
+		}
+
+		//切割路径 获取包体名称
+		//var splitUrlArray = document.location.href.split('/');
+		//var packageUrl = splitUrlArray[splitUrlArray.length - 2];
+		var _productName =#ProductName#;
+		var buildUrl = "Build/" + _productName;
+		var loaderUrl = buildUrl + ".loader.js";
+		var config = {
+			dataUrl: buildUrl + ".data.unityweb",
+			frameworkUrl: buildUrl + ".framework.js.unityweb",
+			codeUrl: buildUrl + ".wasm.unityweb",
+			streamingAssetsUrl: "StreamingAssets",
+			companyName: "DefaultCompany",
+			productName: _productName,
+			productVersion: "0.1",
+			showBanner: unityShowBanner,
+		};
+
+		if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+			container.className = "unity-mobile";
+			config.devicePixelRatio = 1;
+			unityShowBanner('WebGL builds are not supported on mobile devices.');
+		} else {
+			ChineseInput();
+		}
+		loadingBar.style.display = "block";
+
+		var script = document.createElement("script");
+		var loadProgress;
+		var gameInstance;
+		script.src = loaderUrl;
+		script.onload = () => {
+			createUnityInstance(canvas, config, (progress) => {
+				progressBarFull.style.width = 100 * progress + "%";
+				loadProgress = 100 * progress;
+				document.getElementById("loadText").textContent = "加载中... " + parseInt(loadProgress) + "%";
+			}).then((unityInstance) => {
+				loadingBar.style.display = "none";
+				browerHint.style.display = 'none';
+				gameInstance = unityInstance;
+			}).catch((message) => {
+				alert(message); sk - ocXiV9W6iyOm1aEGBcUXT3BlbkFJs4FjA1IE9jwjDk7JQNNfsk - ocXiV9W6iyOm1aEGBcUXT3BlbkFJs4FjA1IE9jwjDk7JQNNf
+			});
+		};
+
+		document.body.appendChild(script);
+
+		//绑定关闭页面前 事件
+		// window.onbeforeunload = OnBeforeunload;
+
+		//是否包含中文输入 true/false
+		function ChineseInput() {
+			var isChinese = false;
+			if (isChinese) {
+				canvas.style.width = "99vw";
+				canvas.style.height = "99vh";
+			}
+			else {
+				canvas.style.width = "100vw";
+				canvas.style.height = "100vh";
+			}
+		}
+
+		//关闭页面/浏览器前
+		function OnBeforeunload(e) {
+			console.log('即将关闭页面');
+			gameInstance.SendMessage("ExternalCall", "OnBeforeunload");
+			e.preventDefault();
+			e.returnValue = "";
+			return 1;
+		}
+
+	</script>
+
+	<script>
+	
+		function GetCurrentURL() {
+		
+			var jsonData = {
+						"fileType": "txt",
+						"receiveContent": window.location.href,
+					};
+					jsonStr = JSON.stringify(jsonData);
+					gameInstance.SendMessage("ExternalCall", "ReceiveFileData", jsonStr);
+	}
+	
+	
+	    //在本窗口内打开新页面
+		function OpenUrl_Window(str) {
+			var otherDiv = document.getElementById('urlWindow');
+			otherDiv.style.display = "block";
+			document.getElementById("iframe").src = str;
+		}
+		//关闭在本窗口内打开的新页面
+		function CloseUrl_Window() {
+			var otherDiv = document.getElementById('urlWindow');
+			otherDiv.style.display = "none";
+			document.getElementById("iframe").src =""
+		};
+
+		//下载到本地 base64位字符串,文件名称带后缀
+		function Download(str, filename) {
+			var binary = fixBinary(atob(str));
+			var data = new Blob([binary]);
+			var link = document.createElement('a');
+			link.download = fn;
+			link.href = URL.createObjectURL(data);
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+
+			function fixBinary(bin) {
+				var length = bin.length;
+				var buf = new ArrayBuffer(length);
+				var arr = new Uint8Array(buf);
+				for (var i = 0; i < length; i++) {
+					arr[i] = bin.charCodeAt(i);
+				}
+				return buf;
+			}
+		}
+
+		//新窗口打开网址
+		function OpenURL(url) {
+			window.open(url);
+		}
+
+
+		//新开一个窗口
+		function OpenURL1(url) {
+			window.open(url, "_blank", "scrollbars=yes,resizable=1,modal=false,alwaysRaised=yes");
+			//height=300, width=300, top=0, left=0,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=n o, status=no  第三个参数
+		}
+
+		//弹窗提示,只有一个确定按钮
+		function AlertInfo(str) {
+			window.alert(str);
+		}
+
+		//弹窗提示,有确认/取消 返回bool
+		function ConfirmInfo(str) {
+			return window.confirm(str);
+		}
+
+		//弹窗提示输入, 返回输入值
+		function PromptInfo(str) {
+			return window.prompt(str);
+		}
+
+		//退出
+		function Exit() {
+			window.open("about:blank", "_self").close();
+		}
+
+		//刷新数据到IndexedDB
+		function SyncDB() {
+			FS.syncfs(false, function (err) {
+				if (err) console.log("syncfs error: " + err);
+			});
+		}
+
+
+		//设置cookie
+		function SetCookie(cname, cvalue, exdays) {
+			var d = new Date();
+			d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+			var expires = "expires=" + d.toGMTString();
+			document.cookie = cname + "=" + cvalue + "; " + expires;
+		}
+
+		function GetCookie(cname) {
+			var returnArg;    //传出去的参数
+			var name = cname + "=";
+			var ca = document.cookie.split(';');
+			for (var i = 0; i < ca.length; i++) {
+				var c = ca[i].trim();
+				if (c.indexOf(name) == 0) {
+					returnArg = c.substring(name.length, c.length);
+
+					var jsonData = {
+						"fileType": "txt",
+						"receiveContent": returnArg,
+					};
+					jsonStr = JSON.stringify(jsonData);
+					gameInstance.SendMessage("ExternalCall", "ReceiveFileData", jsonStr);
+
+					return; // returnArg;
+				}
+			}
+			return "";
+		}
+
+
+
+		//选择文件
+		function SelectFile() {
+			var tempFileLayout = document.getElementById('files');
+			tempFileLayout.click();
+		}
+
+		//文件导入
+		function FileImport() {
+			var selectedFile = document.getElementById('files').files[0];
+			var suffix = selectedFile.name.substring(selectedFile.name.lastIndexOf(".") + 1);
+
+			if (selectedFile != null) {
+				var reader = new FileReader();
+				reader.readAsDataURL(selectedFile);
+				reader.onload = function (e) {
+					console.log(e.target.result);
+					var jsonData = {
+						"fileType": suffix,
+						"receiveContent": e.target.result.split(',')[1],
+					};
+					jsonStr = JSON.stringify(jsonData);
+					gameInstance.SendMessage("ExternalCall", "ReceiveFileData", jsonStr);
+				}
+				reader.onabort = function (e) {
+
+				}
+				reader.onerror = function (e) {
+
+				}
+			}
+		}
+
+
+
+	</script>
+
+</body>
+</html>
