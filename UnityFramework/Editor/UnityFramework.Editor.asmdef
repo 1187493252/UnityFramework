@@ -1,3 +1,19 @@
 {
-	"name": "UnityFramework.Editor"
+    "name": "UnityFramework.Editor",
+    "rootNamespace": "",
+    "references": [
+        "UnityFramework.Runtime",
+        "Framework"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

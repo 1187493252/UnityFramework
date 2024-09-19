@@ -132,7 +132,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1364570691}
-  - component: {fileID: 1364570690}
   - component: {fileID: 1364570692}
   - component: {fileID: 1364570693}
   m_Layer: 0
@@ -142,18 +141,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1364570690
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1364570689}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 90dfc2dd237951247a072044f09bbbf7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1364570691
 Transform:
   m_ObjectHideFlags: 0
@@ -186,10 +173,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1364570689}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea78b7f4e8cb76a4a8a01eba47172dfa, type: 3}
+  m_Script: {fileID: 11500000, guid: c43339e228a93d648997679bb7b4452d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NextSceneName: Login
+  ResourceComponent: {fileID: 1876240366}
 --- !u!1001 &1683682424
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -197,137 +184,9 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 450909966799755549, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: configInfo.fileName
-      value: q11
-      objectReference: {fileID: 0}
-    - target: {fileID: 450909966799755549, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: configInfo.fileType
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 450909966799755549, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: FilePaths.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 450909966799755549, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: FilePaths.Array.data[0]
-      value: Data/Data1.json
-      objectReference: {fileID: 0}
-    - target: {fileID: 450909966799755549, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: FilePaths.Array.data[1]
-      value: Data/TestData1.json
-      objectReference: {fileID: 0}
-    - target: {fileID: 450909966799755549, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: FilePaths.Array.data[2]
-      value: Data/Data1.json
-      objectReference: {fileID: 0}
-    - target: {fileID: 450909966799755549, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: DataFilePaths.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 450909966799755549, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: FilePaths.Array.data[0].fileName
-      value: 11
-      objectReference: {fileID: 0}
-    - target: {fileID: 450909966799755549, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: FilePaths.Array.data[0].fileType
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 450909966799755549, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: DataFilePaths.Array.data[0].dataName
-      value: NetworkConfig
-      objectReference: {fileID: 0}
-    - target: {fileID: 450909966799755549, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: DataFilePaths.Array.data[0].fileName
-      value: Data
-      objectReference: {fileID: 0}
-    - target: {fileID: 450909966799755549, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: DataFilePaths.Array.data[0].fileType
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 450909966799755549, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: DataFilePaths.Array.data[1].dataName
-      value: Data
-      objectReference: {fileID: 0}
-    - target: {fileID: 450909966799755549, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: DataFilePaths.Array.data[1].fileName
-      value: NetworkConfig
-      objectReference: {fileID: 0}
-    - target: {fileID: 450909966799755549, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: DataFilePaths.Array.data[1].fileType
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 450909966799755549, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: DataFilePaths.Array.data[2].dataName
-      value: Config
-      objectReference: {fileID: 0}
-    - target: {fileID: 450909966799755549, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: DataFilePaths.Array.data[2].fileName
-      value: Config
-      objectReference: {fileID: 0}
-    - target: {fileID: 450909966799755549, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: DataFilePaths.Array.data[2].fileType
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1783602997402638571, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: TableName.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1783602997402638571, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: TableName.Array.data[0]
-      value: UIFormInfo
-      objectReference: {fileID: 0}
-    - target: {fileID: 2221027231681503567, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: m_UIGroups.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2221027231681503567, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: m_UIGroups.Array.data[0].m_Name
-      value: default
-      objectReference: {fileID: 0}
-    - target: {fileID: 2793125080968852511, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: TableName.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2793125080968852511, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: TableName.Array.data[0]
-      value: NetworkConfig
-      objectReference: {fileID: 0}
-    - target: {fileID: 2793125080968852511, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: TableName.Array.data[1]
-      value: Config
-      objectReference: {fileID: 0}
-    - target: {fileID: 3443161207624890340, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: ConfigLoadMode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3443161207624890340, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: ResourceLoadMode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3443161207624890340, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: TableName.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3443161207624890340, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: TableName.Array.data[0]
-      value: AudioInfo
-      objectReference: {fileID: 0}
-    - target: {fileID: 4484336523290549285, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
+    - target: {fileID: 2970851468185990694, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: m_EditorResourceMode
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5554970468386900132, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: m_SettingHelperTypeName
-      value: UnityFramework.Runtime.DefaultSettingHelper
-      objectReference: {fileID: 0}
-    - target: {fileID: 5603955524520475539, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: TableName.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5603955524520475539, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: TableName.Array.data[0]
-      value: EntityInfo
       objectReference: {fileID: 0}
     - target: {fileID: 6016411196361803830, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: m_RootOrder
@@ -373,14 +232,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6016411196361803832, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: NextSceneName
-      value: Login
-      objectReference: {fileID: 0}
-    - target: {fileID: 6016411196361803832, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: IsDontDestroyOnLoad
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6016411196361803835, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: m_Name
       value: UnityFramework
@@ -389,41 +240,45 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 7583830411263867369, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: m_EntityGroups.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7583830411263867369, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: m_EnableShowEntityUpdateEvent
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7583830411263867369, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: m_EntityGroups.Array.data[0].m_Name
-      value: default
-      objectReference: {fileID: 0}
-    - target: {fileID: 7583830411263867369, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: m_EnableShowEntityDependencyAssetEvent
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7583830411263867369, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: m_EntityGroups.Array.data[0].m_InstanceCapacity
-      value: 16
-      objectReference: {fileID: 0}
-    - target: {fileID: 7583830411263867369, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: m_EntityGroups.Array.data[0].m_InstanceExpireTime
-      value: 60
-      objectReference: {fileID: 0}
-    - target: {fileID: 7583830411263867369, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: m_EntityGroups.Array.data[0].m_InstanceAutoReleaseInterval
-      value: 60
-      objectReference: {fileID: 0}
-    - target: {fileID: 8417737579558058715, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: m_Timeout
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 8417737579558058715, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
-      propertyPath: m_WebRequestAgentHelperCount
-      value: 10
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
+--- !u!114 &1876240366 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2842656755537762821, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
+  m_PrefabInstance: {fileID: 1683682424}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce28366e652498743b1d1423e821a0d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
