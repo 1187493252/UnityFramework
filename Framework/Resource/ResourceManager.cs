@@ -22,24 +22,11 @@ namespace Framework.Resource
 {
     internal sealed partial class ResourceManager : FrameworkModule, IResourceManager
     {
-        private ResourceMode m_ResourceMode ;
-
-        
-        private const int DefaultPriority = 0;
-
-        private bool m_EnableCachedAssets = true;
-
-        private int m_LoadAssetCountPerFrame = 1;
-
-        private float m_MinLoadAssetRandomDelaySeconds = 0f;
-
-        private float m_MaxLoadAssetRandomDelaySeconds = 0f;
-
-
+        private ResourceMode m_ResourceMode;
 
         private IResourceHelper m_ResourceHelper;
 
-       
+
         public ResourceMode ResourceMode => m_ResourceMode;
 
 
@@ -56,70 +43,24 @@ namespace Framework.Resource
 
         public void InitResources(Action initResourcesCompleteCallback)
         {
-           
-        }
-
-        public void LoadAsset(string assetName, LoadAssetCallbacks loadAssetCallbacks)
-        {
-            LoadAsset(assetName, null, DefaultPriority, loadAssetCallbacks, null);
-        }
-
-        public void LoadAsset(string assetName, Type assetType, LoadAssetCallbacks loadAssetCallbacks)
-        {
-            LoadAsset(assetName, assetType, DefaultPriority, loadAssetCallbacks, null);
 
         }
 
-        public void LoadAsset(string assetName, int priority, LoadAssetCallbacks loadAssetCallbacks)
+        public void StopUpdateResources()
         {
-            LoadAsset(assetName, null, priority, loadAssetCallbacks, null);
-
-
-        }
-
-        public void LoadAsset(string assetName, LoadAssetCallbacks loadAssetCallbacks, object userData)
-        {
-            LoadAsset(assetName, null, DefaultPriority, loadAssetCallbacks, userData);
-
-        }
-
-        public void LoadAsset(string assetName, Type assetType, int priority, LoadAssetCallbacks loadAssetCallbacks)
-        {
-            LoadAsset(assetName, null, priority, loadAssetCallbacks, null);
-
-        }
-
-        public void LoadAsset(string assetName, Type assetType, LoadAssetCallbacks loadAssetCallbacks, object userData)
-        {
-            LoadAsset(assetName, assetType, DefaultPriority, loadAssetCallbacks, userData);
-
-        }
-
-        public void LoadAsset(string assetName, int priority, LoadAssetCallbacks loadAssetCallbacks, object userData)
-        {
-         LoadAsset(assetName, null, priority, loadAssetCallbacks, userData);
-
         }
 
         public void LoadAsset(string assetName, Type assetType, int priority, LoadAssetCallbacks loadAssetCallbacks, object userData)
         {
-           m_ResourceHelper.LoadAsset(assetName, assetType, priority, loadAssetCallbacks, userData);
+            m_ResourceHelper.LoadAsset(assetName, assetType, priority, loadAssetCallbacks, userData);
         }
 
-        public void LoadScene(string sceneAssetName, LoadSceneCallbacks loadSceneCallbacks)
+
+        public void UnloadAsset(object asset)
         {
-            LoadScene(sceneAssetName, DefaultPriority, loadSceneCallbacks, null);
+            m_ResourceHelper.UnloadAsset(asset);
         }
 
-        public void LoadScene(string sceneAssetName, int priority, LoadSceneCallbacks loadSceneCallbacks)
-        {
-            LoadScene(sceneAssetName, priority, loadSceneCallbacks, null);
-        }
-
-        public void LoadScene(string sceneAssetName, LoadSceneCallbacks loadSceneCallbacks, object userData)
-        {
-            LoadScene(sceneAssetName, DefaultPriority, loadSceneCallbacks, userData);
-        }
 
         public void LoadScene(string sceneAssetName, int priority, LoadSceneCallbacks loadSceneCallbacks, object userData)
         {
@@ -127,19 +68,9 @@ namespace Framework.Resource
         }
 
 
-        public void StopUpdateResources()
-        {
-        }
 
-        public void UnloadAsset(object asset)
-        {
-            m_ResourceHelper.UnloadAsset(asset);
-        }
 
-        public void UnloadScene(string sceneAssetName, UnloadSceneCallbacks unloadSceneCallbacks)
-        {
-            UnloadScene(sceneAssetName, unloadSceneCallbacks, null);
-        }
+
 
         public void UnloadScene(string sceneAssetName, UnloadSceneCallbacks unloadSceneCallbacks, object userData)
         {
@@ -154,13 +85,14 @@ namespace Framework.Resource
 
         internal override void Update(float elapseSeconds, float realElapseSeconds)
         {
-           
+
         }
 
 
 
-     
+
+
     }
 
-  
+
 }

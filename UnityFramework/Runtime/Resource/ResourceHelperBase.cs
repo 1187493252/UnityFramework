@@ -16,7 +16,10 @@ namespace UnityFramework.Runtime
 {
     public abstract class ResourceHelperBase : MonoBehaviour, IResourceHelper
     {
-     
+        [SerializeField]
+        private ResourceMode m_ResourceMode;
+        public ResourceMode ResourceMode => m_ResourceMode;
+
 
         public abstract void LoadAsset(string assetName, Type assetType, int priority, LoadAssetCallbacks loadAssetCallbacks, object userData);
 

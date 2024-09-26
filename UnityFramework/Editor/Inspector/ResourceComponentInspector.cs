@@ -21,15 +21,15 @@ namespace UnityFramework.Editor
     [CustomEditor(typeof(ResourceComponent))]
     internal sealed class ResourceComponentInspector : UnityFrameworkInspector
     {
-        private static readonly string[] ResourceModeNames = new string[] { "Package", "Updatable", "Updatable While Playing" };
 
-        private const string NoneOptionName = "<None>";
-
-
+        private const string NoneOptionName = "<Custom>";
         private SerializedProperty m_ResourceHelperTypeName = null;
-
         private string[] m_ResourceHelperTypeNames = null;
         private int m_ResourceHelperTypeNameIndex = 0;
+
+        private SerializedProperty m_CustomResourceHelper = null;
+
+
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
@@ -41,7 +41,21 @@ namespace UnityFramework.Editor
 
             int resourceHelperSelectedIndex = EditorGUILayout.Popup("ResourceHelper", m_ResourceHelperTypeNameIndex, m_ResourceHelperTypeNames);
 
+            if (resourceHelperSelectedIndex != m_ResourceHelperTypeNameIndex)
+            {
+                m_ResourceHelperTypeNameIndex = resourceHelperSelectedIndex;
+                m_ResourceHelperTypeName.stringValue = resourceHelperSelectedIndex <= 0 ? null : m_ResourceHelperTypeNames[resourceHelperSelectedIndex];
+            }
 
+
+            if (m_ResourceHelperTypeNameIndex <= 0)
+            {
+                EditorGUILayout.PropertyField(m_CustomResourceHelper);
+                if (m_CustomResourceHelper.objectReferenceValue == null)
+                {
+                    EditorGUILayout.HelpBox(Utility.Text.Format("You must set Custom Helper."), MessageType.Error);
+                }
+            }
 
             serializedObject.ApplyModifiedProperties();
 
@@ -61,13 +75,13 @@ namespace UnityFramework.Editor
 
             m_ResourceHelperTypeName = serializedObject.FindProperty("m_ResourceHelperTypeName");
 
-
+            m_CustomResourceHelper = serializedObject.FindProperty("m_CustomResourceHelper");
 
 
             RefreshTypeNames();
         }
 
-   
+
 
 
         private void RefreshTypeNames()
@@ -85,7 +99,7 @@ namespace UnityFramework.Editor
                 if (m_ResourceHelperTypeNameIndex <= 0)
                 {
                     m_ResourceHelperTypeNameIndex = 0;
-                    m_ResourceHelperTypeName.stringValue = null;
+                    m_ResourceHelperTypeName.stringValue = NoneOptionName;
                 }
             }
             serializedObject.ApplyModifiedProperties();

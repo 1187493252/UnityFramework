@@ -14,17 +14,17 @@ namespace Framework.Resource
     /// </summary>
     public enum ResourceMode : byte
     {
-        Resource,
+        Unspecified,
 
-        EditorSimulateMode ,
-        
-     
+        EditorSimulateMode,
+
+
         OfflinePlayMode,
 
 
         HostPlayMode,
 
-     
+
         WebPlayMode
     }
 }

@@ -21,16 +21,19 @@ namespace UnityFramework.Runtime
     public class DefaultResourceHelper : ResourceHelperBase
     {
 
+        [SerializeField]
         private bool m_EnableCachedAssets = true;
 
+        [SerializeField]
         private int m_LoadAssetCountPerFrame = 100;
 
+        [SerializeField]
         private float m_MinLoadAssetRandomDelaySeconds = 0f;
 
+        [SerializeField]
         private float m_MaxLoadAssetRandomDelaySeconds = 0f;
 
         private Dictionary<string, UnityEngine.Object> m_CachedAssets = null;
-        private Dictionary<string, object> m_CachedDatas = null;
         private FrameworkLinkedList<LoadAssetInfo> m_LoadAssetInfos = null;
         private FrameworkLinkedList<LoadSceneInfo> m_LoadSceneInfos = null;
         private FrameworkLinkedList<UnloadSceneInfo> m_UnloadSceneInfos = null;
@@ -52,11 +55,10 @@ namespace UnityFramework.Runtime
             m_LoadAssetInfos = new FrameworkLinkedList<LoadAssetInfo>();
             m_LoadSceneInfos = new FrameworkLinkedList<LoadSceneInfo>();
             m_UnloadSceneInfos = new FrameworkLinkedList<UnloadSceneInfo>();
-            m_CachedDatas = new Dictionary<string, object>(StringComparer.Ordinal);
 
 
         }
-    
+
 
         private void Update()
         {
@@ -245,28 +247,9 @@ namespace UnityFramework.Runtime
             return null;
         }
 
-        private object GetCachedData(string dataName)
-        {
-            if (!m_EnableCachedAssets)
-            {
-                return null;
-            }
 
-            if (string.IsNullOrEmpty(dataName))
-            {
-                return null;
-            }
 
-            object data = null;
-            if (m_CachedDatas.TryGetValue(dataName, out data))
-            {
-                return data;
-            }
 
-            return null;
-        }
-
-    
 
         public override void LoadAsset(string assetName, Type assetType, int priority, LoadAssetCallbacks loadAssetCallbacks, object userData)
         {
@@ -290,7 +273,7 @@ namespace UnityFramework.Runtime
             m_LoadAssetInfos.AddLast(new LoadAssetInfo(assetName, assetType, priority, DateTime.UtcNow, m_MinLoadAssetRandomDelaySeconds + (float)Utility.Random.GetRandomDouble() * (m_MaxLoadAssetRandomDelaySeconds - m_MinLoadAssetRandomDelaySeconds), loadAssetCallbacks, userData));
         }
 
- 
+
 
 
         public override void LoadScene(string sceneAssetName, int priority, LoadSceneCallbacks loadSceneCallbacks, object userData)
@@ -324,11 +307,11 @@ namespace UnityFramework.Runtime
             m_LoadSceneInfos.AddLast(new LoadSceneInfo(asyncOperation, sceneAssetName, priority, DateTime.UtcNow, loadSceneCallbacks, userData));
         }
 
-  
 
-  
 
-    
+
+
+
 
         public override void UnloadScene(string sceneAssetName, UnloadSceneCallbacks unloadSceneCallbacks, object userData)
         {
@@ -372,7 +355,7 @@ namespace UnityFramework.Runtime
 
         public override void UnloadAsset(object asset)
         {
-           
+
         }
 
         public override void Shutdown()

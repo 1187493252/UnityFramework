@@ -26,21 +26,17 @@ namespace UnityFramework.Runtime
 
         private float m_GameSpeedBeforePause = 1f;
 
-        [SerializeField]
-        private bool m_EditorResourceMode = true;
 
 
         [SerializeField]
         private Language m_EditorLanguage = Language.Unspecified;
 
-        [SerializeField]
-        private string m_VersionHelperTypeName = "UnityFramework.Runtime.DefaultVersionHelper";
+
 
         [SerializeField]
         private string m_LogHelperTypeName = "UnityFramework.Runtime.DefaultLogHelper";
 
-        [SerializeField]
-        private string m_CompressionHelperTypeName = "UnityFramework.Runtime.DefaultCompressionHelper";
+
 
         [SerializeField]
         private string m_JsonHelperTypeName = "UnityFramework.Runtime.DefaultJsonHelper";
@@ -57,20 +53,7 @@ namespace UnityFramework.Runtime
         [SerializeField]
         private bool m_NeverSleep = true;
 
-        /// <summary>
-        /// 获取或设置是否使用编辑器资源模式（仅编辑器内有效）。
-        /// </summary>
-        public bool EditorResourceMode
-        {
-            get
-            {
-                return m_EditorResourceMode;
-            }
-            set
-            {
-                m_EditorResourceMode = value;
-            }
-        }
+
 
         /// <summary>
         /// 获取或设置编辑器语言（仅编辑器内有效）。
@@ -85,15 +68,6 @@ namespace UnityFramework.Runtime
             {
                 m_EditorLanguage = value;
             }
-        }
-
-        /// <summary>
-        /// 获取或设置编辑器资源辅助器。
-        /// </summary>
-        public IResourceManager EditorResourceHelper
-        {
-            get;
-            set;
         }
 
         /// <summary>
@@ -193,11 +167,7 @@ namespace UnityFramework.Runtime
                 Utility.Converter.ScreenDpi = DefaultDpi;
             }
 
-            m_EditorResourceMode &= Application.isEditor;
-            if (m_EditorResourceMode)
-            {
-                Log.Debug("During this run,Framework will use editor resource files, which you should validate first.");
-            }
+
 
             Application.targetFrameRate = m_FrameRate;
             Time.timeScale = m_GameSpeed;

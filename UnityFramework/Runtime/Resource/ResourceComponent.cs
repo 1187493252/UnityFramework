@@ -17,7 +17,7 @@ using Framework;
 namespace UnityFramework.Runtime
 {
     [DisallowMultipleComponent]
-    public class ResourceComponent:UnityFrameworkComponent
+    public class ResourceComponent : UnityFrameworkComponent
     {
         private const int DefaultPriority = 0;
         private IResourceManager m_ResourceManager = null;
@@ -25,26 +25,13 @@ namespace UnityFramework.Runtime
         private ResourceHelperBase m_ResourceHelper = null;
 
 
-        [SerializeField]
-        private ResourceMode m_ResourceMode = ResourceMode.EditorSimulateMode;
-
-        [SerializeField]
-        private bool m_EnableCachedAssets = true;
-
-        [SerializeField]
-        private int m_LoadAssetCountPerFrame = 100;
-
-        [SerializeField]
-        private float m_MinLoadAssetRandomDelaySeconds = 0f;
-
-        [SerializeField]
-        private float m_MaxLoadAssetRandomDelaySeconds = 0f;
-
 
         [SerializeField]
         private string m_ResourceHelperTypeName = "UnityFramework.Runtime.DefaultResourceHelper";
         [SerializeField]
         private ResourceHelperBase m_CustomResourceHelper = null;
+
+        public ResourceMode ResourceMode => m_ResourceManager.ResourceMode;
 
         /// <summary>
         /// 游戏框架组件初始化。
@@ -67,21 +54,22 @@ namespace UnityFramework.Runtime
                 Log.Debug("Event component is invalid.");
                 return;
             }
-            m_ResourceManager =  FrameworkEntry.GetModule<IResourceManager>();
+            m_ResourceManager = FrameworkEntry.GetModule<IResourceManager>();
             if (m_ResourceManager == null)
             {
                 Log.Debug("Resource manager is invalid.");
                 return;
             }
- 
-   
-
- 
 
 
-            SetResourceMode(m_ResourceMode);
 
-            m_ResourceHelper = Helper.CreateHelper(m_ResourceHelperTypeName, m_CustomResourceHelper);
+            m_ResourceHelper = Helper.GetHelper<ResourceHelperBase>(this.gameObject, m_ResourceHelperTypeName);
+
+            if (!m_ResourceHelper)
+            {
+                m_ResourceHelper = Helper.CreateHelper(m_ResourceHelperTypeName, m_CustomResourceHelper);
+            }
+
             if (m_ResourceHelper == null)
             {
                 Log.Error("Can not create resource helper.");
@@ -95,34 +83,13 @@ namespace UnityFramework.Runtime
 
             m_ResourceManager.SetResourceHelper(m_ResourceHelper);
 
-  
 
-    
+            m_ResourceManager.SetResourceMode(m_ResourceHelper.ResourceMode);
+
 
         }
-        /// <summary>
-        /// 设置资源模式。
-        /// </summary>
-        /// <param name="resourceMode">资源模式。</param>
-        public void SetResourceMode(ResourceMode resourceMode)
-        {
-            m_ResourceManager.SetResourceMode(resourceMode);
-            switch (resourceMode)
-            {
-                case ResourceMode.Resource:
-                    break;
-                case ResourceMode.EditorSimulateMode:
-                    break;
-                case ResourceMode.OfflinePlayMode:
-                    break;
-                case ResourceMode.HostPlayMode:
-                    break;
-                case ResourceMode.WebPlayMode:
-                    break;
-                default:
-                    break;
-            }
-        }
+
+
 
         /// <summary>
         /// 预订执行释放未被使用的资源。
@@ -130,7 +97,7 @@ namespace UnityFramework.Runtime
         /// <param name="performGCCollect">是否使用垃圾回收。</param>
         public void UnloadUnusedAssets(bool performGCCollect)
         {
-       
+
         }
 
         /// <summary>
@@ -139,7 +106,7 @@ namespace UnityFramework.Runtime
         /// <param name="performGCCollect">是否使用垃圾回收。</param>
         public void ForceUnloadUnusedAssets(bool performGCCollect)
         {
-      
+
         }
 
         /// <summary>
@@ -266,8 +233,8 @@ namespace UnityFramework.Runtime
             m_ResourceManager.UnloadAsset(asset);
         }
 
-  
 
-      
+
+
     }
 }
