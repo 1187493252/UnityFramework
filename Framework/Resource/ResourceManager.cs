@@ -40,13 +40,10 @@ namespace Framework.Resource
         private string m_ReadOnlyPath = null;
         private string m_ReadWritePath = null;
         private Dictionary<string, UnityEngine.Object> m_CachedAssets = null;
-        private Dictionary<string, object> m_CachedDatas = null;
 
         private FrameworkLinkedList<LoadAssetInfo> m_LoadAssetInfos = null;
         private FrameworkLinkedList<LoadSceneInfo> m_LoadSceneInfos = null;
         private FrameworkLinkedList<UnloadSceneInfo> m_UnloadSceneInfos = null;
-        private FrameworkLinkedList<LoadDataInfo> m_LoadDataInfos = null;
-        WebRequestComponent m_UnityWebRequestComponent;
 
         /// <summary>
         /// 获取资源只读区路径。
@@ -138,9 +135,6 @@ namespace Framework.Resource
             m_LoadAssetInfos = new FrameworkLinkedList<LoadAssetInfo>();
             m_LoadSceneInfos = new FrameworkLinkedList<LoadSceneInfo>();
             m_UnloadSceneInfos = new FrameworkLinkedList<UnloadSceneInfo>();
-            m_LoadDataInfos = new FrameworkLinkedList<LoadDataInfo>();
-            m_CachedDatas = new Dictionary<string, object>(StringComparer.Ordinal);
-            m_UnityWebRequestComponent = UnityFrameworkEntry.GetComponent<WebRequestComponent>();
 
 
         }
@@ -298,104 +292,7 @@ namespace Framework.Resource
 
         }
 
-        void LoadData()
-        {
-            foreach (var item in m_LoadDataInfos)
-            {
-                LoadDataInfo loadDataInfo = item;
-                float elapseSecond = (float)(DateTime.UtcNow - loadDataInfo.StartTime).TotalSeconds;
-                if (elapseSecond >= loadDataInfo.DelaySeconds)
-                {
-                    object asset = GetCachedData(loadDataInfo.DataName);
 
-                    if (asset == null)
-                    {
-                        string dataContent = "";
-
-
-                        //加载数据
-                        string url = ReadOnlyPath + "/Data/" + loadDataInfo.DataName;
-                        switch (loadDataInfo.DataType)
-                        {
-                            case DataType.Json:
-                                url += ".json";
-                                break;
-                            case DataType.Txt:
-                                url += ".txt";
-                                break;
-                            case DataType.Xml:
-                                url += ".xml";
-                                break;
-                            case DataType.Base64:
-                                url += ".base";
-                                break;
-                            case DataType.Binary:
-                                url += ".sc";
-                                break;
-                        }
-                        m_UnityWebRequestComponent.RequestGet(url, callBack: delegate (string tmp, byte[] data)
-                        {
-
-                            byte[] datas;
-
-                            switch (loadDataInfo.DataType)
-                            {
-                                case DataType.Base64:
-                                    datas = Convert.FromBase64String(tmp);
-                                    dataContent = Encoding.Unicode.GetString(datas);
-                                    break;
-                                case DataType.Binary:
-                                    Stream stream = new MemoryStream(data);
-                                    BinaryFormatter binaryFormatter = new BinaryFormatter();
-                                    datas = (byte[])binaryFormatter.Deserialize(stream);
-                                    dataContent = Encoding.Unicode.GetString(datas);
-                                    stream.Dispose();
-                                    break;
-                                default:
-                                    dataContent = tmp;
-                                    break;
-                            }
-
-                            asset = dataContent;
-                            if (asset != null)
-                            {
-                                if (loadDataInfo.LoadDataCallbacks.LoadDataSuccessCallback != null)
-                                {
-                                    loadDataInfo.LoadDataCallbacks.LoadDataSuccessCallback(loadDataInfo.DataName, asset, 0, loadDataInfo.UserData);
-                                }
-                            }
-
-                        }, failCallBack: delegate
-                        {
-                            if (loadDataInfo.LoadDataCallbacks.LoadDataFailureCallback != null)
-                            {
-                                loadDataInfo.LoadDataCallbacks.LoadDataFailureCallback(loadDataInfo.DataName, LoadResourceStatus.AssetError, "Can not load this asset from asset database.", loadDataInfo.UserData);
-                            }
-
-                        });
-                    }
-                    else
-                    {
-                        if (loadDataInfo.LoadDataCallbacks.LoadDataSuccessCallback != null)
-                        {
-                            loadDataInfo.LoadDataCallbacks.LoadDataSuccessCallback(loadDataInfo.DataName, asset, 0, loadDataInfo.UserData);
-                        }
-
-                    }
-
-                }
-                else
-                {
-                    if (loadDataInfo.LoadDataCallbacks.LoadDataUpdateCallback != null)
-                    {
-                        loadDataInfo.LoadDataCallbacks.LoadDataUpdateCallback(loadDataInfo.DataName, elapseSecond / loadDataInfo.DelaySeconds, loadDataInfo.UserData);
-                    }
-
-                }
-            }
-            m_LoadDataInfos.Clear();
-
-        }
 
         /// <summary>
         /// 设置资源只读区路径。
@@ -628,36 +525,7 @@ namespace Framework.Resource
         }
 
 
-        /// <summary>
-        /// 加载数据。
-        /// </summary>
-        /// <param name="dataName">要加载资源的名称。</param>
-        /// <param name="dataType">要加载资源的类型。</param>
-        /// <param name="priority">加载资源的优先级。</param>
-        /// <param name="loadDataCallbacks">加载资源回调函数集。</param>
-        /// <param name="userData">用户自定义数据。</param>
-        public void LoadData(string dataName, DataType dataType, int priority, LoadDataCallbacks loadDataCallbacks, object userData)
-        {
-            if (loadDataCallbacks == null)
-            {
-                Log.Error("Load data callbacks is invalid.");
-                return;
-            }
 
-            if (string.IsNullOrEmpty(dataName))
-            {
-                if (loadDataCallbacks.LoadDataFailureCallback != null)
-                {
-                    loadDataCallbacks.LoadDataFailureCallback(dataName, LoadResourceStatus.NotExist, "Data name is invalid.", userData);
-                }
-
-                return;
-            }
-
-
-            m_LoadDataInfos.AddLast(new LoadDataInfo(dataName, dataType, priority, DateTime.UtcNow, m_MinLoadAssetRandomDelaySeconds + (float)Utility.Random.GetRandomDouble() * (m_MaxLoadAssetRandomDelaySeconds - m_MinLoadAssetRandomDelaySeconds), loadDataCallbacks, userData));
-            LoadData();
-        }
 
         /// <summary>
         /// 卸载资源。
@@ -1177,26 +1045,7 @@ namespace Framework.Resource
 
             return null;
         }
-        private object GetCachedData(string dataName)
-        {
-            if (!m_EnableCachedAssets)
-            {
-                return null;
-            }
 
-            if (string.IsNullOrEmpty(dataName))
-            {
-                return null;
-            }
-
-            object data = null;
-            if (m_CachedDatas.TryGetValue(dataName, out data))
-            {
-                return data;
-            }
-
-            return null;
-        }
 
 
         internal override void Shutdown()

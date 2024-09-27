@@ -40,7 +40,6 @@ namespace UnityFramework.Runtime
         private string m_ReadOnlyPath = null;
         private string m_ReadWritePath = null;
         private Dictionary<string, UnityEngine.Object> m_CachedAssets = null;
-        private Dictionary<string, object> m_CachedDatas = null;
 
         private FrameworkLinkedList<LoadAssetInfo> m_LoadAssetInfos = null;
         private FrameworkLinkedList<LoadSceneInfo> m_LoadSceneInfos = null;
@@ -138,7 +137,6 @@ namespace UnityFramework.Runtime
             m_LoadAssetInfos = new FrameworkLinkedList<LoadAssetInfo>();
             m_LoadSceneInfos = new FrameworkLinkedList<LoadSceneInfo>();
             m_UnloadSceneInfos = new FrameworkLinkedList<UnloadSceneInfo>();
-            m_CachedDatas = new Dictionary<string, object>(StringComparer.Ordinal);
 
             BaseComponent baseComponent = GetComponent<BaseComponent>();
 
@@ -722,10 +720,10 @@ namespace UnityFramework.Runtime
         /// <remarks>此方法仅适用于二进制资源存储在磁盘（而非文件系统）中的情况。若二进制资源存储在文件系统中时，返回值将始终为空。</remarks>
         public string GetBinaryPath(string binaryAssetName)
         {
-            //if (!HasFile(binaryAssetName))
-            //{
-            //    return null;
-            //}
+            if (!HasFile(binaryAssetName))
+            {
+                return null;
+            }
 
             return Application.dataPath.Substring(0, Application.dataPath.Length - AssetsStringLength) + binaryAssetName;
         }
@@ -778,7 +776,6 @@ namespace UnityFramework.Runtime
         /// <param name="userData">用户自定义数据。</param>
         public void LoadBinary(string binaryAssetName, LoadBinaryCallbacks loadBinaryCallbacks, object userData)
         {
-            return;
             if (loadBinaryCallbacks == null)
             {
                 Log.Error("Load binary callbacks is invalid.");
@@ -1068,26 +1065,6 @@ namespace UnityFramework.Runtime
         }
 
 
-        private object GetCachedData(string dataName)
-        {
-            if (!m_EnableCachedAssets)
-            {
-                return null;
-            }
-
-            if (string.IsNullOrEmpty(dataName))
-            {
-                return null;
-            }
-
-            object data = null;
-            if (m_CachedDatas.TryGetValue(dataName, out data))
-            {
-                return data;
-            }
-
-            return null;
-        }
 
 
 

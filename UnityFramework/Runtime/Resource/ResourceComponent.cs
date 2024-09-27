@@ -89,7 +89,7 @@ namespace UnityFramework.Runtime
         private string m_LoadResourceAgentHelperTypeName = "UnityFramework.Runtime.DefaultLoadResourceAgentHelper";
 
         //  [SerializeField]
-        //   private LoadResourceAgentHelperBase m_CustomLoadResourceAgentHelper = null;
+        //  private LoadResourceAgentHelperBase m_CustomLoadResourceAgentHelper = null;
 
         [SerializeField]
         private int m_LoadResourceAgentHelperCount = 3;
