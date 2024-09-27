@@ -51,7 +51,7 @@ namespace Framework.Resource
         void SetResourceHelper(IResourceHelper resourceHelper);
 
         /// <summary>
-        /// 使用单机模式并初始化资源。
+        /// 初始化资源。
         /// </summary>
         /// <param name="initResourcesCompleteCallback">使用单机模式并初始化资源完成时的回调函数。</param>
         void InitResources(Action initResourcesCompleteCallback);
@@ -64,7 +64,18 @@ namespace Framework.Resource
         void StopUpdateResources();
 
 
+        /// <summary>
+        /// 预订执行释放未被使用的资源。
+        /// </summary>
+        /// <param name="performGCCollect">是否使用垃圾回收。</param>
+        void UnloadUnusedAssets(bool performGCCollect);
 
+
+        /// <summary>
+        /// 强制执行释放未被使用的资源。
+        /// </summary>
+        /// <param name="performGCCollect">是否使用垃圾回收。</param>
+        void ForceUnloadUnusedAssets(bool performGCCollect);
 
 
         /// <summary>

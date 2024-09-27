@@ -16,9 +16,33 @@ namespace Framework.Resource
     /// </summary>
     public interface IResourceHelper
     {
+        /// <summary>
+        /// 初始化资源。
+        /// </summary>
+        /// <param name="initResourcesCompleteCallback">使用单机模式并初始化资源完成时的回调函数。</param>
+        void InitResources(Action initResourcesCompleteCallback);
 
 
-     
+
+        /// <summary>
+        /// 停止更新资源。
+        /// </summary>
+        void StopUpdateResources();
+
+
+        /// <summary>
+        /// 预订执行释放未被使用的资源。
+        /// </summary>
+        /// <param name="performGCCollect">是否使用垃圾回收。</param>
+        void UnloadUnusedAssets(bool performGCCollect);
+
+
+        /// <summary>
+        /// 强制执行释放未被使用的资源。
+        /// </summary>
+        /// <param name="performGCCollect">是否使用垃圾回收。</param>
+        void ForceUnloadUnusedAssets(bool performGCCollect);
+
 
         /// <summary>
         /// 异步加载资源。
@@ -37,7 +61,7 @@ namespace Framework.Resource
         /// <param name="asset">要卸载的资源。</param>
         void UnloadAsset(object asset);
 
-    
+
 
         /// <summary>
         /// 异步加载场景。

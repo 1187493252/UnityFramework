@@ -56,8 +56,9 @@ namespace UnityFramework.Runtime
             m_LoadSceneInfos = new FrameworkLinkedList<LoadSceneInfo>();
             m_UnloadSceneInfos = new FrameworkLinkedList<UnloadSceneInfo>();
 
-
         }
+
+
 
 
         private void Update()
@@ -210,6 +211,39 @@ namespace UnityFramework.Runtime
                 }
             }
         }
+
+        public override void InitResources(Action initResourcesCompleteCallback)
+        {
+            initResourcesCompleteCallback?.Invoke();
+        }
+
+        public override void StopUpdateResources()
+        {
+
+        }
+
+        /// <summary>
+        /// 预订执行释放未被使用的资源。
+        /// </summary>
+        /// <param name="performGCCollect">是否使用垃圾回收。</param>
+        public override void UnloadUnusedAssets(bool performGCCollect)
+        {
+            Resources.UnloadUnusedAssets();
+            if (performGCCollect)
+            {
+                GC.Collect();
+            }
+        }
+
+        /// <summary>
+        /// 强制执行释放未被使用的资源。
+        /// </summary>
+        /// <param name="performGCCollect">是否使用垃圾回收。</param>
+        public override void ForceUnloadUnusedAssets(bool performGCCollect)
+        {
+            UnloadUnusedAssets(performGCCollect);
+        }
+
 
         private bool HasCachedAsset(string assetName)
         {

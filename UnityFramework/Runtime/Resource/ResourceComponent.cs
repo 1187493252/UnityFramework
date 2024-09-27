@@ -97,7 +97,7 @@ namespace UnityFramework.Runtime
         /// <param name="performGCCollect">是否使用垃圾回收。</param>
         public void UnloadUnusedAssets(bool performGCCollect)
         {
-
+            m_ResourceManager.UnloadUnusedAssets(performGCCollect);
         }
 
         /// <summary>
@@ -106,11 +106,11 @@ namespace UnityFramework.Runtime
         /// <param name="performGCCollect">是否使用垃圾回收。</param>
         public void ForceUnloadUnusedAssets(bool performGCCollect)
         {
-
+            m_ResourceManager.ForceUnloadUnusedAssets(performGCCollect);
         }
 
         /// <summary>
-        /// 使用单机模式并初始化资源。
+        /// 初始化资源。
         /// </summary>
         /// <param name="initResourcesCompleteCallback">使用单机模式并初始化资源完成时的回调函数。</param>
         public void InitResources(Action initResourcesCompleteCallback)

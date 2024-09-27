@@ -11,6 +11,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Resources;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
@@ -43,11 +44,30 @@ namespace Framework.Resource
 
         public void InitResources(Action initResourcesCompleteCallback)
         {
-
+            m_ResourceHelper.InitResources(initResourcesCompleteCallback);
         }
 
         public void StopUpdateResources()
         {
+            m_ResourceHelper.StopUpdateResources();
+        }
+
+        /// <summary>
+        /// 预订执行释放未被使用的资源。
+        /// </summary>
+        /// <param name="performGCCollect">是否使用垃圾回收。</param>
+        public void UnloadUnusedAssets(bool performGCCollect)
+        {
+            m_ResourceHelper.UnloadUnusedAssets(performGCCollect);
+        }
+
+        /// <summary>
+        /// 强制执行释放未被使用的资源。
+        /// </summary>
+        /// <param name="performGCCollect">是否使用垃圾回收。</param>
+        public void ForceUnloadUnusedAssets(bool performGCCollect)
+        {
+            m_ResourceHelper.ForceUnloadUnusedAssets(performGCCollect);
         }
 
         public void LoadAsset(string assetName, Type assetType, int priority, LoadAssetCallbacks loadAssetCallbacks, object userData)
