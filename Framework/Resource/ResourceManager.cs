@@ -433,7 +433,7 @@ namespace Framework.Resource
         /// <param name="resourceMode">资源模式。</param>
         public void SetResourceMode(ResourceMode resourceMode)
         {
-            throw new NotSupportedException("SetResourceMode");
+            // throw new NotSupportedException("SetResourceMode");
         }
 
 
@@ -443,7 +443,7 @@ namespace Framework.Resource
         /// <param name="resourceHelper">资源辅助器。</param>
         public void SetResourceHelper(IResourceHelper resourceHelper)
         {
-            throw new NotSupportedException("SetResourceHelper");
+            // throw new NotSupportedException("SetResourceHelper");
         }
 
         /// <summary>
