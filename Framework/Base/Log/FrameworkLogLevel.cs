@@ -24,6 +24,11 @@ namespace Framework
         Debug = 0,
 
         /// <summary>
+        /// 信息。
+        /// </summary>
+        Info,
+
+        /// <summary>
         /// 警告。
         /// </summary>
         Warning,
@@ -33,5 +38,9 @@ namespace Framework
         /// </summary>
         Error,
 
+        /// <summary>
+        /// 严重错误。
+        /// </summary>
+        Fatal
     }
 }

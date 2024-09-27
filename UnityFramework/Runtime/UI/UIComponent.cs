@@ -144,7 +144,16 @@ namespace UnityFramework.Runtime
             }
         }
 
-
+        private Dictionary<int, UIFormInfo> uiFormInfoDic = new Dictionary<int, UIFormInfo> { };
+        private Dictionary<int, UIFormBase> uiFormDicById = new Dictionary<int, UIFormBase>();
+        public int UIFormInfoCout
+        {
+            get
+            {
+                return uiFormInfoDic.Count;
+            }
+        }
+        UnityFramework.Runtime.UI.UIHelper helper;
 
         protected override void Awake()
         {
@@ -152,7 +161,7 @@ namespace UnityFramework.Runtime
             m_UIManager = FrameworkEntry.GetModule<IUIManager>();
             if (m_UIManager == null)
             {
-                Log.Error("UI manager is invalid.");
+                Log.Fatal("UI manager is invalid.");
                 return;
             }
             if (m_EnableOpenUIFormSuccessEvent)
@@ -182,19 +191,25 @@ namespace UnityFramework.Runtime
             BaseComponent baseComponent = UnityFrameworkEntry.GetComponent<BaseComponent>();
             if (baseComponent == null)
             {
-                Log.Error("Base component is invalid.");
+                Log.Fatal("Base component is invalid.");
                 return;
             }
 
             m_EventComponent = UnityFrameworkEntry.GetComponent<EventComponent>();
             if (m_EventComponent == null)
             {
-                Log.Error("Event component is invalid.");
+                Log.Fatal("Event component is invalid.");
                 return;
             }
 
-
-            m_UIManager.SetResourceManager(FrameworkEntry.GetModule<IResourceManager>());
+            if (baseComponent.EditorResourceMode)
+            {
+                m_UIManager.SetResourceManager(baseComponent.EditorResourceHelper);
+            }
+            else
+            {
+                m_UIManager.SetResourceManager(FrameworkEntry.GetModule<IResourceManager>());
+            }
 
             m_UIManager.SetObjectPoolManager(FrameworkEntry.GetModule<IObjectPoolManager>());
             m_UIManager.InstanceAutoReleaseInterval = m_InstanceAutoReleaseInterval;
@@ -237,7 +252,8 @@ namespace UnityFramework.Runtime
         public void Init()
         {
             ClearAll();
-
+            helper = GetComponent<UnityFramework.Runtime.UI.UIHelper>();
+            helper.Init();
         }
 
         /// <summary>
@@ -479,6 +495,17 @@ namespace UnityFramework.Runtime
             return m_UIManager.IsValidUIForm(uiForm);
         }
 
+        /// <summary>
+        /// 打开界面
+        /// </summary>
+        /// <param name="uiFormId">配置表中的id</param>
+        /// <param name="uiGroupName">界面组名称</param>
+        public void OpenUIForm(int uiFormId, string uiGroupName)
+        {
+            string uiFormAssetName = uiFormInfoDic[uiFormId].Path;
+
+            OpenUIForm(uiFormId, uiFormAssetName, uiGroupName, DefaultPriority, false, null);
+        }
 
 
         /// <summary>
@@ -721,18 +748,165 @@ namespace UnityFramework.Runtime
         {
             m_EventComponent.Fire(this, CloseUIFormCompleteEventArgs.Create(e));
         }
+        //-----------------------------------------
+        /// <summary>
+        /// 获取UIForm
+        /// </summary>
+        /// <param name = "id" > id </ param >
+        /// < returns ></ returns >
+        public UIFormBase GetSceneUIForm(int id)
+        {
+            uiFormDicById.TryGetValue(id, out UIFormBase uiForm);
+            if (uiForm == null)
+            {
+                Log.Error($"获取 UIForm Error : id {id}");
+            }
+            return uiForm;
+        }
+        /// <summary>
+        /// 获取UIForm
+        /// </summary>
+        /// <param name="name">名字</param>
+        /// <returns></returns>
+        public UIFormBase GetSceneUIForm(string name)
+        {
+            UIFormBase uiForm = null;
+            foreach (var item in uiFormDicById)
+            {
+                if (item.Value.gameObject.name == name)
+                {
+                    uiForm = item.Value;
+                    break;
+                }
+            }
+            if (uiForm == null)
+            {
+                Log.Error($"获取 UIForm Error:{name}");
+            }
+
+            return uiForm;
+
+        }
+
+        /// <summary>
+        /// 注册UIForm
+        /// </summary>
+        /// <param name="uiForm"></param>
+        public void AddSceneUIForm(UIFormBase uiForm)
+        {
+            uiFormDicById.AddOrReplace(uiForm.Id, uiForm);
+
+        }
+
+        public void AddUIFormInfo(int uiFormID, UIFormInfo uiFormInfo)
+        {
+            if (uiFormInfoDic == null)
+            {
+                uiFormInfoDic = new Dictionary<int, UIFormInfo>();
+            }
+            uiFormInfoDic.TryAdd(uiFormID, uiFormInfo);
+        }
+        public UIFormInfo GetUIFormInfo(string name)
+        {
+            foreach (var item in uiFormInfoDic)
+            {
+                if (item.Value.UIFormName == name)
+                {
+                    return item.Value;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 移除UI
+        /// </summary>
+        /// <param name="id"></param>
+        public void RemoveSceneUIForm(int id)
+        {
+            uiFormDicById.Remove(id);
+        }
+        /// <summary>
+        /// 移除UIView
+        /// </summary>
+        /// <param name="name"></param>
+        public void RemoveSceneUIForm(string name)
+        {
+            RemoveSceneUIForm(GetSceneUIForm(name));
+        }
+        public void RemoveSceneUIForm(UIFormBase uiForm)
+        {
+            RemoveSceneUIForm(uiForm.Id);
+        }
 
 
+        /// <summary>
+        /// 打开UI
+        /// </summary>
+        /// <param name="id">编号</param>
+        /// <returns></returns>
+        public UIFormBase OpenSceneUIForm(int id)
+        {
+            UIFormBase uiForm = GetSceneUIForm(id);
+            if (uiForm)
+            {
+                uiForm.Show();
+            }
+            return uiForm;
 
+        }
+        public UIFormBase OpenSceneUIForm(string name)
+        {
+            UIFormBase uiForm = GetSceneUIForm(name);
+            if (uiForm)
+            {
+                uiForm.Show();
+            }
+            return uiForm;
 
+        }
+        public T OpenSceneUIForm<T>(int id) where T : UIFormBase
+        {
+            T t = (T)GetSceneUIForm(id);
+            if (t)
+            {
+                t.Show();
+            }
+            return t;
+        }
 
-
-
-
-
-        public void ClearAll()
+        /// <summary>
+        /// 关闭UI
+        /// </summary>
+        /// <param name="id">编号</param>
+        /// <param name="isDestroy">是否销毁</param>
+        /// <returns></returns>
+        public UIFormBase CloseSceneUIForm(int id, bool isDestroy = false)
         {
 
+            if (uiFormDicById.TryGetValue(id, out UIFormBase uiForm))
+            {
+                uiForm.Hide(isDestroy);
+                return uiForm;
+            }
+            else
+            {
+                Log.Info($"Close UIForm Error:id{id}");
+                return null;
+            }
+        }
+        public void ClearSceneUIForm()
+        {
+            if (uiFormDicById == null || uiFormDicById.Count < 1)
+            {
+                return;
+            }
+            uiFormDicById.Clear();
+        }
+        public void ClearAll()
+        {
+            ClearSceneUIForm();
+            uiFormInfoDic.Clear();
         }
 
     }

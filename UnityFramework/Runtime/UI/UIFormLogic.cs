@@ -15,7 +15,7 @@ using UnityEngine.UI;
 
 namespace UnityFramework.Runtime
 {
-    public abstract class UIFormLogic : MonoBehaviour
+    public abstract class UIFormLogic : MonoBase
     {
         private bool m_Available = false;
         private bool m_Visible = false;

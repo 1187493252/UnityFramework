@@ -762,7 +762,7 @@ namespace Framework.UI
             if (uiFormInstanceObject == null)
             {
                 m_UIFormsBeingLoaded.Add(uiFormId, uiFormAssetName);
-                m_ResourceManager.LoadAsset(uiFormAssetName, null, priority, m_LoadAssetCallbacks, OpenUIFormInfo.Create(uiFormId, uiGroup, pauseCoveredUIForm, userData));
+                m_ResourceManager.LoadAsset(uiFormAssetName, priority, m_LoadAssetCallbacks, OpenUIFormInfo.Create(uiFormId, uiGroup, pauseCoveredUIForm, userData));
                 return;
             }
 

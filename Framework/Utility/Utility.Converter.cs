@@ -10,8 +10,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using UnityEngine;
-using UnityEngine.UI;
 
 namespace Framework
 {
@@ -55,7 +53,7 @@ namespace Framework
             {
                 if (ScreenDpi <= 0)
                 {
-                    throw new Exception("You must set screen DPI first.");
+                    throw new FrameworkException("You must set screen DPI first.");
                 }
 
                 return InchesToCentimeters * pixels / ScreenDpi;
@@ -70,7 +68,7 @@ namespace Framework
             {
                 if (ScreenDpi <= 0)
                 {
-                    throw new Exception("You must set screen DPI first.");
+                    throw new FrameworkException("You must set screen DPI first.");
                 }
 
                 return CentimetersToInches * centimeters * ScreenDpi;
@@ -85,7 +83,7 @@ namespace Framework
             {
                 if (ScreenDpi <= 0)
                 {
-                    throw new Exception("You must set screen DPI first.");
+                    throw new FrameworkException("You must set screen DPI first.");
                 }
 
                 return pixels / ScreenDpi;
@@ -100,7 +98,7 @@ namespace Framework
             {
                 if (ScreenDpi <= 0)
                 {
-                    throw new Exception("You must set screen DPI first.");
+                    throw new FrameworkException("You must set screen DPI first.");
                 }
 
                 return inches * ScreenDpi;
@@ -138,12 +136,12 @@ namespace Framework
             {
                 if (buffer == null)
                 {
-                    throw new Exception("Buffer is invalid.");
+                    throw new FrameworkException("Buffer is invalid.");
                 }
 
                 if (startIndex < 0 || startIndex + 1 > buffer.Length)
                 {
-                    throw new Exception("Start index is invalid.");
+                    throw new FrameworkException("Start index is invalid.");
                 }
 
                 buffer[startIndex] = value ? (byte)1 : (byte)0;
@@ -256,12 +254,12 @@ namespace Framework
             {
                 if (buffer == null)
                 {
-                    throw new Exception("Buffer is invalid.");
+                    throw new FrameworkException("Buffer is invalid.");
                 }
 
                 if (startIndex < 0 || startIndex + 2 > buffer.Length)
                 {
-                    throw new Exception("Start index is invalid.");
+                    throw new FrameworkException("Start index is invalid.");
                 }
 
                 fixed (byte* valueRef = buffer)
@@ -377,12 +375,12 @@ namespace Framework
             {
                 if (buffer == null)
                 {
-                    throw new Exception("Buffer is invalid.");
+                    throw new FrameworkException("Buffer is invalid.");
                 }
 
                 if (startIndex < 0 || startIndex + 4 > buffer.Length)
                 {
-                    throw new Exception("Start index is invalid.");
+                    throw new FrameworkException("Start index is invalid.");
                 }
 
                 fixed (byte* valueRef = buffer)
@@ -498,12 +496,12 @@ namespace Framework
             {
                 if (buffer == null)
                 {
-                    throw new Exception("Buffer is invalid.");
+                    throw new FrameworkException("Buffer is invalid.");
                 }
 
                 if (startIndex < 0 || startIndex + 8 > buffer.Length)
                 {
-                    throw new Exception("Start index is invalid.");
+                    throw new FrameworkException("Start index is invalid.");
                 }
 
                 fixed (byte* valueRef = buffer)
@@ -738,12 +736,12 @@ namespace Framework
             {
                 if (value == null)
                 {
-                    throw new Exception("Value is invalid.");
+                    throw new FrameworkException("Value is invalid.");
                 }
 
                 if (encoding == null)
                 {
-                    throw new Exception("Encoding is invalid.");
+                    throw new FrameworkException("Encoding is invalid.");
                 }
 
                 return encoding.GetBytes(value);
@@ -773,12 +771,12 @@ namespace Framework
             {
                 if (value == null)
                 {
-                    throw new Exception("Value is invalid.");
+                    throw new FrameworkException("Value is invalid.");
                 }
 
                 if (encoding == null)
                 {
-                    throw new Exception("Encoding is invalid.");
+                    throw new FrameworkException("Encoding is invalid.");
                 }
 
                 return encoding.GetBytes(value, 0, value.Length, buffer, startIndex);
@@ -804,12 +802,12 @@ namespace Framework
             {
                 if (value == null)
                 {
-                    throw new Exception("Value is invalid.");
+                    throw new FrameworkException("Value is invalid.");
                 }
 
                 if (encoding == null)
                 {
-                    throw new Exception("Encoding is invalid.");
+                    throw new FrameworkException("Encoding is invalid.");
                 }
 
                 return encoding.GetString(value);
@@ -839,12 +837,12 @@ namespace Framework
             {
                 if (value == null)
                 {
-                    throw new Exception("Value is invalid.");
+                    throw new FrameworkException("Value is invalid.");
                 }
 
                 if (encoding == null)
                 {
-                    throw new Exception("Encoding is invalid.");
+                    throw new FrameworkException("Encoding is invalid.");
                 }
 
                 return encoding.GetString(value, startIndex, length);

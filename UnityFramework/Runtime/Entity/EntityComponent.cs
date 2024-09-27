@@ -21,7 +21,16 @@ namespace UnityFramework.Runtime
     [DisallowMultipleComponent]
     public sealed partial class EntityComponent : UnityFrameworkComponent
     {
-
+        private Dictionary<int, EntityInfo> entityInfoDic = new Dictionary<int, EntityInfo> { };
+        private Dictionary<int, EntityBase> entityDicById = new Dictionary<int, EntityBase> { };
+        EntityHelper helper;
+        public int EntityInfoCout
+        {
+            get
+            {
+                return entityInfoDic.Count;
+            }
+        }
         //---------------
         private const int DefaultPriority = 0;
 
@@ -86,7 +95,7 @@ namespace UnityFramework.Runtime
             m_EntityManager = FrameworkEntry.GetModule<IEntityManager>();
             if (m_EntityManager == null)
             {
-                Log.Error("Entity manager is invalid.");
+                Log.Fatal("Entity manager is invalid.");
                 return;
             }
 
@@ -112,19 +121,25 @@ namespace UnityFramework.Runtime
             BaseComponent baseComponent = UnityFrameworkEntry.GetComponent<BaseComponent>();
             if (baseComponent == null)
             {
-                Log.Error("Base component is invalid.");
+                Log.Fatal("Base component is invalid.");
                 return;
             }
 
             m_EventComponent = UnityFrameworkEntry.GetComponent<EventComponent>();
             if (m_EventComponent == null)
             {
-                Log.Error("Event component is invalid.");
+                Log.Fatal("Event component is invalid.");
                 return;
             }
 
-
-            m_EntityManager.SetResourceManager(FrameworkEntry.GetModule<IResourceManager>());
+            if (baseComponent.EditorResourceMode)
+            {
+                m_EntityManager.SetResourceManager(baseComponent.EditorResourceHelper);
+            }
+            else
+            {
+                m_EntityManager.SetResourceManager(FrameworkEntry.GetModule<IResourceManager>());
+            }
 
             m_EntityManager.SetObjectPoolManager(FrameworkEntry.GetModule<IObjectPoolManager>());
 
@@ -382,7 +397,11 @@ namespace UnityFramework.Runtime
 
 
 
-
+        public void ShowEntity(int entityId, string entityGroupName)
+        {
+            string entityAssetName = entityInfoDic[entityId].Path;
+            ShowEntity(entityId, entityAssetName, entityGroupName, DefaultPriority, null);
+        }
 
 
 
@@ -1094,16 +1113,172 @@ namespace UnityFramework.Runtime
         }
 
 
+        public void Init()
+        {
+            ClearAll();
+            helper = GetComponent<EntityHelper>();
+            helper.Init();
+        }
+
+        public EntityBase ShowSceneEntity(int entityID)
+        {
+            EntityBase entityBase = GetSceneEntity(entityID);
+            if (entityBase)
+            {
+                entityBase.Show();
+            }
+            return entityBase;
+        }
+        public EntityBase ShowSceneEntity(string name)
+        {
+            EntityBase entityBase = GetSceneEntity(name);
+            if (entityBase)
+            {
+                entityBase.Show();
+            }
+            return entityBase;
+
+        }
+        public T ShowSceneEntity<T>(int entityID) where T : EntityBase
+        {
+            T t = (T)GetSceneEntity(entityID);
+            if (t != null)
+            {
+                t.Show();
+            }
+            return t;
+        }
+
+        public EntityBase HideSceneEntity(int entityID)
+        {
+            EntityBase entityBase = entityDicById[entityID];
+            if (entityDicById.TryGetValue(entityID, out entityBase))
+            {
+                entityBase.Hide();
+            }
+            else
+            {
+                Log.Info($"不存在实体:{entityID}");
+            }
+            return entityBase;
+        }
+
+        public void AddSceneEntity(EntityBase entityBase)
+        {
+            entityDicById.AddOrReplace(entityBase.Id, entityBase);
+        }
+        public void AddEntityInfo(int entityID, EntityInfo entityInfo)
+        {
+            if (entityInfoDic == null)
+            {
+                entityInfoDic = new Dictionary<int, EntityInfo>();
+            }
+            entityInfoDic.TryAdd(entityID, entityInfo);
+        }
+        /// <summary>
+        /// 移除Entity
+        /// </summary>
+        /// <param name="entityID"></param>
+        /// <param name="isDeleteEntity">是否删除Entity对象</param>
+        public void RemoveSceneEntity(int entityID, bool isDeleteEntity = false)
+        {
+            if (entityDicById.ContainsKey(entityID))
+            {
+                if (isDeleteEntity)
+                {
+                    Destroy(entityDicById[entityID]);
+                }
+                entityDicById.Remove(entityID);
+            }
+            else
+            {
+                Log.Info($"不存在实体:{entityID}");
+            }
+        }
+        /// <summary>
+        /// 移除Entity
+        /// </summary>
+        /// <param name="delList"></param>
+        /// <param name="isDeleteEntity">是否删除Entity对象</param>
+        public void RemoveSceneEntity(List<int> delList, bool isDeleteEntity = false)
+        {
+            foreach (var item in delList)
+            {
+                RemoveSceneEntity(item, isDeleteEntity);
+            }
+        }
+        /// <summary>
+        /// 移除所有Entity
+        /// </summary>
+        /// <param name="isDeleteEntity">是否删除Entity对象</param>
+        public void ClearAllSceneEntity(bool isDeleteEntity = false)
+        {
+            if (entityDicById == null || entityDicById.Count < 1)
+            {
+                return;
+            }
+            if (isDeleteEntity)
+            {
+                foreach (var item in entityDicById)
+                {
+                    Destroy(item.Value.gameObject);
+                }
+            }
+            entityDicById.Clear();
+        }
+
+        public EntityInfo GetEntityInfo(string name)
+        {
+            foreach (var item in entityInfoDic)
+            {
+                if (item.Value.EntityName == name)
+                {
+                    return item.Value;
+                }
+            }
+            return null;
+        }
 
 
-
-
-
-
-
-
-
-
+        public EntityBase GetSceneEntity(int entityID)
+        {
+            if (entityDicById == null)
+            {
+                entityDicById = new Dictionary<int, EntityBase>();
+            }
+            entityDicById.TryGetValue(entityID, out EntityBase entity);
+            if (entity == null)
+            {
+                Log.Error($"不存在实体:{entityID}");
+            }
+            return entity;
+        }
+        public EntityBase GetSceneEntity(string name)
+        {
+            if (entityDicById == null)
+            {
+                entityDicById = new Dictionary<int, EntityBase>();
+            }
+            EntityBase entityLogic = null;
+            foreach (var item in entityDicById)
+            {
+                if (item.Value.gameObject.name == name)
+                {
+                    entityLogic = item.Value;
+                    break;
+                }
+            }
+            if (entityLogic == null)
+            {
+                Log.Error($"不存在实体:{name}");
+            }
+            return entityLogic;
+        }
+        public void ClearAll()
+        {
+            ClearAllSceneEntity(true);
+            entityInfoDic.Clear();
+        }
     }
 
     public class EntityInfo

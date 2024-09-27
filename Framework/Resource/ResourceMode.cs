@@ -14,17 +14,24 @@ namespace Framework.Resource
     /// </summary>
     public enum ResourceMode : byte
     {
-        Unspecified,
+        /// <summary>
+        /// 未指定。
+        /// </summary>
+        Unspecified = 0,
 
-        EditorSimulateMode,
+        /// <summary>
+        /// 单机模式。
+        /// </summary>
+        Package,
 
+        /// <summary>
+        /// 预下载的可更新模式。
+        /// </summary>
+        Updatable,
 
-        OfflinePlayMode,
-
-
-        HostPlayMode,
-
-
-        WebPlayMode
+        /// <summary>
+        /// 使用时下载的可更新模式。
+        /// </summary>
+        UpdatableWhilePlaying
     }
 }

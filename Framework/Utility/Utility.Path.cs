@@ -61,7 +61,7 @@ namespace Framework
             {
                 if (string.IsNullOrEmpty(directoryName))
                 {
-                    throw new Exception("Directory name is invalid.");
+                    throw new FrameworkException("Directory name is invalid.");
                 }
 
                 try

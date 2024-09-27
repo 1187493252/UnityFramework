@@ -112,18 +112,18 @@ namespace Framework
 
                 if (code == null)
                 {
-                    throw new Exception("Code is invalid.");
+                    throw new FrameworkException("Code is invalid.");
                 }
 
                 int codeLength = code.Length;
                 if (codeLength <= 0)
                 {
-                    throw new Exception("Code length is invalid.");
+                    throw new FrameworkException("Code length is invalid.");
                 }
 
                 if (startIndex < 0 || length < 0 || startIndex + length > bytes.Length)
                 {
-                    throw new Exception("Start index or length is invalid.");
+                    throw new FrameworkException("Start index or length is invalid.");
                 }
 
                 int codeIndex = startIndex % codeLength;

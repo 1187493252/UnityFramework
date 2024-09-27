@@ -27,14 +27,14 @@ namespace UnityFramework.Runtime
                 m_BaseComponent = UnityFrameworkEntry.GetComponent<BaseComponent>();
                 if (m_BaseComponent == null)
                 {
-                    Log.Error("Base component is invalid.");
+                    Log.Fatal("Base component is invalid.");
                     return;
                 }
 
                 m_ResourceComponent = UnityFrameworkEntry.GetComponent<ResourceComponent>();
                 if (m_ResourceComponent == null)
                 {
-                    Log.Error("Resource component is invalid.");
+                    Log.Fatal("Resource component is invalid.");
                     return;
                 }
             }
@@ -51,6 +51,8 @@ namespace UnityFramework.Runtime
 #else
                     DrawItem("Game Identifier", Application.bundleIdentifier);
 #endif
+                    DrawItem(" Framework Version", Version.FrameworkVersion);
+                    DrawItem(" Version", Utility.Text.Format("{0} ({1})", Version.GameVersion, Version.InternalGameVersion.ToString()));
                     //  DrawItem("Resource Version", m_BaseComponent.EditorResourceMode ? "Unavailable in editor resource mode" : (string.IsNullOrEmpty(m_ResourceComponent.ApplicableGameVersion) ? "Unknown" : Utility.Text.Format("{0} ({1})", m_ResourceComponent.ApplicableGameVersion, m_ResourceComponent.InternalResourceVersion.ToString())));
                     DrawItem("Application Version", Application.version);
                     DrawItem("Unity Version", Application.unityVersion);

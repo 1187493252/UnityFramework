@@ -170,7 +170,7 @@ namespace UnityFramework.Runtime
                 isPause = true;
                 if (isShowLog)
                 {
-                    Debug.Log($"{Flag} :Timer暂停");
+                    Log.Info($"{Flag} :Timer暂停");
                 }
             }
         }
@@ -186,7 +186,7 @@ namespace UnityFramework.Runtime
                 isPause = false;
                 if (isShowLog)
                 {
-                    Debug.Log($"{Flag} :Timer恢复");
+                    Log.Info($"{Flag} :Timer恢复");
                 }
             }
         }
@@ -195,7 +195,7 @@ namespace UnityFramework.Runtime
         {
             if (isShowLog)
             {
-                Debug.Log($"{Flag} :计时开始");
+                Log.Info($"{Flag} :计时开始");
             }
         }
         /// <summary>
@@ -205,7 +205,7 @@ namespace UnityFramework.Runtime
         {
             if (isShowLog)
             {
-                Debug.Log($"{Flag} :Timer事件执行");
+                Log.Info($"{Flag} :Timer事件执行");
             }
             if (timerHandler != null)
             {
@@ -262,7 +262,7 @@ namespace UnityFramework.Runtime
             onDestroy = null;
             if (isShowLog)
             {
-                Debug.Log($"{Flag} :Timer删除");
+                Log.Info($"{Flag} :Timer删除");
             }
         }
 

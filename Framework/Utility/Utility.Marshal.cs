@@ -42,7 +42,7 @@ namespace Framework
             {
                 if (ensureSize < 0)
                 {
-                    throw new Exception("Ensure size is invalid.");
+                    throw new FrameworkException("Ensure size is invalid.");
                 }
 
                 if (s_CachedHGlobalPtr == IntPtr.Zero || s_CachedHGlobalSize < ensureSize)
@@ -90,7 +90,7 @@ namespace Framework
             {
                 if (structureSize < 0)
                 {
-                    throw new Exception("Structure size is invalid.");
+                    throw new FrameworkException("Structure size is invalid.");
                 }
 
                 EnsureCachedHGlobalSize(structureSize);
@@ -148,22 +148,22 @@ namespace Framework
             {
                 if (structureSize < 0)
                 {
-                    throw new Exception("Structure size is invalid.");
+                    throw new FrameworkException("Structure size is invalid.");
                 }
 
                 if (result == null)
                 {
-                    throw new Exception("Result is invalid.");
+                    throw new FrameworkException("Result is invalid.");
                 }
 
                 if (startIndex < 0)
                 {
-                    throw new Exception("Start index is invalid.");
+                    throw new FrameworkException("Start index is invalid.");
                 }
 
                 if (startIndex + structureSize > result.Length)
                 {
-                    throw new Exception("Result length is not enough.");
+                    throw new FrameworkException("Result length is not enough.");
                 }
 
                 EnsureCachedHGlobalSize(structureSize);
@@ -220,22 +220,22 @@ namespace Framework
             {
                 if (structureSize < 0)
                 {
-                    throw new Exception("Structure size is invalid.");
+                    throw new FrameworkException("Structure size is invalid.");
                 }
 
                 if (buffer == null)
                 {
-                    throw new Exception("Buffer is invalid.");
+                    throw new FrameworkException("Buffer is invalid.");
                 }
 
                 if (startIndex < 0)
                 {
-                    throw new Exception("Start index is invalid.");
+                    throw new FrameworkException("Start index is invalid.");
                 }
 
                 if (startIndex + structureSize > buffer.Length)
                 {
-                    throw new Exception("Buffer length is not enough.");
+                    throw new FrameworkException("Buffer length is not enough.");
                 }
 
                 EnsureCachedHGlobalSize(structureSize);

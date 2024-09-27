@@ -73,7 +73,7 @@ namespace Framework
             {
                 if (s_JsonHelper == null)
                 {
-                    throw new Exception("JSON helper is invalid.");
+                    throw new FrameworkException("JSON helper is invalid.");
                 }
 
                 try
@@ -82,12 +82,12 @@ namespace Framework
                 }
                 catch (Exception exception)
                 {
-                    if (exception is Exception)
+                    if (exception is FrameworkException)
                     {
                         throw;
                     }
 
-                    throw new Exception(Text.Format("Can not convert to JSON with exception '{0}'.", exception.ToString()), exception);
+                    throw new FrameworkException(Text.Format("Can not convert to JSON with exception '{0}'.", exception.ToString()), exception);
                 }
             }
 
@@ -101,7 +101,7 @@ namespace Framework
             {
                 if (s_JsonHelper == null)
                 {
-                    throw new Exception("JSON helper is invalid.");
+                    throw new FrameworkException("JSON helper is invalid.");
                 }
 
                 try
@@ -110,12 +110,12 @@ namespace Framework
                 }
                 catch (Exception exception)
                 {
-                    if (exception is Exception)
+                    if (exception is FrameworkException)
                     {
                         throw;
                     }
 
-                    throw new Exception(Text.Format("Can not convert to object with exception '{0}'.", exception.ToString()), exception);
+                    throw new FrameworkException(Text.Format("Can not convert to object with exception '{0}'.", exception.ToString()), exception);
                 }
             }
 
@@ -129,12 +129,12 @@ namespace Framework
             {
                 if (s_JsonHelper == null)
                 {
-                    throw new Exception("JSON helper is invalid.");
+                    throw new FrameworkException("JSON helper is invalid.");
                 }
 
                 if (objectType == null)
                 {
-                    throw new Exception("Object type is invalid.");
+                    throw new FrameworkException("Object type is invalid.");
                 }
 
                 try
@@ -143,12 +143,12 @@ namespace Framework
                 }
                 catch (Exception exception)
                 {
-                    if (exception is Exception)
+                    if (exception is FrameworkException)
                     {
                         throw;
                     }
 
-                    throw new Exception(Text.Format("Can not convert to object with exception '{0}'.", exception.ToString()), exception);
+                    throw new FrameworkException(Text.Format("Can not convert to object with exception '{0}'.", exception.ToString()), exception);
                 }
             }
         }

@@ -33,7 +33,7 @@ namespace Framework
             {
                 if (format == null)
                 {
-                    throw new Exception("Format is invalid.");
+                    throw new FrameworkException("Format is invalid.");
                 }
 
                 CheckCachedStringBuilder();
@@ -53,7 +53,7 @@ namespace Framework
             {
                 if (format == null)
                 {
-                    throw new Exception("Format is invalid.");
+                    throw new FrameworkException("Format is invalid.");
                 }
 
                 CheckCachedStringBuilder();
@@ -74,7 +74,7 @@ namespace Framework
             {
                 if (format == null)
                 {
-                    throw new Exception("Format is invalid.");
+                    throw new FrameworkException("Format is invalid.");
                 }
 
                 CheckCachedStringBuilder();
@@ -93,12 +93,12 @@ namespace Framework
             {
                 if (format == null)
                 {
-                    throw new Exception("Format is invalid.");
+                    throw new FrameworkException("Format is invalid.");
                 }
 
                 if (args == null)
                 {
-                    throw new Exception("Args is invalid.");
+                    throw new FrameworkException("Args is invalid.");
                 }
 
                 CheckCachedStringBuilder();

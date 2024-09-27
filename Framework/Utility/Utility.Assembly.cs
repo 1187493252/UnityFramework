@@ -59,7 +59,7 @@ namespace Framework
             {
                 if (results == null)
                 {
-                    throw new Exception("Results is invalid.");
+                    throw new FrameworkException("Results is invalid.");
                 }
 
                 results.Clear();
@@ -78,7 +78,7 @@ namespace Framework
             {
                 if (string.IsNullOrEmpty(typeName))
                 {
-                    throw new Exception("Type name is invalid.");
+                    throw new FrameworkException("Type name is invalid.");
                 }
 
                 Type type = null;

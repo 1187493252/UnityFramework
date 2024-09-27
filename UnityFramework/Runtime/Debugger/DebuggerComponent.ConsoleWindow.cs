@@ -226,7 +226,7 @@ namespace UnityFramework.Runtime
                 m_SettingComponent = UnityFrameworkEntry.GetComponent<SettingComponent>();
                 if (m_SettingComponent == null)
                 {
-                    Log.Error("Setting component is invalid.");
+                    Log.Fatal("Setting component is invalid.");
                     return;
                 }
 

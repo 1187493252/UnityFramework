@@ -26,6 +26,10 @@ namespace UnityFramework.Runtime
                     Debug.Log(Utility.Text.Format("<color=#FFFFFF>{0}</color>", message.ToString()));
                     break;
 
+                case FrameworkLogLevel.Info:
+                    Debug.Log(Utility.Text.Format("<color=#FFFFFF>{0}</color>", message.ToString()));
+                    break;
+
                 case FrameworkLogLevel.Warning:
                     Debug.LogWarning(Utility.Text.Format("<color=#FFC107>{0}</color>", message.ToString()));
                     break;
@@ -35,7 +39,7 @@ namespace UnityFramework.Runtime
                     break;
 
                 default:
-                    throw new System.Exception(message.ToString());
+                    throw new FrameworkException(message.ToString());
             }
         }
     }

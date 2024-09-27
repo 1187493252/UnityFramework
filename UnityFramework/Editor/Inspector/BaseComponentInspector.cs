@@ -21,18 +21,23 @@ namespace UnityFramework.Editor
         private static readonly float[] GameSpeed = new float[] { 0f, 0.01f, 0.1f, 0.25f, 0.5f, 1f, 1.5f, 2f, 4f, 8f };
         private static readonly string[] GameSpeedForDisplay = new string[] { "0x", "0.01x", "0.1x", "0.25x", "0.5x", "1x", "1.5x", "2x", "4x", "8x" };
 
+        private SerializedProperty m_EditorResourceMode = null;
         private SerializedProperty m_EditorLanguage = null;
+        private SerializedProperty m_VersionHelperTypeName = null;
         private SerializedProperty m_LogHelperTypeName = null;
+        private SerializedProperty m_CompressionHelperTypeName = null;
         private SerializedProperty m_JsonHelperTypeName = null;
         private SerializedProperty m_FrameRate = null;
         private SerializedProperty m_GameSpeed = null;
         private SerializedProperty m_RunInBackground = null;
         private SerializedProperty m_NeverSleep = null;
 
-
+        private string[] m_VersionHelperTypeNames = null;
+        private int m_VersionHelperTypeNameIndex = 0;
         private string[] m_LogHelperTypeNames = null;
         private int m_LogHelperTypeNameIndex = 0;
-
+        private string[] m_CompressionHelperTypeNames = null;
+        private int m_CompressionHelperTypeNameIndex = 0;
         private string[] m_JsonHelperTypeNames = null;
         private int m_JsonHelperTypeNameIndex = 0;
 
@@ -46,22 +51,25 @@ namespace UnityFramework.Editor
 
             EditorGUI.BeginDisabledGroup(EditorApplication.isPlayingOrWillChangePlaymode);
             {
-                //m_EditorResourceMode.boolValue = EditorGUILayout.BeginToggleGroup("Editor Resource Mode", m_EditorResourceMode.boolValue);
-                //{
-                //    EditorGUILayout.HelpBox("Editor resource mode option is only for editor mode. Game UnityFramework will use editor resource files, which you should validate first.", MessageType.Warning);
-                //    EditorGUILayout.PropertyField(m_EditorLanguage);
-                //    EditorGUILayout.HelpBox("Editor language option is only use for localization test in editor mode.", MessageType.Info);
-                //}
-                //EditorGUILayout.EndToggleGroup();
+                m_EditorResourceMode.boolValue = EditorGUILayout.BeginToggleGroup("Editor Resource Mode", m_EditorResourceMode.boolValue);
+                {
+                    EditorGUILayout.HelpBox("Editor resource mode option is only for editor mode. Game UnityFramework will use editor resource files, which you should validate first.", MessageType.Warning);
+                    EditorGUILayout.PropertyField(m_EditorLanguage);
+                    EditorGUILayout.HelpBox("Editor language option is only use for localization test in editor mode.", MessageType.Info);
+                }
+                EditorGUILayout.EndToggleGroup();
 
-                EditorGUILayout.PropertyField(m_EditorLanguage);
-                EditorGUILayout.HelpBox("Editor language option is only use for localization test in editor mode.", MessageType.Info);
 
                 EditorGUILayout.BeginVertical("box");
                 {
                     EditorGUILayout.LabelField("Global Helpers", EditorStyles.boldLabel);
 
-
+                    int versionHelperSelectedIndex = EditorGUILayout.Popup("Version Helper", m_VersionHelperTypeNameIndex, m_VersionHelperTypeNames);
+                    if (versionHelperSelectedIndex != m_VersionHelperTypeNameIndex)
+                    {
+                        m_VersionHelperTypeNameIndex = versionHelperSelectedIndex;
+                        m_VersionHelperTypeName.stringValue = versionHelperSelectedIndex <= 0 ? null : m_VersionHelperTypeNames[versionHelperSelectedIndex];
+                    }
 
                     int logHelperSelectedIndex = EditorGUILayout.Popup("Log Helper", m_LogHelperTypeNameIndex, m_LogHelperTypeNames);
                     if (logHelperSelectedIndex != m_LogHelperTypeNameIndex)
@@ -70,7 +78,12 @@ namespace UnityFramework.Editor
                         m_LogHelperTypeName.stringValue = logHelperSelectedIndex <= 0 ? null : m_LogHelperTypeNames[logHelperSelectedIndex];
                     }
 
-
+                    int compressionHelperSelectedIndex = EditorGUILayout.Popup("Compression Helper", m_CompressionHelperTypeNameIndex, m_CompressionHelperTypeNames);
+                    if (compressionHelperSelectedIndex != m_CompressionHelperTypeNameIndex)
+                    {
+                        m_CompressionHelperTypeNameIndex = compressionHelperSelectedIndex;
+                        m_CompressionHelperTypeName.stringValue = compressionHelperSelectedIndex <= 0 ? null : m_CompressionHelperTypeNames[compressionHelperSelectedIndex];
+                    }
 
                     int jsonHelperSelectedIndex = EditorGUILayout.Popup("JSON Helper", m_JsonHelperTypeNameIndex, m_JsonHelperTypeNames);
                     if (jsonHelperSelectedIndex != m_JsonHelperTypeNameIndex)
@@ -157,12 +170,14 @@ namespace UnityFramework.Editor
 
         private void OnEnable()
         {
-            //   m_EditorResourceMode = serializedObject.FindProperty("m_EditorResourceMode");
+            m_EditorResourceMode = serializedObject.FindProperty("m_EditorResourceMode");
 
 
 
             m_EditorLanguage = serializedObject.FindProperty("m_EditorLanguage");
+            m_VersionHelperTypeName = serializedObject.FindProperty("m_VersionHelperTypeName");
             m_LogHelperTypeName = serializedObject.FindProperty("m_LogHelperTypeName");
+            m_CompressionHelperTypeName = serializedObject.FindProperty("m_CompressionHelperTypeName");
             m_JsonHelperTypeName = serializedObject.FindProperty("m_JsonHelperTypeName");
             m_FrameRate = serializedObject.FindProperty("m_FrameRate");
             m_GameSpeed = serializedObject.FindProperty("m_GameSpeed");
@@ -174,6 +189,23 @@ namespace UnityFramework.Editor
 
         private void RefreshTypeNames()
         {
+            List<string> versionHelperTypeNames = new List<string>
+            {
+                NoneOptionName
+            };
+
+            //	versionHelperTypeNames.AddRange(Type.GetRuntimeTypeNames(typeof(Version.IVersionHelper)));
+            m_VersionHelperTypeNames = versionHelperTypeNames.ToArray();
+            m_VersionHelperTypeNameIndex = 0;
+            if (!string.IsNullOrEmpty(m_VersionHelperTypeName.stringValue))
+            {
+                m_VersionHelperTypeNameIndex = versionHelperTypeNames.IndexOf(m_VersionHelperTypeName.stringValue);
+                if (m_VersionHelperTypeNameIndex <= 0)
+                {
+                    m_VersionHelperTypeNameIndex = 0;
+                    m_VersionHelperTypeName.stringValue = null;
+                }
+            }
 
             List<string> logHelperTypeNames = new List<string>
             {
@@ -193,9 +225,23 @@ namespace UnityFramework.Editor
                 }
             }
 
+            List<string> compressionHelperTypeNames = new List<string>
+            {
+                NoneOptionName
+            };
 
-
-
+            //	compressionHelperTypeNames.AddRange(Type.GetRuntimeTypeNames(typeof(Utility.Compression.ICompressionHelper)));
+            m_CompressionHelperTypeNames = compressionHelperTypeNames.ToArray();
+            m_CompressionHelperTypeNameIndex = 0;
+            if (!string.IsNullOrEmpty(m_CompressionHelperTypeName.stringValue))
+            {
+                m_CompressionHelperTypeNameIndex = compressionHelperTypeNames.IndexOf(m_CompressionHelperTypeName.stringValue);
+                if (m_CompressionHelperTypeNameIndex <= 0)
+                {
+                    m_CompressionHelperTypeNameIndex = 0;
+                    m_CompressionHelperTypeName.stringValue = null;
+                }
+            }
 
             List<string> jsonHelperTypeNames = new List<string>
             {

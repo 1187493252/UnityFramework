@@ -69,7 +69,7 @@ namespace UnityFramework.Runtime
             m_ResourceComponent = UnityFrameworkEntry.GetComponent<ResourceComponent>();
             if (m_ResourceComponent == null)
             {
-                Log.Error("Resource component is invalid.");
+                Log.Fatal("Resource component is invalid.");
                 return;
             }
         }

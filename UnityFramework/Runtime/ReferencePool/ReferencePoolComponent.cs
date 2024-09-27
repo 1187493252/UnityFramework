@@ -29,7 +29,7 @@ namespace UnityFramework.Runtime
                 ReferencePool.EnableStrictCheck = value;
                 if (value)
                 {
-                    Log.Debug("Strict checking is enabled for the Reference Pool. It will drastically affect the performance.");
+                    Log.Info("Strict checking is enabled for the Reference Pool. It will drastically affect the performance.");
                 }
             }
         }

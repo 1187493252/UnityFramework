@@ -48,7 +48,7 @@ namespace UnityFramework.Runtime
             m_SettingManager = FrameworkEntry.GetModule<ISettingManager>();
             if (m_SettingManager == null)
             {
-                Log.Error("Setting manager is invalid.");
+                Log.Fatal("Setting manager is invalid.");
                 return;
             }
 

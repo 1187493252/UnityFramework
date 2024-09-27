@@ -36,14 +36,14 @@ namespace UnityFramework.Runtime
                 m_DebuggerComponent = UnityFrameworkEntry.GetComponent<DebuggerComponent>();
                 if (m_DebuggerComponent == null)
                 {
-                    Log.Error("Debugger component is invalid.");
+                    Log.Fatal("Debugger component is invalid.");
                     return;
                 }
 
                 m_SettingComponent = UnityFrameworkEntry.GetComponent<SettingComponent>();
                 if (m_SettingComponent == null)
                 {
-                    Log.Error("Setting component is invalid.");
+                    Log.Fatal("Setting component is invalid.");
                     return;
                 }
 
