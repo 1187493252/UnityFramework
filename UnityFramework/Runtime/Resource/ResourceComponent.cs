@@ -11,6 +11,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace UnityFramework.Runtime
@@ -88,8 +89,6 @@ namespace UnityFramework.Runtime
         [SerializeField]
         private string m_LoadResourceAgentHelperTypeName = "UnityFramework.Runtime.DefaultLoadResourceAgentHelper";
 
-        //  [SerializeField]
-        //  private LoadResourceAgentHelperBase m_CustomLoadResourceAgentHelper = null;
 
         [SerializeField]
         private int m_LoadResourceAgentHelperCount = 3;
@@ -916,4 +915,8 @@ namespace UnityFramework.Runtime
             m_EventComponent.Fire(this, ResourceUpdateAllCompleteEventArgs.Create(e));
         }
     }
+
+
+
+
 }

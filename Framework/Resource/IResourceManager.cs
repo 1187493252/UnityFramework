@@ -127,11 +127,7 @@ namespace Framework.Resource
         /// <param name="resourceHelper">资源辅助器。</param>
         void SetResourceHelper(IResourceHelper resourceHelper);
 
-        /// <summary>
-        /// 增加加载资源代理辅助器。
-        /// </summary>
-        /// <param name="loadResourceAgentHelper">要增加的加载资源代理辅助器。</param>
-        void AddLoadResourceAgentHelper(ILoadResourceAgentHelper loadResourceAgentHelper);
+
 
         /// <summary>
         /// 使用单机模式并初始化资源。

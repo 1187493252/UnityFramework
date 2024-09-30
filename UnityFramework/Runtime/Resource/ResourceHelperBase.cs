@@ -37,5 +37,9 @@ namespace UnityFramework.Runtime
         /// </summary>
         /// <param name="objectToRelease">要释放的资源。</param>
         public abstract void Release(object objectToRelease);
+        public abstract void LoadAsset(string assetName, Type assetType, int priority, LoadAssetCallbacks loadAssetCallbacks, object userData);
+        public abstract void UnloadAsset(object asset);
+        public abstract void LoadScene(string sceneAssetName, int priority, LoadSceneCallbacks loadSceneCallbacks, object userData);
+        public abstract void Shutdown();
     }
 }

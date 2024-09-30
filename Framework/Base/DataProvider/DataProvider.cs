@@ -152,7 +152,7 @@ namespace Framework
         /// <param name="dataAssetName">内容资源名称。</param>
         public void ReadData(string dataAssetName)
         {
-            ReadData(dataAssetName, Constant.DefaultPriority, null);
+            ReadData(dataAssetName, Framework.Resource.Constant.DefaultPriority, null);
         }
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace Framework
         /// <param name="userData">用户自定义数据。</param>
         public void ReadData(string dataAssetName, object userData)
         {
-            ReadData(dataAssetName, Constant.DefaultPriority, userData);
+            ReadData(dataAssetName, Framework.Resource.Constant.DefaultPriority, userData);
         }
 
         /// <summary>

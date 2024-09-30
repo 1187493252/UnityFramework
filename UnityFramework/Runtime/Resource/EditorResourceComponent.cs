@@ -29,7 +29,7 @@ namespace UnityFramework.Runtime
         private bool m_EnableCachedAssets = true;
 
         [SerializeField]
-        private int m_LoadAssetCountPerFrame = 1;
+        private int m_LoadAssetCountPerFrame = 100;
 
         [SerializeField]
         private float m_MinLoadAssetRandomDelaySeconds = 0f;
@@ -362,14 +362,7 @@ namespace UnityFramework.Runtime
             throw new NotSupportedException("SetResourceHelper");
         }
 
-        /// <summary>
-        /// 增加加载资源代理辅助器。
-        /// </summary>
-        /// <param name="loadResourceAgentHelper">要增加的加载资源代理辅助器。</param>
-        public void AddLoadResourceAgentHelper(ILoadResourceAgentHelper loadResourceAgentHelper)
-        {
-            throw new NotSupportedException("AddLoadResourceAgentHelper");
-        }
+
 
         /// <summary>
         /// 使用单机模式并初始化资源。
@@ -520,25 +513,6 @@ namespace UnityFramework.Runtime
                 return;
             }
 
-            //if (!assetName.StartsWith("Assets/", StringComparison.Ordinal))
-            //{
-            //    if (loadAssetCallbacks.LoadAssetFailureCallback != null)
-            //    {
-            //        loadAssetCallbacks.LoadAssetFailureCallback(assetName, LoadResourceStatus.NotExist, Utility.Text.Format("Asset name '{0}' is invalid.", assetName), userData);
-            //    }
-
-            //    return;
-            //}
-
-            //if (!HasFile(assetName))
-            //{
-            //    if (loadAssetCallbacks.LoadAssetFailureCallback != null)
-            //    {
-            //        loadAssetCallbacks.LoadAssetFailureCallback(assetName, LoadResourceStatus.NotExist, Utility.Text.Format("Asset '{0}' is not exist.", assetName), userData);
-            //    }
-
-            //    return;
-            //}
 
             m_LoadAssetInfos.AddLast(new LoadAssetInfo(assetName, assetType, priority, DateTime.UtcNow, m_MinLoadAssetRandomDelaySeconds + (float)Utility.Random.GetRandomDouble() * (m_MaxLoadAssetRandomDelaySeconds - m_MinLoadAssetRandomDelaySeconds), loadAssetCallbacks, userData));
         }
@@ -611,25 +585,7 @@ namespace UnityFramework.Runtime
                 return;
             }
 
-            //if (!sceneAssetName.StartsWith("Assets/", StringComparison.Ordinal) || !sceneAssetName.EndsWith(".unity", StringComparison.Ordinal))
-            //{
-            //    if (loadSceneCallbacks.LoadSceneFailureCallback != null)
-            //    {
-            //        loadSceneCallbacks.LoadSceneFailureCallback(sceneAssetName, LoadResourceStatus.NotExist, Utility.Text.Format("Scene asset name '{0}' is invalid.", sceneAssetName), userData);
-            //    }
 
-            //    return;
-            //}
-
-            //if (!HasFile(sceneAssetName))
-            //{
-            //    if (loadSceneCallbacks.LoadSceneFailureCallback != null)
-            //    {
-            //        loadSceneCallbacks.LoadSceneFailureCallback(sceneAssetName, LoadResourceStatus.NotExist, Utility.Text.Format("Scene '{0}' is not exist.", sceneAssetName), userData);
-            //    }
-
-            //    return;
-            //}
 
 #if UNITY_5_5_OR_NEWER
             AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(sceneAssetName, LoadSceneMode.Additive);
@@ -668,23 +624,13 @@ namespace UnityFramework.Runtime
                 return;
             }
 
-            //if (!sceneAssetName.StartsWith("Assets/", StringComparison.Ordinal) || !sceneAssetName.EndsWith(".unity", StringComparison.Ordinal))
-            //{
-            //    Log.Error("Scene asset name '{0}' is invalid.", sceneAssetName);
-            //    return;
-            //}
+
 
             if (unloadSceneCallbacks == null)
             {
                 Log.Error("Unload scene callbacks is invalid.");
                 return;
             }
-
-            //if (!HasFile(sceneAssetName))
-            //{
-            //    Log.Error("Scene '{0}' is not exist.", sceneAssetName);
-            //    return;
-            //}
 
 #if UNITY_5_5_OR_NEWER
             AsyncOperation asyncOperation = SceneManager.UnloadSceneAsync(sceneAssetName);
@@ -720,10 +666,7 @@ namespace UnityFramework.Runtime
         /// <remarks>此方法仅适用于二进制资源存储在磁盘（而非文件系统）中的情况。若二进制资源存储在文件系统中时，返回值将始终为空。</remarks>
         public string GetBinaryPath(string binaryAssetName)
         {
-            if (!HasFile(binaryAssetName))
-            {
-                return null;
-            }
+
 
             return Application.dataPath.Substring(0, Application.dataPath.Length - AssetsStringLength) + binaryAssetName;
         }
@@ -972,61 +915,7 @@ namespace UnityFramework.Runtime
         }
 
 
-        private bool HasFile(string assetName)
-        {
-            if (string.IsNullOrEmpty(assetName))
-            {
-                return false;
-            }
 
-            if (HasCachedAsset(assetName))
-            {
-                return true;
-            }
-
-            string assetFullName = Application.dataPath.Substring(0, Application.dataPath.Length - AssetsStringLength) + assetName;
-            if (string.IsNullOrEmpty(assetFullName))
-            {
-                return false;
-            }
-
-            string[] splitedAssetFullName = assetFullName.Split('/');
-            string currentPath = Path.GetPathRoot(assetFullName);
-            for (int i = 1; i < splitedAssetFullName.Length - 1; i++)
-            {
-                string[] directoryNames = Directory.GetDirectories(currentPath, splitedAssetFullName[i]);
-                if (directoryNames.Length != 1)
-                {
-                    return false;
-                }
-
-                currentPath = directoryNames[0];
-            }
-
-            string[] fileNames = Directory.GetFiles(currentPath, splitedAssetFullName[splitedAssetFullName.Length - 1]);
-            if (fileNames.Length != 1)
-            {
-                return false;
-            }
-
-            string fileFullName = Utility.Path.GetRegularPath(fileNames[0]);
-            if (fileFullName == null)
-            {
-                return false;
-            }
-
-            if (assetFullName != fileFullName)
-            {
-                if (assetFullName.ToLowerInvariant() == fileFullName.ToLowerInvariant())
-                {
-                    Log.Warning("The real path of the specific asset '{0}' is '{1}'. Check the case of letters in the path.", assetName, "Assets" + fileFullName.Substring(Application.dataPath.Length));
-                }
-
-                return false;
-            }
-
-            return true;
-        }
 
         private bool HasCachedAsset(string assetName)
         {
@@ -1063,9 +952,6 @@ namespace UnityFramework.Runtime
 
             return null;
         }
-
-
-
 
 
         [StructLayout(LayoutKind.Auto)]
@@ -1264,5 +1150,8 @@ namespace UnityFramework.Runtime
                 }
             }
         }
+
+
     }
+
 }

@@ -638,7 +638,7 @@ namespace Framework.UI
         /// <param name="uiGroupName">界面组名称。</param>
         public void OpenUIForm(int uiFormId, string uiFormAssetName, string uiGroupName)
         {
-            OpenUIForm(uiFormId, uiFormAssetName, uiGroupName, Constant.DefaultPriority, false, null);
+            OpenUIForm(uiFormId, uiFormAssetName, uiGroupName, Framework.Resource.Constant.DefaultPriority, false, null);
         }
 
         /// <summary>
@@ -660,7 +660,7 @@ namespace Framework.UI
         /// <param name="pauseCoveredUIForm">是否暂停被覆盖的界面。</param>
         public void OpenUIForm(int uiFormId, string uiFormAssetName, string uiGroupName, bool pauseCoveredUIForm)
         {
-            OpenUIForm(uiFormId, uiFormAssetName, uiGroupName, Constant.DefaultPriority, pauseCoveredUIForm, null);
+            OpenUIForm(uiFormId, uiFormAssetName, uiGroupName, Framework.Resource.Constant.DefaultPriority, pauseCoveredUIForm, null);
         }
 
         /// <summary>
@@ -671,7 +671,7 @@ namespace Framework.UI
         /// <param name="userData">用户自定义数据。</param>
         public void OpenUIForm(int uiFormId, string uiFormAssetName, string uiGroupName, object userData)
         {
-            OpenUIForm(uiFormId, uiFormAssetName, uiGroupName, Constant.DefaultPriority, false, userData);
+            OpenUIForm(uiFormId, uiFormAssetName, uiGroupName, Framework.Resource.Constant.DefaultPriority, false, userData);
         }
 
         /// <summary>
@@ -707,7 +707,7 @@ namespace Framework.UI
         /// <param name="userData">用户自定义数据。</param>
         public void OpenUIForm(int uiFormId, string uiFormAssetName, string uiGroupName, bool pauseCoveredUIForm, object userData)
         {
-            OpenUIForm(uiFormId, uiFormAssetName, uiGroupName, Constant.DefaultPriority, pauseCoveredUIForm, userData);
+            OpenUIForm(uiFormId, uiFormAssetName, uiGroupName, Framework.Resource.Constant.DefaultPriority, pauseCoveredUIForm, userData);
         }
 
         /// <summary>

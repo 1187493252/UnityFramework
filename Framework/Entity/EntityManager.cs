@@ -572,7 +572,7 @@ namespace Framework.Entity
         /// <param name="entityGroupName">实体组名称。</param>
         public void ShowEntity(int entityId, string entityAssetName, string entityGroupName)
         {
-            ShowEntity(entityId, entityAssetName, entityGroupName, Constant.DefaultPriority, null);
+            ShowEntity(entityId, entityAssetName, entityGroupName, Framework.Resource.Constant.DefaultPriority, null);
         }
 
         /// <summary>
@@ -596,7 +596,7 @@ namespace Framework.Entity
         /// <param name="userData">用户自定义数据。</param>
         public void ShowEntity(int entityId, string entityAssetName, string entityGroupName, object userData)
         {
-            ShowEntity(entityId, entityAssetName, entityGroupName, Constant.DefaultPriority, userData);
+            ShowEntity(entityId, entityAssetName, entityGroupName, Framework.Resource.Constant.DefaultPriority, userData);
         }
 
         /// <summary>
