@@ -1,0 +1,19 @@
+{
+  "name": "com.sc.unityframework",
+  "version": "1.0.0",
+  "displayName": "SC.UnityFramework",
+  "description": "",
+  "documentationUrl": "",
+  "dependencies": {},
+   "samples": [
+    {
+      "displayName": "YooAssetDemo",
+      "description": "",
+      "path": "Samples~/YooAssetDemo"
+    }
+  ],
+  "relatedPackages": {},
+  "dependencies": {
+	  "com.unity.textmeshpro": "3.0.0"	  
+  }
+}
