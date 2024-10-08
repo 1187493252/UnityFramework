@@ -4,16 +4,81 @@
   "displayName": "SC.UnityFramework",
   "description": "",
   "documentationUrl": "",
-  "dependencies": {},
-   "samples": [
+  "relatedPackages": {},
+  "dependencies": {
+    "com.unity.textmeshpro": "3.0.0",
+    "com.unity.inputsystem": "1.7.0"
+  },
+  "samples": [
+    {
+      "displayName": "AddressableDemo",
+      "description": "",
+      "path": "Samples~/AddressableDemo"
+    },
+    {
+      "displayName": "ColorPalette",
+      "description": "颜色选择器,调色盘",
+      "path": "Samples~/ColorPalette"
+    },
+    {
+      "displayName": "EmojiText",
+      "description": "图文富文本",
+      "path": "Samples~/EmojiText"
+    },
+    {
+      "displayName": "FPS",
+      "description": "第一人称控制器",
+      "path": "Samples~/FPS"
+    },
+    {
+      "displayName": "HybridCLRDemo",
+      "description": "",
+      "path": "Samples~/HybridCLRDemo"
+    },
+    {
+      "displayName": "KeyBoard",
+      "description": "键盘",
+      "path": "Samples~/KeyBoard"
+    },
+    {
+      "displayName": "LinkSpriteText",
+      "description": "图文富文本",
+      "path": "Samples~/LinkSpriteText"
+    },
+    {
+      "displayName": "Logo",
+      "description": "中锐Logo",
+      "path": "Samples~/Logo"
+    },
+    {
+      "displayName": "ProtobufDemo",
+      "description": "",
+      "path": "Samples~/ProtobufDemo"
+    },
+    {
+      "displayName": "ScrollView",
+      "description": "滑动列表",
+      "path": "Samples~/ScrollView"
+    },
+    {
+      "displayName": "Sine",
+      "description": "",
+      "path": "Samples~/Sine"
+    },
+    {
+      "displayName": "TextMeshProDemo",
+      "description": "",
+      "path": "Samples~/TextMeshProDemo"
+    },
+    {
+      "displayName": "VideoPlay",
+      "description": "Unity官方播放器",
+      "path": "Samples~/VideoPlay"
+    },
     {
       "displayName": "YooAssetDemo",
       "description": "",
       "path": "Samples~/YooAssetDemo"
     }
-  ],
-  "relatedPackages": {},
-  "dependencies": {
-	  "com.unity.textmeshpro": "3.0.0"	  
-  }
+  ]
 }

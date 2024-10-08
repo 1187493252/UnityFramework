@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Default Local Group
+  m_EditorClassIdentifier: 
+  m_GroupName: Default Local Group
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 0e2b73fde60f9b4478b0b55b3dfa1411
+  m_SerializeEntries:
+  - m_GUID: 848a209f8b2011045bb5510bcfbf017b
+    m_Address: Assets/Framework/Framework/Prefabs/UnityFramework.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - default
+  - m_GUID: 84f066bccdc6f9a4b8d26e686c5597ff
+    m_Address: Assets/Framework/Framework/VR/VRIF/Prefabs/EventSystem.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - default
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: f33564cc50c2d6e4db77a5fcf3681aa1, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 27e4c09b499d9b44f922e995dd27b070, type: 2}
+    - {fileID: 11400000, guid: 8d9ceba7bce0e0c4e9cf3ebf32943ecf, type: 2}

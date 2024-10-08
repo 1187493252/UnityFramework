@@ -1,0 +1,27 @@
+//Protobuf版本
+syntax="proto3";
+//包名,类似C#中的命名空间
+package person;
+
+//一条message,类似C#中的类
+message OnePerson
+{
+	//[定义声明][数据类型][字段名]=[编号][默认值]
+	//[定义声明]:required:必填字段;optional:可选字段;repeated:可重复字段 proto3移除了required
+	//[数据类型]:字段的类型,与C#稍有不同,更多类型及其说明请参考官网文档.
+	//[编    号]:唯一标识字段,不可重复,编号1-15使用1个字节进行编码,编号16之后使用两个字节进行编码,推荐将1-15预留给常用的字段,此外编号19000-19999为官方预留,不能使用.
+	optional string name = 1;
+	optional int64 idNumber = 2;
+	optional genders gender = 3;
+	optional string profession = 101;
+}
+//枚举类型
+enum genders
+{	
+	//该参数为true表示允许字段拥有别名,别名使用相同编号.
+	option allow_alias = true;
+	man = 0;
+	boy = 0;
+	woman = 1;
+	girl = 1;
+}

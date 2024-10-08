@@ -33,6 +33,7 @@ public class SceneHome : MonoBehaviour
 
     private void OnDestroy()
     {
+
         if (_windowHandle != null)
         {
             _windowHandle.Release();

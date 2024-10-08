@@ -27,6 +27,8 @@ public class UIHomeWindow : UIFormLogic
     private void OnClickLoginBtn()
     {
         SceneEventDefine.ChangeToBattleScene.SendEventMessage();
+        ComponentEntry.UI.CloseUIForm(this.UIForm);
+
     }
 
 }
