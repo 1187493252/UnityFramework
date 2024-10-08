@@ -1,0 +1,3 @@
+打包前去除掉项目里用mono构建的内容或者插件
+
+WebGL必须使用全局安装，即 HybridCLRSettings中useGlobal为true。 切记每次Generate/xxx之后必须重新将{project}/HybridCLRData/LocalIl2CppData-{platform}/il2cpp/libil2cpp 目录复制到Editor安装目录，再打包。否则有可能会出现 Scripting Missing或者桥接函数缺失之类的错误。
