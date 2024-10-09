@@ -32,4 +32,8 @@ cp -r "$SOURCE_FOLDER"/. "$TARGET_FOLDER"/
 
 git add "$TARGET_FOLDER"
 
+#提交信息（可选）
 
+#COMMIT_MESSAGE="Auto-update files in target folder"
+
+#git commit -m "$COMMIT_MESSAGE" -- "$TARGET_FOLDER"
