@@ -75,7 +75,7 @@ namespace UnityFramework.Runtime
         /// </summary>
         public override void Show()
         {
-            OnShow(this);
+            base.Show();
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace UnityFramework.Runtime
         /// <param name="userData"></param>
         public override void Hide(bool isDestroy = false)
         {
-            OnHide(isDestroy, this);
+            base.Hide(isDestroy);
         }
 
         /// <summary>
