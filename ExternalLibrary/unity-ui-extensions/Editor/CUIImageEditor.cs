@@ -68,7 +68,14 @@ namespace UnityEngine.UI.Extensions
 
                 Handles.color = Color.gray;
                 EditorGUI.BeginChangeCheck();
-                var fmh_71_107_638622568313728458 = script.transform.rotation; Vector3 newCornerPos = Handles.FreeMoveHandle(script.transform.TransformPoint(cornerPos), HandleUtility.GetHandleSize(script.transform.TransformPoint(cornerPos)) / 7, Vector3.one, Handles.SphereHandleCap);
+#if UNITY_2022_3_OR_NEWER
+                           var fmh_71_107_638622568313728458 = script.transform.rotation; Vector3 newCornerPos = Handles.FreeMoveHandle(script.transform.TransformPoint(cornerPos), HandleUtility.GetHandleSize(script.transform.TransformPoint(cornerPos)) / 7, Vector3.one, Handles.SphereHandleCap);
+#else
+                var fmh_71_107_638622568313728458 = script.transform.rotation; Vector3 newCornerPos = Handles.FreeMoveHandle(script.transform.TransformPoint(cornerPos), Quaternion.identity, HandleUtility.GetHandleSize(script.transform.TransformPoint(cornerPos)) / 7, Vector3.one, Handles.SphereHandleCap);
+
+#endif
+
+
                 Handles.Label(newCornerPos, string.Format("Corner Mover"));
 
                 newCornerPos = script.transform.InverseTransformPoint(newCornerPos);
