@@ -11,6 +11,11 @@
   },
   "samples": [
     {
+      "displayName": "GameMain",
+      "description": "",
+      "path": "Samples~/GameMain"
+    },
+    {
       "displayName": "AddressableDemo",
       "description": "",
       "path": "Samples~/AddressableDemo"
