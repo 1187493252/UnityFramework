@@ -298,6 +298,10 @@ PrefabInstance:
       value: Config
       objectReference: {fileID: 0}
     - target: {fileID: 3443161207624890340, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
+      propertyPath: AudioLoadMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3443161207624890340, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: ConfigLoadMode
       value: 1
       objectReference: {fileID: 0}
@@ -315,7 +319,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3481953813128123157, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: m_ResourceHelperTypeName
-      value: 
+      value: UnityFramework.Runtime.DefaultResourceHelper
       objectReference: {fileID: 0}
     - target: {fileID: 4484336523290549285, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: m_LogHelperTypeName
@@ -403,7 +407,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7583830411263867369, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: m_EntityHelperTypeName
-      value: 
+      value: UnityFramework.Runtime.DefaultEntityHelper
       objectReference: {fileID: 0}
     - target: {fileID: 7583830411263867369, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: m_EntityGroups.Array.size
@@ -411,7 +415,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7583830411263867369, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: m_EntityGroupHelperTypeName
-      value: 
+      value: UnityFramework.Runtime.DefaultEntityGroupHelper
       objectReference: {fileID: 0}
     - target: {fileID: 7583830411263867369, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: m_EnableShowEntityUpdateEvent
