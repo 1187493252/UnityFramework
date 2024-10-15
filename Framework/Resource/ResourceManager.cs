@@ -18,7 +18,6 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityFramework.Runtime;
 
 namespace Framework.Resource
 {
@@ -229,8 +228,7 @@ namespace Framework.Resource
         {
             if (string.IsNullOrEmpty(readOnlyPath))
             {
-                Log.Error("Read-only path is invalid.");
-                return;
+                throw new FrameworkException("Read-only path is invalid.");
             }
 
             m_ReadOnlyPath = readOnlyPath;
@@ -244,8 +242,8 @@ namespace Framework.Resource
         {
             if (string.IsNullOrEmpty(readWritePath))
             {
-                Log.Error("Read-write path is invalid.");
-                return;
+                throw new FrameworkException("Read-write path is invalid.");
+
             }
 
             m_ReadWritePath = readWritePath;
@@ -406,8 +404,8 @@ namespace Framework.Resource
         {
             if (loadAssetCallbacks == null)
             {
-                Log.Error("Load asset callbacks is invalid.");
-                return;
+                throw new FrameworkException("Load asset callbacks is invalid.");
+
             }
 
             if (string.IsNullOrEmpty(assetName))
@@ -478,8 +476,8 @@ namespace Framework.Resource
         {
             if (loadSceneCallbacks == null)
             {
-                Log.Error("Load scene callbacks is invalid.");
-                return;
+                throw new FrameworkException("Load scene callbacks is invalid.");
+
             }
 
             if (string.IsNullOrEmpty(sceneAssetName))
@@ -520,15 +518,15 @@ namespace Framework.Resource
         {
             if (string.IsNullOrEmpty(sceneAssetName))
             {
-                Log.Error("Scene asset name is invalid.");
+                throw new FrameworkException("Scene asset name is invalid.");
                 return;
             }
 
 
             if (unloadSceneCallbacks == null)
             {
-                Log.Error("Unload scene callbacks is invalid.");
-                return;
+                throw new FrameworkException("Unload scene callbacks is invalid.");
+
             }
 
 
@@ -599,8 +597,8 @@ namespace Framework.Resource
         {
             if (loadBinaryCallbacks == null)
             {
-                Log.Error("Load binary callbacks is invalid.");
-                return;
+                throw new FrameworkException("Load binary callbacks is invalid.");
+
             }
 
             if (string.IsNullOrEmpty(binaryAssetName))
