@@ -1055,7 +1055,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e26ab56eb0ee6784ea07198c622f230f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ConfigLoadMode: 1
+  AudioLoadMode: 0
   ResourceLoadMode: 0
   TableName: []
   ClipsList: []

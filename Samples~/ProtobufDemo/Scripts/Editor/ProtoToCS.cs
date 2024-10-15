@@ -292,15 +292,14 @@ namespace UnityFramework.Editor
             window.minSize = new Vector2(500, 600);
             window.Show();
 
-            ClearConsoleLog();
 
-        }
-        public static void ClearConsoleLog()
-        {
+            //ClearConsoleLog
             System.Type log = typeof(EditorWindow).Assembly.GetType("UnityEditor.LogEntries");
             System.Reflection.MethodInfo clearMethod = log.GetMethod("Clear");
             clearMethod.Invoke(null, null);
+
         }
+
     }
 
 }

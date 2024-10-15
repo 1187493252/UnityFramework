@@ -19,6 +19,7 @@ namespace UnityFramework.Editor
     {
         private static readonly string[] RuntimeAssemblyNames =
       {
+            "UnityFramework",
 #if UNITY_2017_3_OR_NEWER
             "UnityFramework.Runtime",
 #endif
@@ -27,6 +28,7 @@ namespace UnityFramework.Editor
 
         private static readonly string[] RuntimeOrEditorAssemblyNames =
         {
+            "UnityFramework",
 #if UNITY_2017_3_OR_NEWER
             "UnityFramework.Runtime",
 #endif

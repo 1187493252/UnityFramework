@@ -781,7 +781,7 @@ namespace UnityFramework.Editor
             ClearConsoleLog();
 
         }
-        public static void ClearConsoleLog()
+        static void ClearConsoleLog()
         {
             System.Type log = typeof(EditorWindow).Assembly.GetType("UnityEditor.LogEntries");
             System.Reflection.MethodInfo clearMethod = log.GetMethod("Clear");

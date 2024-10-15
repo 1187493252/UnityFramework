@@ -315,15 +315,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3481953813128123157, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: m_ResourceHelperTypeName
-      value: UnityFramework.Runtime.DefaultResourceHelper
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4484336523290549285, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
+      propertyPath: m_LogHelperTypeName
+      value: UnityFramework.Runtime.DefaultLogHelper
       objectReference: {fileID: 0}
     - target: {fileID: 4484336523290549285, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: m_EditorResourceMode
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4484336523290549285, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
+      propertyPath: m_JsonHelperTypeName
+      value: UnityFramework.Runtime.DefaultJsonHelper
+      objectReference: {fileID: 0}
     - target: {fileID: 5554970468386900132, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: m_SettingHelperTypeName
-      value: UnityFramework.Runtime.DefaultSettingHelper
+      value: UnityFramework.Runtime.PlayerPrefsSettingHelper
       objectReference: {fileID: 0}
     - target: {fileID: 5603955524520475539, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: TableName.Array.size
@@ -394,8 +402,16 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7583830411263867369, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
+      propertyPath: m_EntityHelperTypeName
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7583830411263867369, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: m_EntityGroups.Array.size
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7583830411263867369, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
+      propertyPath: m_EntityGroupHelperTypeName
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7583830411263867369, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: m_EnableShowEntityUpdateEvent
