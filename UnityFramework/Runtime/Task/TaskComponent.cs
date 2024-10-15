@@ -13,6 +13,21 @@ using UnityEngine;
 
 namespace UnityFramework.Runtime
 {
+    public enum TaskState
+    {
+        UnInit = 0,
+        Init = 1,
+        Start = 2,
+        Doing = 3,
+        End = 4
+    }
+    public enum TaskMode
+    {
+        Default = 0,
+        Study = 1,
+        Exam = 2
+    }
+
     [DisallowMultipleComponent]
     public class TaskComponent : UnityFrameworkComponent
     {

@@ -15,6 +15,27 @@ using UnityEngine.UI;
 
 namespace UnityFramework.Runtime
 {
+    /// <summary>
+    /// 文件类型
+    /// </summary>
+    public enum FileType
+    {
+        txt,
+        json,
+        xml,
+        doc,
+        docx,
+        xls,
+        xlsx,
+        mp3,
+        wav,
+        mp4,
+        jpg,
+        png,
+        html,
+        all
+    }
+
     [DisallowMultipleComponent]
     public class ExternalCallComponent : UnityFrameworkComponent
     {

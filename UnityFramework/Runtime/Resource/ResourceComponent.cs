@@ -16,6 +16,16 @@ using UnityEngine;
 
 namespace UnityFramework.Runtime
 {
+    /// <summary>
+    /// 资源加载模式
+    /// </summary>
+    public enum ResourceLoadMode
+    {
+        Resource,
+        StreamingAssets,
+        WebRequest//服务器
+    }
+
     [DisallowMultipleComponent]
     public class ResourceComponent : UnityFrameworkComponent
     {

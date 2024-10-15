@@ -849,18 +849,18 @@ namespace UnityFramework
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="str"></param>
-        public static void PlayAnim(AnimType animType, GameObject obj, string str)
+        public static void PlayAnim(int type, GameObject obj, string str)
         {
-            switch (animType)
+            switch (type)
             {
-                case AnimType.Animation:
+                case 0:
                     Animation animation = obj.GetComponent<Animation>();
                     if (animation)
                     {
                         animation.Play(str);
                     }
                     break;
-                case AnimType.Animator:
+                case 1:
                     Animator animator = obj.GetComponent<Animator>();
                     if (animator)
                     {

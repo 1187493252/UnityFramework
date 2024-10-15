@@ -15,10 +15,24 @@ using UnityEngine.Networking;
 
 namespace UnityFramework.Runtime
 {
+    /// <summary>
+    /// 数据加载模式
+    /// </summary>
+    public enum AudioLoadMode
+    {
+        /// <summary>
+        /// 从数据缓存中读取
+        /// </summary>
+        DataCache,
+        /// <summary>
+        /// 从单独路径读取
+        /// </summary>
+        Path
+    }
     public class AudioHelper : MonoBehaviour
     {
         [Header("配置加载模式")]
-        public ConfigLoadMode ConfigLoadMode;
+        public AudioLoadMode AudioLoadMode;
         [Header("资源加载模式")]
         public ResourceLoadMode ResourceLoadMode;
         [Header("配置表名称:同类型的表格不能同名")]
@@ -46,7 +60,7 @@ namespace UnityFramework.Runtime
 
         void LoadAudio()
         {
-            if (ConfigLoadMode == ConfigLoadMode.Path)
+            if (AudioLoadMode == AudioLoadMode.Path)
             {
                 StartCoroutine(InitOperation_LoadAudioForPath());
             }
