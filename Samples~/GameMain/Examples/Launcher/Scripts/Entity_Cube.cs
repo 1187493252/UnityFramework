@@ -15,7 +15,7 @@ using UnityFramework.Runtime;
 public class Entity_Cube : EntityBase
 {
     EntityMouseInteraction entityClick;
-    protected internal override void OnInit(object userData)
+    protected override void OnInit(object userData)
     {
         base.OnInit(userData);
         entityClick = GetComponent<EntityMouseInteraction>();
@@ -41,7 +41,7 @@ public class Entity_Cube : EntityBase
         //entityClick.EntityProxy.HighlightProxy.StartHighlight();
     }
 
-    protected internal override void OnShow(object userData)
+    protected override void OnShow(object userData)
     {
         base.OnShow(userData);
     }

@@ -1,0 +1,17 @@
+{
+    "name": "UnityFrameworkEditor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:279630ab257120748b0c6fe083d24042",
+        "GUID:47f30d9b652676b4bac0dace51a1081a"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

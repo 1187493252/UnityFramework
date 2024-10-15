@@ -16,7 +16,7 @@ namespace UnityFramework.Editor
 
     public class WebGLTemplates : EditorWindow
     {
-        string templatesPath = "/Framework/WebGLTemplates";
+        string templatesPath = "/UnityFramework/WebGLTemplates";
         string productName = "";
 
         string titles = "测试项目";
