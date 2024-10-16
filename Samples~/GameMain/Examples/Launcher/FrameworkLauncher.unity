@@ -282,6 +282,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2221027231681503567, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
+      propertyPath: m_UIFormHelperTypeName
+      value: UnityFramework.Runtime.DefaultUIFormHelper
+      objectReference: {fileID: 0}
+    - target: {fileID: 2221027231681503567, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: m_UIGroups.Array.data[0].m_Name
       value: default
       objectReference: {fileID: 0}
@@ -419,7 +423,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7583830411263867369, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: m_EnableShowEntityUpdateEvent
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7583830411263867369, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: m_EntityGroups.Array.data[0].m_Name
@@ -427,7 +431,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7583830411263867369, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: m_EnableShowEntityDependencyAssetEvent
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7583830411263867369, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: m_EntityGroups.Array.data[0].m_InstanceCapacity

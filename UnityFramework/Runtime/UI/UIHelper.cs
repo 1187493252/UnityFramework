@@ -6,6 +6,7 @@
 */
 
 using Framework;
+using Framework.Event;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -25,17 +26,30 @@ namespace UnityFramework.Runtime.UI
         {
             uiComponent = ComponentEntry.UI;
 
-            LoadEntity();
+
+            ComponentEntry.Event.Subscribe(LoadUIFormInfoFailEventArgs.EventId, LoadUIFormInfoFail);
+            ComponentEntry.Event.Subscribe(LoadUIFormInfoSuccessEventArgs.EventId, LoadUIFormInfoSuccess);
+            LoadUIForm();
 
         }
 
+        private void LoadUIFormInfoSuccess(object sender, GameEventArgs e)
+        {
+            LoadUIFormInfoSuccessEventArgs eventArgs = (LoadUIFormInfoSuccessEventArgs)e;
+            Log.Info(eventArgs.UserData);
+        }
 
+        private void LoadUIFormInfoFail(object sender, GameEventArgs e)
+        {
+            LoadUIFormInfoFailEventArgs eventArgs = (LoadUIFormInfoFailEventArgs)e;
+            Log.Error(eventArgs.UserData);
+        }
 
         public void Clear()
         {
 
         }
-        void LoadEntity()
+        void LoadUIForm()
         {
             StartCoroutine(InitOperation());
         }
@@ -64,7 +78,7 @@ namespace UnityFramework.Runtime.UI
                     switch (ResourceLoadMode)
                     {
                         case ResourceLoadMode.Resource:
-                            entity = ComponentEntry.Resource.Load<GameObject>(path, ResourceLoadMode);
+                            entity = ComponentEntry.Resource.LoadAsync<GameObject>(path, ResourceLoadMode);
                             break;
                         case ResourceLoadMode.StreamingAssets:
                         case ResourceLoadMode.WebRequest:
@@ -77,8 +91,7 @@ namespace UnityFramework.Runtime.UI
 			                if (request.isHttpError || request.isNetworkError)
 #endif
                             {
-                                Log.Error($"Load {path} fail");
-
+                                ComponentEntry.Event.Fire(this, LoadUIFormInfoFailEventArgs.Create($"load ui {name} fail : {request.error}"));
                             }
                             else
                             {
@@ -96,8 +109,8 @@ namespace UnityFramework.Runtime.UI
             }
             DateTime endTime = global::System.DateTime.Now;
             TimeSpan duration = endTime.Subtract(startTime);
-            Log.Info($"load all uiform success,cout {uiComponent.UIFormInfoCout},time {duration.TotalMilliseconds / 1000.0f:f2}s");
 
+            ComponentEntry.Event.Fire(this, LoadUIFormInfoSuccessEventArgs.Create($"load all uiform success,cout {uiComponent.UIFormInfoCout},time {duration.TotalMilliseconds / 1000.0f:f2}s"));
         }
     }
 }

@@ -6,6 +6,7 @@
 */
 
 using Framework;
+using Framework.Event;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -25,11 +26,23 @@ namespace UnityFramework.Runtime
         {
             entityComponent = ComponentEntry.Entity;
 
+            ComponentEntry.Event.Subscribe(LoadEntityInfoFailEventArgs.EventId, LoadEntityInfoFail);
+            ComponentEntry.Event.Subscribe(LoadEntityInfoSuccessEventArgs.EventId, LoadEntityInfoSuccess);
             LoadEntity();
 
         }
 
+        private void LoadEntityInfoSuccess(object sender, GameEventArgs e)
+        {
+            LoadEntityInfoSuccessEventArgs eventArgs = (LoadEntityInfoSuccessEventArgs)e;
+            Log.Info(eventArgs.UserData);
+        }
 
+        private void LoadEntityInfoFail(object sender, GameEventArgs e)
+        {
+            LoadEntityInfoFailEventArgs eventArgs = (LoadEntityInfoFailEventArgs)e;
+            Log.Error(eventArgs.UserData);
+        }
 
         public void Clear()
         {
@@ -78,7 +91,8 @@ namespace UnityFramework.Runtime
 			                if (request.isHttpError || request.isNetworkError)
 #endif
                             {
-                                Log.Error($"Load {path} fail");
+                                ComponentEntry.Event.Fire(this, LoadEntityInfoFailEventArgs.Create($"load entity {name} fail : {request.error}"));
+
 
                             }
                             else
@@ -98,7 +112,7 @@ namespace UnityFramework.Runtime
             DateTime endTime = global::System.DateTime.Now;
             TimeSpan duration = endTime.Subtract(startTime);
 
-            Log.Info($"load all entity success,cout {entityComponent.EntityInfoCout},time {duration.TotalMilliseconds / 1000.0f:f2}s");
+            ComponentEntry.Event.Fire(this, LoadEntityInfoSuccessEventArgs.Create($"load all entity success,cout {entityComponent.EntityInfoCout},time {duration.TotalMilliseconds / 1000.0f:f2}s"));
 
         }
     }

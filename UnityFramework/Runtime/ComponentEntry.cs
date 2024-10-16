@@ -1,5 +1,6 @@
 using Framework.Event;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -8,7 +9,10 @@ namespace UnityFramework.Runtime
 {
     public class ComponentEntry : MonoBehaviour
     {
+        //  List<string> listTag = new List<string>() { "Data", "Config", "Audio", "Entity", "UIForm" };
+        List<string> listTag = new List<string>() { "Data", "Config" };
 
+        Dictionary<string, bool> dicTag = new Dictionary<string, bool>();
         static bool IsInit;
         public static EntityComponent Entity
         {
@@ -119,11 +123,25 @@ namespace UnityFramework.Runtime
             }
 
         }
-
+        private void Update()
+        {
+            //if (!IsInit)
+            //{
+            //    foreach (var item in dicTag)
+            //    {
+            //        if (item.Value == false)
+            //        {
+            //            return;
+            //        }
+            //    }
+            //    IsInit = true;
+            //    OnInitFinish?.Invoke();
+            //    OnInitFinish = null;
+            //}
+        }
 
         void Init()
         {
-            IsInit = true;
             Entity = UnityFrameworkEntry.GetComponent<EntityComponent>();
             UI = UnityFrameworkEntry.GetComponent<UIComponent>();
             Audio = UnityFrameworkEntry.GetComponent<AudioComponent>();
@@ -148,26 +166,59 @@ namespace UnityFramework.Runtime
                 DontDestroyOnLoad(this);
             }
 
-
+            foreach (var item in listTag)
+            {
+                dicTag.Add(item, false);
+            }
 
 
             Event.Subscribe(LoadDataSuccessEventArgs.EventId, LoadDataSuccess);
+            Event.Subscribe(LoadConfigSuccessEventArgs.EventId, LoadConfigSuccess);
+            // Event.Subscribe(LoadAudioInfoSuccessEventArgs.EventId, LoadAudioInfoSuccess);
+            // Event.Subscribe(LoadUIFormInfoSuccessEventArgs.EventId, LoadUIFormInfoSuccess);
+            // Event.Subscribe(LoadEntityInfoSuccessEventArgs.EventId, LoadEntityInfoSuccess);
+
+
 
             Data.Init();
 
         }
 
+        private void LoadEntityInfoSuccess(object sender, GameEventArgs e)
+        {
+            Event.Unsubscribe(LoadEntityInfoSuccessEventArgs.EventId, LoadEntityInfoSuccess);
+            dicTag["Entity"] = true;
+        }
 
+        private void LoadUIFormInfoSuccess(object sender, GameEventArgs e)
+        {
+            Event.Unsubscribe(LoadUIFormInfoSuccessEventArgs.EventId, LoadUIFormInfoSuccess);
+            dicTag["UIForm"] = true;
+        }
+
+        private void LoadAudioInfoSuccess(object sender, GameEventArgs e)
+        {
+            Event.Unsubscribe(LoadAudioInfoSuccessEventArgs.EventId, LoadAudioInfoSuccess);
+            dicTag["Audio"] = true;
+        }
+
+        private void LoadConfigSuccess(object sender, GameEventArgs e)
+        {
+            Event.Unsubscribe(LoadConfigSuccessEventArgs.EventId, LoadConfigSuccess);
+            dicTag["Config"] = true;
+        }
 
         private void LoadDataSuccess(object sender, GameEventArgs e)
         {
             Event.Unsubscribe(LoadDataSuccessEventArgs.EventId, LoadDataSuccess);
+            dicTag["Data"] = true;
             Audio.Init();
             Entity.Init();
             UI.Init();
             Config.Init();
             Task.Init();
             GameObject.Init();
+            IsInit = true;
             OnInitFinish?.Invoke();
             OnInitFinish = null;
         }

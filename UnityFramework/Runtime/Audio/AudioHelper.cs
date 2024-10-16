@@ -7,6 +7,7 @@
 */
 
 using Framework;
+using Framework.Event;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -44,13 +45,24 @@ namespace UnityFramework.Runtime
         public virtual void Init()
         {
             audioComponent = ComponentEntry.Audio;
-
+            ComponentEntry.Event.Subscribe(LoadAudioInfoFailEventArgs.EventId, LoadAudioFail);
+            ComponentEntry.Event.Subscribe(LoadAudioInfoSuccessEventArgs.EventId, LoadAudioSuccess);
 
             LoadAudio();
 
         }
 
+        private void LoadAudioSuccess(object sender, GameEventArgs e)
+        {
+            LoadAudioInfoSuccessEventArgs eventArgs = (LoadAudioInfoSuccessEventArgs)e;
+            Log.Info(eventArgs.UserData);
+        }
 
+        private void LoadAudioFail(object sender, GameEventArgs e)
+        {
+            LoadAudioInfoFailEventArgs eventArgs = (LoadAudioInfoFailEventArgs)e;
+            Log.Error(eventArgs.UserData);
+        }
 
         public void Clear()
         {
@@ -114,7 +126,7 @@ namespace UnityFramework.Runtime
                     switch (ResourceLoadMode)
                     {
                         case ResourceLoadMode.Resource:
-                            clip = ComponentEntry.Resource.Load<AudioClip>(path, ResourceLoadMode);
+                            clip = ComponentEntry.Resource.LoadAsync<AudioClip>(path, ResourceLoadMode);
                             break;
                         case ResourceLoadMode.StreamingAssets:
                         case ResourceLoadMode.WebRequest:
@@ -127,8 +139,7 @@ namespace UnityFramework.Runtime
 			                if (request.isHttpError || request.isNetworkError)
 #endif
                             {
-                                Log.Error($"Load {path} fail");
-
+                                ComponentEntry.Event.Fire(this, LoadAudioInfoFailEventArgs.Create($"load audio {name} fail : {request.error}"));
                             }
                             else
                             {
@@ -152,9 +163,8 @@ namespace UnityFramework.Runtime
             }
             DateTime endTime = global::System.DateTime.Now;
             TimeSpan duration = endTime.Subtract(startTime);
-            Log.Info($"load all audio success,cout {audioComponent.AudioInfoCout},time {duration.TotalMilliseconds / 1000.0f:f2}s");
 
-
+            ComponentEntry.Event.Fire(this, LoadAudioInfoSuccessEventArgs.Create($"load all audio success,cout {audioComponent.AudioInfoCout},time {duration.TotalMilliseconds / 1000.0f:f2}s"));
         }
     }
 }

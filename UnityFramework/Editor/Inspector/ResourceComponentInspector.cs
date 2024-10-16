@@ -37,6 +37,7 @@ namespace UnityFramework.Editor
         private SerializedProperty m_GenerateReadWriteVersionListLength = null;
         private SerializedProperty m_UpdateRetryCount = null;
         private SerializedProperty m_InstanceRoot = null;
+
         private SerializedProperty m_LoadResourceAgentHelperCount = null;
 
         private FieldInfo m_EditorResourceModeFieldInfo = null;
@@ -79,7 +80,6 @@ namespace UnityFramework.Editor
                 m_ReadWritePathType.enumValueIndex = (int)(ReadWritePathType)EditorGUILayout.EnumPopup("Read-Write Path Type", t.ReadWritePathType);
             }
             EditorGUI.EndDisabledGroup();
-
             float minUnloadUnusedAssetsInterval = EditorGUILayout.Slider("Min Unload Unused Assets Interval", m_MinUnloadUnusedAssetsInterval.floatValue, 0f, 3600f);
             if (minUnloadUnusedAssetsInterval != m_MinUnloadUnusedAssetsInterval.floatValue)
             {

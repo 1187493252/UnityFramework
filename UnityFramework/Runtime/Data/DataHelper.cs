@@ -6,6 +6,7 @@
 */
 
 using Framework;
+using Framework.Event;
 using LitJson;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -41,7 +42,7 @@ namespace UnityFramework.Runtime
         }
         private void LoadAssetSuccessCallback(string entityAssetName, object entityAsset, float duration, object userData)
         {
-            Debug.LogError(entityAsset.ToString());
+            Log.Info(entityAsset.ToString());
         }
         public void Clear()
         {
@@ -49,14 +50,14 @@ namespace UnityFramework.Runtime
             ComponentEntry.Event.Unsubscribe(LoadDataFailEventArgs.EventId, LoadDataFail);
         }
 
-        private void LoadDataSuccess(object sender, BaseEventArgs e)
+        private void LoadDataSuccess(object sender, GameEventArgs e)
         {
             LoadDataSuccessEventArgs loadDataSuccessEventArgs = (LoadDataSuccessEventArgs)e;
             Log.Info(loadDataSuccessEventArgs.UserData);
 
         }
 
-        private void LoadDataFail(object sender, BaseEventArgs e)
+        private void LoadDataFail(object sender, GameEventArgs e)
         {
             LoadDataFailEventArgs loadDataFailEventArgs = (LoadDataFailEventArgs)e;
             Log.Error(loadDataFailEventArgs.UserData);
@@ -96,8 +97,7 @@ namespace UnityFramework.Runtime
 			if (request.isHttpError || request.isNetworkError)
 #endif
                 {
-                    // Log.Error(request.error);
-                    ComponentEntry.Event.Fire(this, LoadDataFailEventArgs.Create($"load {Application.streamingAssetsPath + "/" + item} fail : {request.error}"));
+                    ComponentEntry.Event.Fire(this, LoadDataFailEventArgs.Create($"load data {item.dataName} fail : {request.error}"));
                 }
                 else
                 {
