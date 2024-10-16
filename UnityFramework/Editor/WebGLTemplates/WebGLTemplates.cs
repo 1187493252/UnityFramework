@@ -6,6 +6,7 @@
 * 
 */
 
+using NPOI.OpenXml4Net.OPC;
 using System;
 using System.IO;
 using UnityEditor;
@@ -20,6 +21,7 @@ namespace UnityFramework.Editor
         string productName = "";
 
         string titles = "测试项目";
+        bool isPackage;//是否在packageManager
         private void OnEnable()
         {
             productName = Application.productName;
@@ -28,6 +30,15 @@ namespace UnityFramework.Editor
         void OnGUI()
         {
             EditorGUILayout.BeginVertical();
+            GUILayout.Space(5);
+
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.Label("是否在packageManager");
+            isPackage = GUILayout.Toggle(isPackage, "");
+            EditorGUILayout.EndHorizontal();
+            GUILayout.Label("注意:在package中要把WebGLTemplates复制到根目录下");
+            GUILayout.Space(5);
+
 
             GUILayout.Label("网页Title");
             titles = GUILayout.TextField(titles, GUILayout.MinWidth(200f), GUILayout.MinHeight(50f));
@@ -61,7 +72,10 @@ namespace UnityFramework.Editor
         {
             string tmpPath = Application.dataPath + templatesPath;
             string copyToPath = Application.dataPath + "/WebGLTemplates";
-            CopyDir(tmpPath, copyToPath);
+            if (!isPackage)
+            {
+                CopyDir(tmpPath, copyToPath);
+            }
             string path = "";
 #if UNITY_2020_1_OR_NEWER
             path = copyToPath + "/LOAD_2020_OR_NEWER/index.html";
