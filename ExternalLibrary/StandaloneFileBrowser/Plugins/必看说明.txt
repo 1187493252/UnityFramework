@@ -1,2 +1,0 @@
-将mcs.rsp文件放在Assets目录下
-或者将System.Windows.Forms.rar解压放在Plugins目录下
