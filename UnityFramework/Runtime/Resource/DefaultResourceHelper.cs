@@ -1,4 +1,4 @@
-﻿
+
 using Framework.Resource;
 using System;
 using System.Collections;
@@ -154,22 +154,19 @@ namespace UnityFramework.Runtime
 
         public override void LoadAsset(string assetName, Type assetType, int priority, LoadAssetCallbacks loadAssetCallbacks, object userData)
         {
-            throw new NotImplementedException();
         }
 
         public override void UnloadAsset(object asset)
         {
-            throw new NotImplementedException();
         }
 
         public override void LoadScene(string sceneAssetName, int priority, LoadSceneCallbacks loadSceneCallbacks, object userData)
         {
-            throw new NotImplementedException();
         }
 
         public override void Shutdown()
         {
-            throw new NotImplementedException();
+
         }
     }
 }
