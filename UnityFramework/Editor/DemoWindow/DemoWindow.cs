@@ -5,9 +5,9 @@
 * Description:       
 * 
 */
+#if UNITY_EDITOR
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -388,3 +388,4 @@ namespace UnityFramework.Editor
         public List<TaskData> AllTaskItem = new List<TaskData>();
     }
 }
+#endif

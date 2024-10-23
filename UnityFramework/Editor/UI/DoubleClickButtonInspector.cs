@@ -5,12 +5,10 @@
 * Description:       自定义脚本Inspector面板
 * 
 */
+#if UNITY_EDITOR
 
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.UI;
-using UnityEngine;
 using UnityFramework.UI;
 
 namespace UnityFramework.Editor
@@ -43,3 +41,4 @@ namespace UnityFramework.Editor
 
 
 }
+#endif

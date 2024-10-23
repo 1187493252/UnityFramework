@@ -5,10 +5,8 @@
 * Description:       删除丢失脚本
 * 
 */
+#if UNITY_EDITOR
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 namespace UnityFramework.Editor
@@ -39,3 +37,4 @@ namespace UnityFramework.Editor
     }
 
 }
+#endif

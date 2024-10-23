@@ -4,15 +4,9 @@
 * Author:            relly
 * Description:       
 */
+#if UNITY_EDITOR
 
-using Framework;
-using Framework.UI;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEditor;
-using UnityEngine;
 using UnityFramework.Runtime;
 
 namespace UnityFramework.Editor
@@ -159,3 +153,4 @@ namespace UnityFramework.Editor
         }
     }
 }
+#endif

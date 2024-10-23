@@ -5,8 +5,8 @@
 * Description:       创建自定义脚本带窗口
 * 
 */
+#if UNITY_EDITOR
 
-using System;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -474,3 +474,4 @@ namespace UnityFramework.Editor
 
 
 
+#endif

@@ -5,12 +5,12 @@
 * Description:       
 * 
 */
+#if UNITY_EDITOR
 
 using LitJson;
 using System;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace UnityFramework.Editor
 {
@@ -117,3 +117,4 @@ namespace UnityFramework.Editor
         }
     }
 }
+#endif

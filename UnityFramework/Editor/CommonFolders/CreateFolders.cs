@@ -5,6 +5,7 @@
 * Description:       在当前选择目录下创建文件夹
 * 
 */
+#if UNITY_EDITOR
 
 using System;
 using System.Collections.Generic;
@@ -155,3 +156,4 @@ namespace UnityFramework.Editor
     }
 }
 
+#endif

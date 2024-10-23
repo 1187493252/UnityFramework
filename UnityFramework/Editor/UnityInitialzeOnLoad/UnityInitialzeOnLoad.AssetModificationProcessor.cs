@@ -5,6 +5,7 @@
 * Description:       Project视图资源变化
 * 
 */
+#if UNITY_EDITOR
 
 using UnityEditor;
 using UnityEngine;
@@ -63,4 +64,4 @@ namespace UnityFramework.Editor
         }
     }
 }
-
+#endif

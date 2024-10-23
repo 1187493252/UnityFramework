@@ -5,6 +5,7 @@
 * Description:       
 * 
 */
+#if UNITY_EDITOR
 
 using Framework;
 using System.Collections.Generic;
@@ -128,3 +129,4 @@ namespace UnityFramework.Editor
         }
     }
 }
+#endif

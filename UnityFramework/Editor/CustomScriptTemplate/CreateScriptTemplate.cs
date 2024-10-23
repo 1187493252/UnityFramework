@@ -5,12 +5,10 @@
 * Description:       创建自定义脚本带窗口
 * 已放弃使用2021.7.26
 */
+#if UNITY_EDITOR
 
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.AccessControl;
 using UnityEditor;
 using UnityEngine;
 namespace UnityFramework.Editor
@@ -125,3 +123,4 @@ namespace UnityFramework.Editor
 
 
 
+#endif

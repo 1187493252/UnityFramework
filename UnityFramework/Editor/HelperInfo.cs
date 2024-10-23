@@ -4,12 +4,10 @@
 * Author:            relly
 * Description:       
 */
+#if UNITY_EDITOR
 
 using Framework;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
@@ -99,3 +97,4 @@ namespace UnityFramework.Editor
         }
     }
 }
+#endif

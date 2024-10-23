@@ -5,13 +5,13 @@
 * Description:       自定义Unity宏
 * 
 */
+#if UNITY_EDITOR
 
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.UI;
 namespace UnityFramework.Editor
 {
     public class ScriptingDefineSymbolsSettingWindows : EditorWindow
@@ -373,3 +373,4 @@ namespace UnityFramework.Editor
 }
 
 
+#endif

@@ -5,8 +5,8 @@
 * Description:       
 * 
 */
+#if UNITY_EDITOR
 
-using NPOI.OpenXml4Net.OPC;
 using System;
 using System.IO;
 using UnityEditor;
@@ -156,3 +156,4 @@ namespace UnityFramework.Editor
         }
     }
 }
+#endif

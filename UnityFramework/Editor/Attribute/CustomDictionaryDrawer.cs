@@ -5,6 +5,7 @@
 * Description:       
 * 
 */
+#if UNITY_EDITOR
 
 using UnityEditor;
 using static UnityFramework.CustomDictionary;
@@ -24,3 +25,4 @@ namespace UnityFramework.Editor
 
 
 }
+#endif

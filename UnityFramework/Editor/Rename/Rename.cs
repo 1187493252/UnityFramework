@@ -5,6 +5,7 @@
 * Description:       在Hierarchy窗口对选中的物体重命名,使用场景:对多个物体下子物体的批量同名命名
 * 
 */
+#if UNITY_EDITOR
 
 using System;
 using System.Collections.Generic;
@@ -299,3 +300,4 @@ namespace UnityFramework.Editor
 }
 
 
+#endif

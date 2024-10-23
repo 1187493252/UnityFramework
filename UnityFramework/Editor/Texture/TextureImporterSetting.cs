@@ -5,6 +5,7 @@
 * Description:       
 * 
 */
+#if UNITY_EDITOR
 
 using UnityEditor;
 using UnityEngine;
@@ -118,7 +119,7 @@ namespace UnityFramework.Editor
                                     texture.SetPlatformTextureSettings(platformSettingWebGL);
                                 }
                             }
-                          //  texture.SaveAndReimport();
+                            //  texture.SaveAndReimport();
                             AssetDatabase.ImportAsset(path);
                         }
                     }
@@ -150,3 +151,4 @@ namespace UnityFramework.Editor
 }
 
 
+#endif

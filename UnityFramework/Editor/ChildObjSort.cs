@@ -4,9 +4,8 @@
 * Author:            relly
 * Description:       子物体排序
 */
+#if UNITY_EDITOR
 
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
@@ -49,3 +48,4 @@ namespace UnityFramework.Editor
         }
     }
 }
+#endif

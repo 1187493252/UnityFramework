@@ -4,15 +4,11 @@
 * Author:            
 * Description:       
 */
+#if UNITY_EDITOR
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace UnityFramework.Editor
 {
@@ -60,3 +56,4 @@ namespace UnityFramework.Editor
         }
     }
 }
+#endif

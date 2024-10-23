@@ -5,6 +5,7 @@
 * Description:       
 * 
 */
+#if UNITY_EDITOR
 
 using UnityEditor;
 
@@ -60,3 +61,4 @@ namespace UnityFramework.Editor
         }
     }
 }
+#endif

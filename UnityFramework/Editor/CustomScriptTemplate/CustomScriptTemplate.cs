@@ -1,5 +1,4 @@
-using System.IO;
-using UnityEngine;
+#if UNITY_EDITOR
 //已放弃使用2021.7.26
 namespace UnityFramework.Editor
 {
@@ -37,3 +36,4 @@ namespace UnityFramework.Editor
     }
 }
 
+#endif

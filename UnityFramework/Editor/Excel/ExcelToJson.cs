@@ -5,6 +5,7 @@
 * Description:       
 * 
 */
+#if UNITY_EDITOR
 
 using ExcelDataReader;
 using LitJson;
@@ -790,3 +791,4 @@ namespace UnityFramework.Editor
     }
 
 }
+#endif

@@ -5,9 +5,8 @@
 * Description:       
 * 
 */
+#if UNITY_EDITOR
 
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityFramework.Runtime;
@@ -61,3 +60,4 @@ namespace UnityFramework.Editor
 
     }
 }
+#endif

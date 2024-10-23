@@ -5,10 +5,8 @@
 * Description:       在根目录下创建常见文件夹
 * 
 */
+#if UNITY_EDITOR
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -105,3 +103,4 @@ namespace UnityFramework.Editor
     }
 }
 
+#endif

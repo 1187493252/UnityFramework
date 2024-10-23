@@ -5,6 +5,7 @@
 * Description:       Unity在启动时执行操作
 * 
 */
+#if UNITY_EDITOR
 
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -37,3 +38,4 @@ namespace UnityFramework.Editor
     }
 }
 
+#endif

@@ -5,6 +5,7 @@
 * Description:       
 * 
 */
+#if UNITY_EDITOR
 
 using System.Reflection;
 using UnityEditor;
@@ -86,3 +87,4 @@ public partial class UnityEditorTools
 
 
 }
+#endif

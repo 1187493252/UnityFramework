@@ -5,6 +5,7 @@
 * Description:       在Project窗口对选中的资源重命名
 * 
 */
+#if UNITY_EDITOR
 
 using System;
 using System.Collections.Generic;
@@ -311,3 +312,4 @@ namespace UnityFramework.Editor
 }
 
 
+#endif
