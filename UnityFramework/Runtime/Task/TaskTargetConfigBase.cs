@@ -57,7 +57,7 @@ namespace UnityFramework.Runtime
             foreach (var item in StartHideUIFormId)
             {
                 EntityBase entityBase = ComponentEntry.Entity.GetSceneEntity(item);
-                entityBase.Hide();
+                entityBase.Hide(false);
             }
 
         }
@@ -84,12 +84,12 @@ namespace UnityFramework.Runtime
             foreach (var item in EndHideUIFormId)
             {
                 EntityBase entityBase = ComponentEntry.Entity.GetSceneEntity(item);
-                entityBase.Hide();
+                entityBase.Hide(false);
             }
             foreach (var item in EndHideEntityId)
             {
                 EntityBase entityBase = ComponentEntry.Entity.GetSceneEntity(item);
-                entityBase.Hide();
+                entityBase.Hide(false);
             }
             foreach (var item in EndShowEntityId)
             {

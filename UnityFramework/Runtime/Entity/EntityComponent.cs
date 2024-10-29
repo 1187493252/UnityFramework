@@ -1149,12 +1149,12 @@ namespace UnityFramework.Runtime
             return t;
         }
 
-        public EntityBase HideSceneEntity(int entityID)
+        public EntityBase HideSceneEntity(int entityID, bool isShutdown = false)
         {
             EntityBase entityBase = entityDicById[entityID];
             if (entityDicById.TryGetValue(entityID, out entityBase))
             {
-                entityBase.Hide();
+                entityBase.Hide(isShutdown);
             }
             else
             {

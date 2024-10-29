@@ -93,19 +93,20 @@ namespace UnityFramework.Runtime
         /// <summary>
         /// 打开 
         /// </summary>
-        public override void Show()
+        public override void Show(object userData = null)
         {
-            base.Show();
+            base.Show(userData);
+            OnOpen(userData);
         }
 
         /// <summary>
         /// 关闭
         /// </summary>
-        /// <param name="isDestroy">是否销毁</param>
-        /// <param name="userData"></param>
-        public override void Hide(bool isDestroy = false)
+
+        public override void Hide(bool isShutdown = false, object userData = null)
         {
-            base.Hide(isDestroy);
+            base.Hide(isShutdown, userData);
+            OnClose(isShutdown, userData);
         }
 
 

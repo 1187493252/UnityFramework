@@ -17,11 +17,11 @@ namespace UnityFramework.Runtime
 
 
 
-        public virtual void Show()
+        public virtual void Show(object userData = null)
         {
             SetVisible(true);
         }
-        public virtual void Hide(bool isDestroy = false)
+        public virtual void Hide(bool isShutdown = false, object userData = null)
         {
             SetVisible(false);
         }

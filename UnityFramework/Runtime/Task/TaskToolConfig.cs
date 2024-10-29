@@ -21,11 +21,39 @@ namespace UnityFramework.Runtime
 
         public string Name;
         public int ToolID;
-
+        EntityBase entityBase;
+        public EntityBase EntityBase
+        {
+            get
+            {
+                if (entityBase == null)
+                {
+                    entityBase = ComponentEntry.Entity.GetSceneEntity(ToolID);
+                }
+                return entityBase;
+            }
+        }
 
         public TaskMode TaskMode = TaskMode.Default;
-
-
+        //------------------------------------------
+        [Header("任务开始时设置(OnTaskStart)")]
+        public bool isSetStartShowHide;
+        public bool isStartShow;
+        public bool isSetStartPose;
+        public Vector3 startPos;
+        public Vector3 startAngle;
+        public bool isSetStartScale;
+        public Vector3 startScale;
+        //-----------------------------------------
+        [Header("任务完成时设置(OnTaskEnd)")]
+        public bool isSetEndShowHide;
+        public bool isEndShow;
+        public bool isSetEndPose;
+        public Vector3 endPos;
+        public Vector3 endAngle;
+        public bool isSetEndScale;
+        public Vector3 endScale;
+        //------------------------------------------
 
         /// <summary>
         /// 任务初始化
@@ -34,7 +62,8 @@ namespace UnityFramework.Runtime
         {
             if (TaskMode == TaskMode.Default || TaskMode == ComponentEntry.Task.TaskMode)
             {
-
+                EntityBase?.SetToolTaskInit(this);
+                EntityBase?.OnTaskInit(taskConfig);
             }
         }
 
@@ -45,7 +74,8 @@ namespace UnityFramework.Runtime
         {
             if (TaskMode == TaskMode.Default || TaskMode == ComponentEntry.Task.TaskMode)
             {
-
+                EntityBase?.SetToolTaskStart(this);
+                EntityBase?.OnTaskStart(taskConfig);
             }
         }
 
@@ -56,7 +86,7 @@ namespace UnityFramework.Runtime
         {
             if (TaskMode == TaskMode.Default || TaskMode == ComponentEntry.Task.TaskMode)
             {
-
+                EntityBase?.OnTaskDoing(taskConfig);
             }
         }
 
@@ -68,7 +98,8 @@ namespace UnityFramework.Runtime
         {
             if (TaskMode == TaskMode.Default || TaskMode == ComponentEntry.Task.TaskMode)
             {
-
+                EntityBase?.SetToolTaskEnd(this);
+                EntityBase?.OnTaskEnd(taskConfig);
             }
         }
 

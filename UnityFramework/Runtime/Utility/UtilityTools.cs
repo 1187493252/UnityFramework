@@ -493,6 +493,14 @@ namespace UnityFramework
             }
         }
 
+        public static void ShowObj<T>(params T[] objs) where T : Component
+        {
+            foreach (var item in objs)
+            {
+                ShowObj(item.gameObject);
+            }
+        }
+
         /// <summary>
         /// 显示多个物体
         /// </summary>
@@ -515,6 +523,15 @@ namespace UnityFramework
                 ShowObj(item);
             }
         }
+
+        public static void ShowObj<T>(List<T> objs) where T : Component
+        {
+            foreach (var item in objs)
+            {
+                ShowObj(item);
+            }
+        }
+
         /// <summary>
         /// 显示单个物体,隐藏其他物体
         /// </summary>
@@ -621,6 +638,32 @@ namespace UnityFramework
             ShowObj(showobj);
         }
 
+        public static void ShowObj<T>(GameObject showobj, List<T> hideobjs) where T : Component
+        {
+            foreach (var item in hideobjs)
+            {
+                HideObj(item.gameObject);
+            }
+            ShowObj(showobj);
+        }
+
+        public static void ShowObj(int index, List<GameObject> showobjs)
+        {
+            foreach (var item in showobjs)
+            {
+                HideObj(item);
+            }
+            ShowObj(showobjs[index]);
+        }
+        public static void ShowObj<T>(int index, List<T> showobjs) where T : Component
+        {
+            foreach (var item in showobjs)
+            {
+                HideObj(item.gameObject);
+            }
+            ShowObj(showobjs[index].gameObject);
+        }
+
 
         /// <summary>
         /// 隐藏单个物体
@@ -690,6 +733,15 @@ namespace UnityFramework
                 HideObj(item);
             }
         }
+
+        public static void HideObj<T>(List<T> objs) where T : Component
+        {
+            foreach (var item in objs)
+            {
+                HideObj(item.gameObject);
+            }
+        }
+
         /// <summary>
         /// 隐藏hideobj,显示showobjs
         /// </summary>
@@ -795,6 +847,35 @@ namespace UnityFramework
             }
             HideObj(hideobj);
         }
+
+        public static void HideObj<T>(GameObject hideobj, List<T> showobjs) where T : Component
+        {
+            foreach (var item in showobjs)
+            {
+                ShowObj(item);
+            }
+            HideObj(hideobj);
+        }
+
+
+
+        public static void HideObj(int index, List<GameObject> hideobjs)
+        {
+            foreach (var item in hideobjs)
+            {
+                ShowObj(item);
+            }
+            HideObj(hideobjs[index]);
+        }
+        public static void HideObj<T>(int index, List<T> hideobjs) where T : Component
+        {
+            foreach (var item in hideobjs)
+            {
+                ShowObj(item.gameObject);
+            }
+            HideObj(hideobjs[index].gameObject);
+        }
+
         /// <summary>
         /// 如果物体当前为显示就隐藏,如果隐藏就显示
         /// </summary>

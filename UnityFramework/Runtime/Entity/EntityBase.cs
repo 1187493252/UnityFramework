@@ -73,19 +73,20 @@ namespace UnityFramework.Runtime
         /// <summary>
         /// 打开 
         /// </summary>
-        public override void Show()
+        public override void Show(object userData = null)
         {
-            base.Show();
+            base.Show(userData);
+            OnShow(userData);
         }
 
         /// <summary>
         /// 关闭
         /// </summary>
-        /// <param name="isDestroy">是否销毁</param>
-        /// <param name="userData"></param>
-        public override void Hide(bool isDestroy = false)
+        public override void Hide(bool isShutdown = false, object userData = null)
         {
-            base.Hide(isDestroy);
+            base.Hide(isShutdown, userData);
+            OnHide(isShutdown, userData);
+
         }
 
         /// <summary>
@@ -142,54 +143,75 @@ namespace UnityFramework.Runtime
         }
 
 
-        /// <summary>
-        /// 实体回收。
-        /// </summary>
-        protected internal override void OnRecycle()
+        public virtual void SetToolTaskInit(TaskToolConfig taskToolConfig)
         {
-            base.OnRecycle();
+
         }
 
-        /// <summary>
-        /// 实体附加子实体。
-        /// </summary>
-        /// <param name="childEntity">附加的子实体。</param>
-        /// <param name="parentTransform">被附加父实体的位置。</param>
-        /// <param name="userData">用户自定义数据。</param>
-        protected internal override void OnAttached(EntityLogic childEntity, Transform parentTransform, object userData)
+
+        public virtual void SetToolTaskStart(TaskToolConfig taskToolConfig)
         {
-            base.OnAttached(childEntity, parentTransform, userData);
+            if (taskToolConfig.isSetStartShowHide)
+            {
+                if (taskToolConfig.isStartShow)
+                {
+                    Show();
+                }
+                else
+                {
+                    Hide(false);
+                }
+            }
+            if (taskToolConfig.isSetStartPose)
+            {
+                transform.localPosition = taskToolConfig.startPos;
+                transform.localEulerAngles = taskToolConfig.startAngle;
+            }
+            if (taskToolConfig.isSetStartScale)
+            {
+                transform.localScale = taskToolConfig.startScale;
+            }
         }
 
-        /// <summary>
-        /// 实体解除子实体。
-        /// </summary>
-        /// <param name="childEntity">解除的子实体。</param>
-        /// <param name="userData">用户自定义数据。</param>
-        protected internal override void OnDetached(EntityLogic childEntity, object userData)
+        public virtual void SetToolTaskEnd(TaskToolConfig taskToolConfig)
         {
-            base.OnDetached(childEntity, userData);
+            if (taskToolConfig.isSetEndShowHide)
+            {
+                if (taskToolConfig.isEndShow)
+                {
+                    Show();
+                }
+                else
+                {
+                    Hide(false);
+                }
+            }
+            if (taskToolConfig.isSetEndPose)
+            {
+                transform.localPosition = taskToolConfig.endPos;
+                transform.localEulerAngles = taskToolConfig.endAngle;
+            }
+            if (taskToolConfig.isSetEndScale)
+            {
+                transform.localScale = taskToolConfig.endScale;
+            }
+        }
+        public virtual void OnTaskInit(TaskConfig taskConfig)
+        {
+
+        }
+        public virtual void OnTaskStart(TaskConfig taskConfig)
+        {
+
         }
 
-        /// <summary>
-        /// 实体附加子实体。
-        /// </summary>
-        /// <param name="parentEntity">被附加的父实体。</param>
-        /// <param name="parentTransform">被附加父实体的位置。</param>
-        /// <param name="userData">用户自定义数据。</param>
-        protected internal override void OnAttachTo(EntityLogic parentEntity, Transform parentTransform, object userData)
+        public virtual void OnTaskDoing(TaskConfig taskConfig)
         {
-            base.OnAttachTo(parentEntity, parentTransform, userData);
-        }
 
-        /// <summary>
-        /// 实体解除子实体。
-        /// </summary>
-        /// <param name="parentEntity">被解除的父实体。</param>
-        /// <param name="userData">用户自定义数据。</param>
-        protected internal override void OnDetachFrom(EntityLogic parentEntity, object userData)
+        }
+        public virtual void OnTaskEnd(TaskConfig taskConfig)
         {
-            base.OnDetachFrom(parentEntity, userData);
+
         }
     }
 }
