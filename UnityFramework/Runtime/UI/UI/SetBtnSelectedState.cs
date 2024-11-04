@@ -11,8 +11,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
-public class SetBtnSelectedState : MonoBehaviour
+public class SetBtnSelectedState : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [Header("父节点,不可空")]
     public Transform root;
@@ -34,6 +35,7 @@ public class SetBtnSelectedState : MonoBehaviour
     public Color selectedColor = Color.white;
 
     Button button;
+    public bool IsOpenHover;
 
 
     public bool IsStartSelected;
@@ -127,6 +129,24 @@ public class SetBtnSelectedState : MonoBehaviour
             {
                 item.SetNormalState(executeEvent);
             }
+        }
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (IsOpenHover)
+        {
+            SetSelectedState();
+            SetOthersNormalState();
+        }
+
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (IsOpenHover)
+        {
+            SetNormalState();
         }
     }
 }
