@@ -7,9 +7,10 @@ public class LookAtTarget : MonoBehaviour
 
     public GameObject _targetObj;
     public bool isLockY;
-
     private Vector3 vec;
     public bool isNeedLookCamera = true;
+
+    public Vector3 offset;
 
     // Start is called before the first frame update
     void Start()
@@ -36,7 +37,10 @@ public class LookAtTarget : MonoBehaviour
             else
             {
                 vec.Set(_targetObj.transform.position.x, transform.position.y, _targetObj.transform.position.z);
+
                 transform.LookAt(vec);
+                Vector3 pos = transform.eulerAngles;
+                transform.eulerAngles = new Vector3(0 + offset.x, pos.y + offset.y, 0 + offset.z);
             }
 
         }
