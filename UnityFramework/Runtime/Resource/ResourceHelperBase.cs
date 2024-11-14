@@ -5,11 +5,11 @@
 * Description:       
 */
 
-using Framework.Resource;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Framework.Resource;
 using UnityEngine;
 
 namespace UnityFramework.Runtime
@@ -32,11 +32,7 @@ namespace UnityFramework.Runtime
         /// <param name="userData">用户自定义数据。</param>
         public abstract void UnloadScene(string sceneAssetName, UnloadSceneCallbacks unloadSceneCallbacks, object userData);
 
-        /// <summary>
-        /// 释放资源。
-        /// </summary>
-        /// <param name="objectToRelease">要释放的资源。</param>
-        public abstract void Release(object objectToRelease);
+
         public abstract void LoadAsset(string assetName, Type assetType, int priority, LoadAssetCallbacks loadAssetCallbacks, object userData);
         public abstract void UnloadAsset(object asset);
         public abstract void LoadScene(string sceneAssetName, int priority, LoadSceneCallbacks loadSceneCallbacks, object userData);

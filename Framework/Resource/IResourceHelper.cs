@@ -58,11 +58,7 @@ namespace Framework.Resource
         /// <param name="userData">用户自定义数据。</param>
         void UnloadScene(string sceneAssetName, UnloadSceneCallbacks unloadSceneCallbacks, object userData);
 
-        /// <summary>
-        /// 释放资源。
-        /// </summary>
-        /// <param name="objectToRelease">要释放的资源。</param>
-        void Release(object objectToRelease);
+
         void Shutdown();
 
     }
