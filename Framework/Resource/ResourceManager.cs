@@ -5,8 +5,6 @@
 * Description:       
 */
 
-using Framework;
-using Framework.Resource;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,6 +14,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using Framework;
+using Framework.Resource;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -84,9 +84,9 @@ namespace Framework.Resource
         /// </summary>
 
 
-        public int AssetCount => throw new NotImplementedException();
+        public int AssetCount => 0;
 
-        public int ResourceCount => throw new NotImplementedException();
+        public int ResourceCount => 0;
 
         private EventHandler<ResourceApplySuccessEventArgs> m_ResourceApplySuccessEventHandler;
         private EventHandler<ResourceApplyFailureEventArgs> m_ResourceApplyFailureEventHandler;

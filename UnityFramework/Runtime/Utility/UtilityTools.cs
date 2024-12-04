@@ -446,6 +446,7 @@ namespace UnityFramework
 
         //-----------------------------------------------------
 
+
         /// <summary>
         /// 显示物体
         /// </summary>
@@ -462,13 +463,9 @@ namespace UnityFramework
         /// 显示物体
         /// </summary>
         /// <param name="objs"></param>
-        public static void ShowObj(Transform obj)
+        public static void ShowObj<T>(T obj) where T : Component
         {
-            if (!obj)
-            {
-                return;
-            }
-            obj.gameObject.SetActive(true);
+            ShowObj(obj.gameObject);
         }
         /// <summary>
         /// 显示多个物体
@@ -481,18 +478,11 @@ namespace UnityFramework
                 ShowObj(item);
             }
         }
+
         /// <summary>
         /// 显示多个物体
         /// </summary>
         /// <param name="objs"></param>
-        public static void ShowObj(params Transform[] objs)
-        {
-            foreach (var item in objs)
-            {
-                ShowObj(item);
-            }
-        }
-
         public static void ShowObj<T>(params T[] objs) where T : Component
         {
             foreach (var item in objs)
@@ -516,14 +506,6 @@ namespace UnityFramework
         /// 显示多个物体
         /// </summary>
         /// <param name="objs"></param>
-        public static void ShowObj(List<Transform> objs)
-        {
-            foreach (var item in objs)
-            {
-                ShowObj(item);
-            }
-        }
-
         public static void ShowObj<T>(List<T> objs) where T : Component
         {
             foreach (var item in objs)
@@ -535,134 +517,45 @@ namespace UnityFramework
         /// <summary>
         /// 显示单个物体,隐藏其他物体
         /// </summary>
-        /// <param name="showobj">要显示的物体</param>
         /// <param name="hideobjs">要隐藏的物体</param>
-        public static void ShowObj(GameObject showobj, GameObject[] hideobjs)
+        /// <param name="showIndex">要显示的物体</param>
+        public static void ShowObj(GameObject[] hideobjs, int showIndex)
         {
-            foreach (var item in hideobjs)
-            {
-                HideObj(item);
-            }
-            ShowObj(showobj);
+            HideObj(hideobjs);
+            ShowObj(hideobjs[showIndex]);
         }
         /// <summary>
         /// 显示单个物体,隐藏其他物体
         /// </summary>
-        /// <param name="showobj">要显示的物体</param>
         /// <param name="hideobjs">要隐藏的物体</param>
-        public static void ShowObj(GameObject showobj, Transform[] hideobjs)
+        /// <param name="showIndex">要显示的物体</param>
+        public static void ShowObj<T>(T[] hideobjs, int showIndex) where T : Component
         {
-            foreach (var item in hideobjs)
-            {
-                HideObj(item);
-            }
-            ShowObj(showobj);
-        }
-        /// <summary>
-        /// 显示单个物体,隐藏其他物体
-        /// </summary>
-        /// <param name="showobj">要显示的物体</param>
-        /// <param name="hideobjs">要隐藏的物体</param>
-        public static void ShowObj(Transform showobj, Transform[] hideobjs)
-        {
-            foreach (var item in hideobjs)
-            {
-                HideObj(item);
-            }
-            ShowObj(showobj);
-        }
-        /// <summary>
-        /// 显示单个物体,隐藏其他物体
-        /// </summary>
-        /// <param name="showobj">要显示的物体</param>
-        /// <param name="hideobjs">要隐藏的物体</param>
-        public static void ShowObj(Transform showobj, GameObject[] hideobjs)
-        {
-            foreach (var item in hideobjs)
-            {
-                HideObj(item);
-            }
-            ShowObj(showobj);
+            HideObj(hideobjs);
+            ShowObj(hideobjs[showIndex]);
         }
 
         /// <summary>
         /// 显示单个物体,隐藏其他物体
         /// </summary>
-        /// <param name="showobj">要显示的物体</param>
         /// <param name="hideobjs">要隐藏的物体</param>
-        public static void ShowObj(GameObject showobj, List<GameObject> hideobjs)
+        /// <param name="showIndex">要显示的物体</param>
+        public static void ShowObj(List<GameObject> hideobjs, int showIndex)
         {
-            foreach (var item in hideobjs)
-            {
-                HideObj(item);
-            }
-            ShowObj(showobj);
+            HideObj(hideobjs);
+            ShowObj(hideobjs[showIndex]);
         }
         /// <summary>
         /// 显示单个物体,隐藏其他物体
         /// </summary>
-        /// <param name="showobj">要显示的物体</param>
         /// <param name="hideobjs">要隐藏的物体</param>
-        public static void ShowObj(GameObject showobj, List<Transform> hideobjs)
+        /// <param name="showIndex">要显示的物体</param>
+        public static void ShowObj<T>(List<T> hideobjs, int showIndex) where T : Component
         {
-            foreach (var item in hideobjs)
-            {
-                HideObj(item);
-            }
-            ShowObj(showobj);
-        }
-        /// <summary>
-        /// 显示单个物体,隐藏其他物体
-        /// </summary>
-        /// <param name="showobj">要显示的物体</param>
-        /// <param name="hideobjs">要隐藏的物体</param>
-        public static void ShowObj(Transform showobj, List<Transform> hideobjs)
-        {
-            foreach (var item in hideobjs)
-            {
-                HideObj(item);
-            }
-            ShowObj(showobj);
-        }
-        /// <summary>
-        /// 显示单个物体,隐藏其他物体
-        /// </summary>
-        /// <param name="showobj">要显示的物体</param>
-        /// <param name="hideobjs">要隐藏的物体</param>
-        public static void ShowObj(Transform showobj, List<GameObject> hideobjs)
-        {
-            foreach (var item in hideobjs)
-            {
-                HideObj(item);
-            }
-            ShowObj(showobj);
+            HideObj(hideobjs);
+            ShowObj(hideobjs[showIndex]);
         }
 
-        public static void ShowObj<T>(GameObject showobj, List<T> hideobjs) where T : Component
-        {
-            foreach (var item in hideobjs)
-            {
-                HideObj(item.gameObject);
-            }
-            ShowObj(showobj);
-        }
-
-        public static void ShowObj(int index, List<GameObject> showobjs)
-        {
-            foreach (var item in showobjs)
-            {
-                HideObj(item);
-            }
-            ShowObj(showobjs[index]);
-        }
-        public static void ShowObj<T>(int index, List<T> showobjs) where T : Component
-        {
-            foreach (var item in showobjs)
-            {
-                HideObj(item.gameObject);
-            }
-            ShowObj(showobjs[index].gameObject);
-        }
 
 
         /// <summary>
@@ -681,13 +574,9 @@ namespace UnityFramework
         /// 隐藏单个物体
         /// </summary>
         /// <param name="hideobj">要隐藏的物体</param>
-        public static void HideObj(Transform hideobj)
+        public static void HideObj<T>(T hideobj) where T : Component
         {
-            if (!hideobj)
-            {
-                return;
-            }
-            hideobj.gameObject.SetActive(false);
+            HideObj(hideobj.gameObject);
         }
         /// <summary>
         /// 隐藏多个物体
@@ -700,15 +589,12 @@ namespace UnityFramework
                 HideObj(item);
             }
         }
-        /// <summary>
-        /// 隐藏多个物体
-        /// </summary>
-        /// <param name="objs"></param>
-        public static void HideObj(params Transform[] objs)
+
+        public static void HideObj<T>(params T[] objs) where T : Component
         {
             foreach (var item in objs)
             {
-                HideObj(item);
+                HideObj(item.gameObject);
             }
         }
         /// <summary>
@@ -716,17 +602,6 @@ namespace UnityFramework
         /// </summary>
         /// <param name="objs"></param>
         public static void HideObj(List<GameObject> objs)
-        {
-            foreach (var item in objs)
-            {
-                HideObj(item);
-            }
-        }
-        /// <summary>
-        /// 隐藏物体
-        /// </summary>
-        /// <param name="objs"></param>
-        public static void HideObj(List<Transform> objs)
         {
             foreach (var item in objs)
             {
@@ -745,136 +620,52 @@ namespace UnityFramework
         /// <summary>
         /// 隐藏hideobj,显示showobjs
         /// </summary>
-        /// <param name="hideobj">要隐藏的物体</param>
         /// <param name="showobjs">要显示的物体</param>
-        public static void HideObj(GameObject hideobj, GameObject[] showobjs)
+        /// <param name="hideIndex">要隐藏的物体</param>
+        public static void HideObj(GameObject[] showobjs, int hideIndex)
         {
-            foreach (var item in showobjs)
-            {
-                ShowObj(item);
-            }
-            HideObj(hideobj);
+            ShowObj(showobjs);
+            HideObj(showobjs[hideIndex]);
         }
         /// <summary>
         /// 隐藏hideobj,显示showobjs
         /// </summary>
-        /// <param name="hideobj">要隐藏的物体</param>
         /// <param name="showobjs">要显示的物体</param>
-        public static void HideObj(GameObject hideobj, Transform[] showobjs)
+        /// <param name="hideIndex">要隐藏的物体</param>
+        public static void HideObj<T>(T[] showobjs, int hideIndex) where T : Component
         {
-            foreach (var item in showobjs)
-            {
-                ShowObj(item);
-            }
-            HideObj(hideobj);
-        }
-        /// <summary>
-        /// 隐藏hideobj,显示showobjs
-        /// </summary>
-        /// <param name="hideobj">要隐藏的物体</param>
-        /// <param name="showobjs">要显示的物体</param>
-        public static void HideObj(Transform hideobj, Transform[] showobjs)
-        {
-            foreach (var item in showobjs)
-            {
-                ShowObj(item);
-            }
-            HideObj(hideobj);
-        }
-        /// <summary>
-        /// 隐藏hideobj,显示showobjs
-        /// </summary>
-        /// <param name="hideobj">要隐藏的物体</param>
-        /// <param name="showobjs">要显示的物体</param>
-        public static void HideObj(Transform hideobj, GameObject[] showobjs)
-        {
-            foreach (var item in showobjs)
-            {
-                ShowObj(item);
-            }
-            HideObj(hideobj);
-        }
-
-        /// <summary>
-        /// 隐藏hideobj,显示showobjs
-        /// </summary>
-        /// <param name="hideobj">要隐藏的物体</param>
-        /// <param name="showobjs">要显示的物体</param>
-        public static void HideObj(GameObject hideobj, List<GameObject> showobjs)
-        {
-            foreach (var item in showobjs)
-            {
-                ShowObj(item);
-            }
-            HideObj(hideobj);
-        }
-        /// <summary>
-        /// 隐藏hideobj,显示showobjs
-        /// </summary>
-        /// <param name="hideobj">要隐藏的物体</param>
-        /// <param name="showobjs">要显示的物体</param>
-        public static void HideObj(GameObject hideobj, List<Transform> showobjs)
-        {
-            foreach (var item in showobjs)
-            {
-                ShowObj(item);
-            }
-            HideObj(hideobj);
-        }
-        /// <summary>
-        /// 隐藏hideobj,显示showobjs
-        /// </summary>
-        /// <param name="hideobj">要隐藏的物体</param>
-        /// <param name="showobjs">要显示的物体</param>
-        public static void HideObj(Transform hideobj, List<Transform> showobjs)
-        {
-            foreach (var item in showobjs)
-            {
-                ShowObj(item);
-            }
-            HideObj(hideobj);
-        }
-        /// <summary>
-        /// 隐藏hideobj,显示showobjs
-        /// </summary>
-        /// <param name="hideobj">要隐藏的物体</param>
-        /// <param name="showobjs">要显示的物体</param>
-        public static void HideObj(Transform hideobj, List<GameObject> showobjs)
-        {
-            foreach (var item in showobjs)
-            {
-                ShowObj(item);
-            }
-            HideObj(hideobj);
-        }
-
-        public static void HideObj<T>(GameObject hideobj, List<T> showobjs) where T : Component
-        {
-            foreach (var item in showobjs)
-            {
-                ShowObj(item);
-            }
-            HideObj(hideobj);
+            ShowObj(showobjs);
+            HideObj(showobjs[hideIndex]);
         }
 
 
 
-        public static void HideObj(int index, List<GameObject> hideobjs)
+        /// <summary>
+        /// 隐藏hideobj,显示showobjs
+        /// </summary>
+        /// <param name="showobjs">要显示的物体</param>
+        /// <param name="hideIndex">要隐藏的物体</param>
+        public static void HideObj(List<GameObject> showobjs, int hideIndex)
         {
-            foreach (var item in hideobjs)
-            {
-                ShowObj(item);
-            }
-            HideObj(hideobjs[index]);
+            ShowObj(showobjs);
+            HideObj(showobjs[hideIndex]);
         }
-        public static void HideObj<T>(int index, List<T> hideobjs) where T : Component
+        /// <summary>
+        /// 隐藏hideobj,显示showobjs
+        /// </summary>
+        /// <param name="showobjs">要显示的物体</param>
+        /// <param name="hideIndex">要隐藏的物体</param>
+        public static void HideObj<T>(List<T> showobjs, int hideIndex) where T : Component
         {
-            foreach (var item in hideobjs)
-            {
-                ShowObj(item.gameObject);
-            }
-            HideObj(hideobjs[index].gameObject);
+            ShowObj(showobjs);
+            HideObj(showobjs[hideIndex]);
         }
+
+
+
+
+
+
 
         /// <summary>
         /// 如果物体当前为显示就隐藏,如果隐藏就显示
@@ -895,16 +686,9 @@ namespace UnityFramework
         /// 如果物体当前为显示就隐藏,如果隐藏就显示
         /// </summary>
         /// <param name="obj">物体</param>
-        public static void ChangeActiveSelf(Transform obj)
+        public static void ChangeActiveSelf<T>(T obj) where T : Component
         {
-            if (obj.gameObject.activeSelf)
-            {
-                HideObj(obj);
-            }
-            else
-            {
-                ShowObj(obj);
-            }
+            ChangeActiveSelf(obj.gameObject);
         }
 
         //-----------------------------------------

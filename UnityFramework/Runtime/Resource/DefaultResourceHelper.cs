@@ -327,13 +327,13 @@ namespace UnityFramework.Runtime
         public override void UnloadAsset(object asset)
         {
 
-            UnityEngine.Object obj = (UnityEngine.Object)asset;
-            Resources.UnloadAsset(obj);
+            //UnityEngine.Object obj = (UnityEngine.Object)asset;
 
-            if (m_EnableCachedAssets)
-            {
-                RemoveCachedAsset(obj);
-            }
+            //if (m_EnableCachedAssets)
+            //{
+            //    RemoveCachedAsset(obj);
+            //}
+
         }
 
 
