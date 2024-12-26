@@ -6,12 +6,12 @@
 * 
 */
 
-using Framework;
-using Framework.Localization;
-using Framework.Resource;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Framework;
+using Framework.Localization;
+using Framework.Resource;
 using UnityEngine;
 
 namespace UnityFramework.Runtime
@@ -43,7 +43,7 @@ namespace UnityFramework.Runtime
         private string m_CompressionHelperTypeName = "UnityFramework.Runtime.DefaultCompressionHelper";
 
         [SerializeField]
-        private string m_JsonHelperTypeName = "UnityFramework.Runtime.DefaultJsonHelper";
+        private string m_JsonHelperTypeName = "UnityFramework.Runtime.LitJsonHelper";
 
         [SerializeField]
         private int m_FrameRate = 30;

@@ -287,28 +287,7 @@ namespace Framework.Resource
         }
 
 
-        /// <summary>
-        /// 检查资源是否存在。
-        /// </summary>
-        /// <param name="assetName">要检查资源的名称。</param>
-        /// <returns>检查资源是否存在的结果。</returns>
-        public HasAssetResult HasAsset(string assetName)
-        {
-#if UNITY_EDITOR
-            UnityEngine.Object obj = UnityEditor.AssetDatabase.LoadMainAssetAtPath(assetName);
-            if (obj == null)
-            {
-                return HasAssetResult.NotExist;
-            }
 
-            HasAssetResult result = obj.GetType() == typeof(UnityEditor.DefaultAsset) ? HasAssetResult.BinaryOnDisk : HasAssetResult.AssetOnDisk;
-            obj = null;
-            UnityEditor.EditorUtility.UnloadUnusedAssetsImmediate();
-            return result;
-#else
-            return HasAssetResult.NotExist;
-#endif
-        }
 
 
 
@@ -519,7 +498,6 @@ namespace Framework.Resource
             if (string.IsNullOrEmpty(sceneAssetName))
             {
                 throw new FrameworkException("Scene asset name is invalid.");
-                return;
             }
 
 
@@ -535,279 +513,35 @@ namespace Framework.Resource
         }
 
         /// <summary>
-        /// 获取二进制资源的实际路径。
+        /// 直接从指定文件路径加载数据流。
         /// </summary>
-        /// <param name="binaryAssetName">要获取实际路径的二进制资源的名称。</param>
-        /// <returns>二进制资源的实际路径。</returns>
-        /// <remarks>此方法仅适用于二进制资源存储在磁盘（而非文件系统）中的情况。若二进制资源存储在文件系统中时，返回值将始终为空。</remarks>
-        public string GetBinaryPath(string binaryAssetName)
-        {
-
-
-            return Application.dataPath.Substring(0, Application.dataPath.Length) + binaryAssetName;
-        }
-
-        /// <summary>
-        /// 获取二进制资源的实际路径。
-        /// </summary>
-        /// <param name="binaryAssetName">要获取实际路径的二进制资源的名称。</param>
-        /// <param name="storageInReadOnly">二进制资源是否存储在只读区中。</param>
-        /// <param name="storageInFileSystem">二进制资源是否存储在文件系统中。</param>
-        /// <param name="relativePath">二进制资源或存储二进制资源的文件系统，相对于只读区或者读写区的相对路径。</param>
-        /// <param name="fileName">若二进制资源存储在文件系统中，则指示二进制资源在文件系统中的名称，否则此参数返回空。</param>
-        /// <returns>是否获取二进制资源的实际路径成功。</returns>
-        public bool GetBinaryPath(string binaryAssetName, out bool storageInReadOnly, out bool storageInFileSystem, out string relativePath, out string fileName)
-        {
-            throw new NotSupportedException("GetBinaryPath");
-        }
-
-        /// <summary>
-        /// 获取二进制资源的长度。
-        /// </summary>
-        /// <param name="binaryAssetName">要获取长度的二进制资源的名称。</param>
-        /// <returns>二进制资源的长度。</returns>
-        public int GetBinaryLength(string binaryAssetName)
-        {
-            string binaryPath = GetBinaryPath(binaryAssetName);
-            if (string.IsNullOrEmpty(binaryPath))
-            {
-                return -1;
-            }
-
-            return (int)new System.IO.FileInfo(binaryPath).Length;
-        }
-
-        /// <summary>
-        /// 异步加载二进制资源。
-        /// </summary>
-        /// <param name="binaryAssetName">要加载二进制资源的名称。</param>
-        /// <param name="loadBinaryCallbacks">加载二进制资源回调函数集。</param>
-        public void LoadBinary(string binaryAssetName, LoadBinaryCallbacks loadBinaryCallbacks)
-        {
-            LoadBinary(binaryAssetName, loadBinaryCallbacks, null);
-        }
-
-        /// <summary>
-        /// 异步加载二进制资源。
-        /// </summary>
-        /// <param name="binaryAssetName">要加载二进制资源的名称。</param>
-        /// <param name="loadBinaryCallbacks">加载二进制资源回调函数集。</param>
+        /// <param name="fileUri">文件路径。</param>
+        /// <param name="loadBytesCallbacks">加载数据流回调函数集。</param>
         /// <param name="userData">用户自定义数据。</param>
-        public void LoadBinary(string binaryAssetName, LoadBinaryCallbacks loadBinaryCallbacks, object userData)
+        public void LoadBytes(string fileUri, LoadBytesCallbacks loadBytesCallbacks, object userData)
         {
-            if (loadBinaryCallbacks == null)
+            if (loadBytesCallbacks == null)
             {
-                throw new FrameworkException("Load binary callbacks is invalid.");
+                throw new FrameworkException("Load bytes callbacks is invalid.");
 
             }
 
-            if (string.IsNullOrEmpty(binaryAssetName))
+            if (string.IsNullOrEmpty(fileUri))
             {
-                if (loadBinaryCallbacks.LoadBinaryFailureCallback != null)
+                if (loadBytesCallbacks.LoadBytesFailureCallback != null)
                 {
-                    loadBinaryCallbacks.LoadBinaryFailureCallback(binaryAssetName, LoadResourceStatus.NotExist, "Binary asset name is invalid.", userData);
+                    loadBytesCallbacks.LoadBytesFailureCallback(fileUri, "FileUri is invalid.", userData);
                 }
 
                 return;
             }
 
-            if (!binaryAssetName.StartsWith("Assets/", StringComparison.Ordinal))
-            {
-                if (loadBinaryCallbacks.LoadBinaryFailureCallback != null)
-                {
-                    loadBinaryCallbacks.LoadBinaryFailureCallback(binaryAssetName, LoadResourceStatus.NotExist, Utility.Text.Format("Binary asset name '{0}' is invalid.", binaryAssetName), userData);
-                }
-
-                return;
-            }
-
-            string binaryPath = GetBinaryPath(binaryAssetName);
-            if (binaryPath == null)
-            {
-                if (loadBinaryCallbacks.LoadBinaryFailureCallback != null)
-                {
-                    loadBinaryCallbacks.LoadBinaryFailureCallback(binaryAssetName, LoadResourceStatus.NotExist, Utility.Text.Format("Binary asset '{0}' is not exist.", binaryAssetName), userData);
-                }
-
-                return;
-            }
-
-            try
-            {
-                byte[] binaryBytes = File.ReadAllBytes(binaryPath);
-                loadBinaryCallbacks.LoadBinarySuccessCallback(binaryAssetName, binaryBytes, 0f, userData);
-            }
-            catch (Exception exception)
-            {
-                if (loadBinaryCallbacks.LoadBinaryFailureCallback != null)
-                {
-                    loadBinaryCallbacks.LoadBinaryFailureCallback(binaryAssetName, LoadResourceStatus.AssetError, exception.ToString(), userData);
-                }
-            }
+            m_ResourceHelper.LoadBytes(fileUri, loadBytesCallbacks, userData);
         }
-
-        /// <summary>
-        /// 从文件系统中加载二进制资源。
-        /// </summary>
-        /// <param name="binaryAssetName">要加载二进制资源的名称。</param>
-        /// <returns>存储加载二进制资源的二进制流。</returns>
-        public byte[] LoadBinaryFromFileSystem(string binaryAssetName)
-        {
-            throw new NotSupportedException("LoadBinaryFromFileSystem");
-        }
-
-        /// <summary>
-        /// 从文件系统中加载二进制资源。
-        /// </summary>
-        /// <param name="binaryAssetName">要加载二进制资源的名称。</param>
-        /// <param name="buffer">存储加载二进制资源的二进制流。</param>
-        /// <returns>实际加载了多少字节。</returns>
-        public int LoadBinaryFromFileSystem(string binaryAssetName, byte[] buffer)
-        {
-            throw new NotSupportedException("LoadBinaryFromFileSystem");
-        }
-
-        /// <summary>
-        /// 从文件系统中加载二进制资源。
-        /// </summary>
-        /// <param name="binaryAssetName">要加载二进制资源的名称。</param>
-        /// <param name="buffer">存储加载二进制资源的二进制流。</param>
-        /// <param name="startIndex">存储加载二进制资源的二进制流的起始位置。</param>
-        /// <returns>实际加载了多少字节。</returns>
-        public int LoadBinaryFromFileSystem(string binaryAssetName, byte[] buffer, int startIndex)
-        {
-            throw new NotSupportedException("LoadBinaryFromFileSystem");
-        }
-
-        /// <summary>
-        /// 从文件系统中加载二进制资源。
-        /// </summary>
-        /// <param name="binaryAssetName">要加载二进制资源的名称。</param>
-        /// <param name="buffer">存储加载二进制资源的二进制流。</param>
-        /// <param name="startIndex">存储加载二进制资源的二进制流的起始位置。</param>
-        /// <param name="length">存储加载二进制资源的二进制流的长度。</param>
-        /// <returns>实际加载了多少字节。</returns>
-        public int LoadBinaryFromFileSystem(string binaryAssetName, byte[] buffer, int startIndex, int length)
-        {
-            throw new NotSupportedException("LoadBinaryFromFileSystem");
-        }
-
-        /// <summary>
-        /// 从文件系统中加载二进制资源的片段。
-        /// </summary>
-        /// <param name="binaryAssetName">要加载片段的二进制资源的名称。</param>
-        /// <param name="length">要加载片段的长度。</param>
-        /// <returns>存储加载二进制资源片段内容的二进制流。</returns>
-        public byte[] LoadBinarySegmentFromFileSystem(string binaryAssetName, int length)
-        {
-            throw new NotSupportedException("LoadBinarySegmentFromFileSystem");
-        }
-
-        /// <summary>
-        /// 从文件系统中加载二进制资源的片段。
-        /// </summary>
-        /// <param name="binaryAssetName">要加载片段的二进制资源的名称。</param>
-        /// <param name="offset">要加载片段的偏移。</param>
-        /// <param name="length">要加载片段的长度。</param>
-        /// <returns>存储加载二进制资源片段内容的二进制流。</returns>
-        public byte[] LoadBinarySegmentFromFileSystem(string binaryAssetName, int offset, int length)
-        {
-            throw new NotSupportedException("LoadBinarySegmentFromFileSystem");
-        }
-
-        /// <summary>
-        /// 从文件系统中加载二进制资源的片段。
-        /// </summary>
-        /// <param name="binaryAssetName">要加载片段的二进制资源的名称。</param>
-        /// <param name="buffer">存储加载二进制资源片段内容的二进制流。</param>
-        /// <returns>实际加载了多少字节。</returns>
-        public int LoadBinarySegmentFromFileSystem(string binaryAssetName, byte[] buffer)
-        {
-            throw new NotSupportedException("LoadBinarySegmentFromFileSystem");
-        }
-
-        /// <summary>
-        /// 从文件系统中加载二进制资源的片段。
-        /// </summary>
-        /// <param name="binaryAssetName">要加载片段的二进制资源的名称。</param>
-        /// <param name="buffer">存储加载二进制资源片段内容的二进制流。</param>
-        /// <param name="length">要加载片段的长度。</param>
-        /// <returns>实际加载了多少字节。</returns>
-        public int LoadBinarySegmentFromFileSystem(string binaryAssetName, byte[] buffer, int length)
-        {
-            throw new NotSupportedException("LoadBinarySegmentFromFileSystem");
-        }
-
-        /// <summary>
-        /// 从文件系统中加载二进制资源的片段。
-        /// </summary>
-        /// <param name="binaryAssetName">要加载片段的二进制资源的名称。</param>
-        /// <param name="buffer">存储加载二进制资源片段内容的二进制流。</param>
-        /// <param name="startIndex">存储加载二进制资源片段内容的二进制流的起始位置。</param>
-        /// <param name="length">要加载片段的长度。</param>
-        /// <returns>实际加载了多少字节。</returns>
-        public int LoadBinarySegmentFromFileSystem(string binaryAssetName, byte[] buffer, int startIndex, int length)
-        {
-            throw new NotSupportedException("LoadBinarySegmentFromFileSystem");
-        }
-
-        /// <summary>
-        /// 从文件系统中加载二进制资源的片段。
-        /// </summary>
-        /// <param name="binaryAssetName">要加载片段的二进制资源的名称。</param>
-        /// <param name="offset">要加载片段的偏移。</param>
-        /// <param name="buffer">存储加载二进制资源片段内容的二进制流。</param>
-        /// <returns>实际加载了多少字节。</returns>
-        public int LoadBinarySegmentFromFileSystem(string binaryAssetName, int offset, byte[] buffer)
-        {
-            throw new NotSupportedException("LoadBinarySegmentFromFileSystem");
-        }
-
-        /// <summary>
-        /// 从文件系统中加载二进制资源的片段。
-        /// </summary>
-        /// <param name="binaryAssetName">要加载片段的二进制资源的名称。</param>
-        /// <param name="offset">要加载片段的偏移。</param>
-        /// <param name="buffer">存储加载二进制资源片段内容的二进制流。</param>
-        /// <param name="length">要加载片段的长度。</param>
-        /// <returns>实际加载了多少字节。</returns>
-        public int LoadBinarySegmentFromFileSystem(string binaryAssetName, int offset, byte[] buffer, int length)
-        {
-            throw new NotSupportedException("LoadBinarySegmentFromFileSystem");
-        }
-
-        /// <summary>
-        /// 从文件系统中加载二进制资源的片段。
-        /// </summary>
-        /// <param name="binaryAssetName">要加载片段的二进制资源的名称。</param>
-        /// <param name="offset">要加载片段的偏移。</param>
-        /// <param name="buffer">存储加载二进制资源片段内容的二进制流。</param>
-        /// <param name="startIndex">存储加载二进制资源片段内容的二进制流的起始位置。</param>
-        /// <param name="length">要加载片段的长度。</param>
-        /// <returns>实际加载了多少字节。</returns>
-        public int LoadBinarySegmentFromFileSystem(string binaryAssetName, int offset, byte[] buffer, int startIndex, int length)
-        {
-            throw new NotSupportedException("LoadBinarySegmentFromFileSystem");
-        }
-
-
-
-
-
-
 
         internal override void Shutdown()
         {
             m_ResourceHelper.Shutdown();
         }
-
-
-
-
-
-
-
-
     }
-
 }

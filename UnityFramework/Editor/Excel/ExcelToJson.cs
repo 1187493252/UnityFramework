@@ -7,9 +7,6 @@
 */
 #if UNITY_EDITOR
 
-using ExcelDataReader;
-using LitJson;
-using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -17,6 +14,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using ExcelDataReader;
+using LitJson;
+using OfficeOpenXml;
 using UnityEditor;
 using UnityEngine;
 
@@ -58,7 +58,7 @@ namespace UnityFramework.Editor
             scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
             GUILayout.Space(5);
 
-            GUILayout.Label("说明:Excel表格示例在UnityFramework/ExcelData ");
+            GUILayout.Label("说明:Excel表格示例在ExcelData文件夹,只支持xlsx不支持xls ");
             GUILayout.Space(5);
 
             EditorGUILayout.BeginVertical();
@@ -396,7 +396,7 @@ namespace UnityFramework.Editor
                                 string field = result.Tables[i].Rows[0][k].ToString();
                                 //读取第二行数据转换成对应Type
                                 string typestring = result.Tables[i].Rows[1][k].ToString();
-                                System.Type type = GetTypeByString(typestring);
+                                System.Type type = ExcelHelper.GetTypeByString(typestring);
                                 string content = result.Tables[i].Rows[j][k].ToString();
 
                                 if (type != null)
@@ -443,7 +443,7 @@ namespace UnityFramework.Editor
                                 else
                                 {
                                     //type = null content可能是数组
-                                    object value = CovertToArrayorList(typestring, content);
+                                    object value = ExcelHelper.GetValueByString(typestring, content, delimiter.ToCharArray()[0]);
                                     //Key-Value对应
                                     rowData[field] = value;
                                 }
@@ -482,6 +482,7 @@ namespace UnityFramework.Editor
             AssetDatabase.Refresh();
 
         }
+
         private void BatchConvertToJson(string _directory)
         {
             if (Directory.Exists(_directory))
@@ -494,256 +495,12 @@ namespace UnityFramework.Editor
             }
         }
 
-        string GetTypeNameByString(string typeName)
-        {
-            string realTypeName = typeName;
-            switch (typeName.Trim().ToLower())
-            {
-                case "bool":
-                    realTypeName = "System.Boolean";
-                    break;
-                case "byte":
-                    realTypeName = "System.Byte";
-                    break;
-                case "sbyte":
-                    realTypeName = "System.SByte";
-                    break;
-                case "char":
-                    realTypeName = "System.Char";
-                    break;
-                case "decimal":
-                    realTypeName = "System.Decimal";
-                    break;
-                case "double":
-                    realTypeName = "System.Double";
-                    break;
-                case "float":
-                    realTypeName = "System.Single";
-                    break;
-                case "int":
-                    realTypeName = "System.Int32";
-                    break;
-                case "uint":
-                    realTypeName = "System.UInt32";
-                    break;
-                case "long":
-                    realTypeName = "System.Int64";
-                    break;
-                case "ulong":
-                    realTypeName = "System.UInt64";
-                    break;
-                case "object":
-                    realTypeName = "System.Object";
-                    break;
-                case "short":
-                    realTypeName = "System.Int16";
-                    break;
-                case "ushort":
-                    realTypeName = "System.UInt16";
-                    break;
-                case "string":
-                    realTypeName = "System.String";
-                    break;
-                case "date":
-                case "datetime":
-                    realTypeName = "System.DateTime";
-                    break;
-                case "guid":
-                    realTypeName = "System.Guid";
-                    break;
-                default:
-                    break;
-            }
-            return realTypeName;
-        }
-
-        System.Type GetTypeByString(string typeName)
-        {
-            System.Type result = null;
-
-            string realTypeName = GetTypeNameByString(typeName);
-            try
-            {
-                result = System.Type.GetType(realTypeName, true, true);
-            }
-            catch (Exception e)
-            {
-                Debug.Log($"基础类型转换错误,{typeName}可能为数组/列表: {e}");
-            }
-            return result;
-        }
 
 
-        /// <summary>
-        /// 转换成数组/链表
-        /// </summary>
-        /// <param name="type"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        object CovertToArrayorList(string type, string value)
-        {
-            bool isList = false;
-            if (type.ToUpperFirst().Contains("List"))
-            {
-                isList = true;
-            }
-            string[] strArry = value.Split(delimiter.ToCharArray()[0]);
-            int lgh = strArry.Length;
 
-            if (type.ToLower().Contains("int"))
-            {
-                int[] result = new int[lgh];
-                for (int i = 0; i < lgh; i++)
-                {
-                    if (string.IsNullOrEmpty(strArry[i]))
-                    {
-                        result[i] = 0;
-                    }
-                    else
-                    {
-                        try
-                        {
-                            result[i] = int.Parse(strArry[i]);
-                        }
-                        catch (Exception e)
-                        {
-                            result[i] = 0;
 
-                            Debug.LogError($"int.Parse 转换  {strArry[i]} 错误,已初始化为默认值: {e}");
-                        }
-                    }
-                }
-                if (isList)
-                {
-                    return result.ToList();
-                }
-                else
-                {
-                    return result;
 
-                }
-                //	return isList ? result.ToList() : result;
-            }
-            else if (type.ToLower().Contains("float"))
-            {
-                float[] result = new float[lgh];
-                for (int i = 0; i < lgh; i++)
-                {
-                    if (string.IsNullOrEmpty(strArry[i]))
-                    {
-                        result[i] = 0;
-                    }
-                    else
-                    {
-                        try
-                        {
-                            result[i] = float.Parse(strArry[i]);
-                        }
-                        catch (Exception e)
-                        {
-                            result[i] = 0;
 
-                            Debug.LogError($"float.Parse 转换  {strArry[i]} 错误,已初始化为默认值: {e}");
-                        }
-                    }
-                }
-                if (isList)
-                {
-                    return result.ToList();
-                }
-                else
-                {
-                    return result;
-
-                }
-                //return isList ? result.ToList() : result;
-
-            }
-            else if (type.ToLower().Contains("double"))
-            {
-                double[] result = new double[lgh];
-                for (int i = 0; i < lgh; i++)
-                {
-                    if (string.IsNullOrEmpty(strArry[i]))
-                    {
-                        result[i] = 0;
-                    }
-                    else
-                    {
-                        try
-                        {
-                            result[i] = double.Parse(strArry[i]);
-                        }
-                        catch (Exception e)
-                        {
-                            result[i] = 0;
-
-                            Debug.LogError($"double.Parse 转换  {strArry[i]} 错误,已初始化为默认值: {e}");
-                        }
-                    }
-                }
-                if (isList)
-                {
-                    return result.ToList();
-                }
-                else
-                {
-                    return result;
-
-                }
-                //return isList ? result.ToList() : result;
-
-            }
-            else if (type.ToLower().Contains("bool"))
-            {
-                bool[] result = new bool[lgh];
-                for (int i = 0; i < lgh; i++)
-                {
-                    if (string.IsNullOrEmpty(strArry[i]))
-                    {
-                        result[i] = false;
-                    }
-                    else
-                    {
-                        try
-                        {
-                            result[i] = bool.Parse(strArry[i]);
-                        }
-                        catch (Exception e)
-                        {
-                            result[i] = false;
-
-                            Debug.LogError($"bool.Parse 转换  {strArry[i]} 错误,已初始化为默认值: {e}");
-                        }
-                    }
-                }
-                if (isList)
-                {
-                    return result.ToList();
-                }
-                else
-                {
-                    return result;
-
-                }
-                //return isList ? result.ToList() : result;
-
-            }
-            else if (type.ToLower().Contains("string"))
-            {
-                if (isList)
-                {
-                    return strArry.ToList();
-                }
-                else
-                {
-                    return strArry;
-
-                }
-                //	return isList ? strArry.ToList() : strArry;
-            }
-            return null;
-        }
 
 
     }

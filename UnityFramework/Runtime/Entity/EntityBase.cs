@@ -53,8 +53,7 @@ namespace UnityFramework.Runtime
                 }
                 else
                 {
-                    ComponentEntry.OnInitFinish += delegate
-                    {
+                    ComponentEntry.OnInitFinish += delegate {
                         ComponentEntry.Entity.AddSceneEntity(this);
                     };
                 }

@@ -5,8 +5,6 @@
 * Description:       
 */
 
-using Framework;
-using Framework.Resource;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,7 +13,10 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using Framework;
+using Framework.Resource;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 
 namespace UnityFramework.Runtime
@@ -45,6 +46,7 @@ namespace UnityFramework.Runtime
         private FrameworkLinkedList<LoadSceneInfo> m_LoadSceneInfos = null;
         private FrameworkLinkedList<UnloadSceneInfo> m_UnloadSceneInfos = null;
 
+        private FrameworkLinkedList<LoadByteInfo> m_LoadByteInfos = null;
 
 
         /// <summary>
@@ -311,6 +313,49 @@ namespace UnityFramework.Runtime
             }
 
 
+            if (m_LoadByteInfos.Count > 0)
+            {
+                LinkedListNode<LoadByteInfo> current = m_LoadByteInfos.First;
+                while (current != null)
+                {
+                    LoadByteInfo loadByteInfo = current.Value;
+                    UnityWebRequest unityWebRequest = loadByteInfo.AsyncOperation.webRequest;
+                    if (loadByteInfo.AsyncOperation.isDone)
+                    {
+
+                        bool isError = false;
+                        byte[] bytes = null;
+                        string errorMessage = null;
+#if UNITY_2020_2_OR_NEWER
+                        isError = unityWebRequest.result != UnityWebRequest.Result.Success;
+#elif UNITY_2017_1_OR_NEWER
+            isError = unityWebRequest.isNetworkError || unityWebRequest.isHttpError;
+#else
+            isError = unityWebRequest.isError;
+#endif
+                        bytes = unityWebRequest.downloadHandler.data;
+                        errorMessage = isError ? unityWebRequest.error : null;
+                        unityWebRequest.Dispose();
+
+                        if (!isError)
+                        {
+                            float elapseSeconds = (float)(DateTime.UtcNow - loadByteInfo.StartTime).TotalSeconds; loadByteInfo.LoadBytesCallbacks.LoadBytesSuccessCallback(unityWebRequest.url, bytes, elapseSeconds, loadByteInfo.UserData);
+                        }
+                        else if (loadByteInfo.LoadBytesCallbacks.LoadBytesFailureCallback != null)
+                        {
+                            loadByteInfo.LoadBytesCallbacks.LoadBytesFailureCallback(unityWebRequest.url, errorMessage, loadByteInfo.UserData);
+                        }
+                        LinkedListNode<LoadByteInfo> next = current.Next;
+                        m_LoadByteInfos.Remove(loadByteInfo);
+                        current = next;
+                    }
+                    else
+                    {
+                        current = current.Next;
+                    }
+                }
+            }
+
         }
 
         /// <summary>
@@ -514,7 +559,7 @@ namespace UnityFramework.Runtime
             }
 
 
-            m_LoadAssetInfos.AddLast(new LoadAssetInfo(assetName, assetType, priority, DateTime.UtcNow, m_MinLoadAssetRandomDelaySeconds + (float)Utility.Random.GetRandomDouble() * (m_MaxLoadAssetRandomDelaySeconds - m_MinLoadAssetRandomDelaySeconds), loadAssetCallbacks, userData));
+            m_LoadAssetInfos.AddLast(new LoadAssetInfo(assetName, assetType, priority, DateTime.UtcNow, m_MinLoadAssetRandomDelaySeconds + (float)Framework.Utility.Random.GetRandomDouble() * (m_MaxLoadAssetRandomDelaySeconds - m_MinLoadAssetRandomDelaySeconds), loadAssetCallbacks, userData));
         }
 
 
@@ -658,263 +703,45 @@ namespace UnityFramework.Runtime
 #endif
         }
 
-        /// <summary>
-        /// 获取二进制资源的实际路径。
-        /// </summary>
-        /// <param name="binaryAssetName">要获取实际路径的二进制资源的名称。</param>
-        /// <returns>二进制资源的实际路径。</returns>
-        /// <remarks>此方法仅适用于二进制资源存储在磁盘（而非文件系统）中的情况。若二进制资源存储在文件系统中时，返回值将始终为空。</remarks>
-        public string GetBinaryPath(string binaryAssetName)
-        {
 
 
-            return Application.dataPath.Substring(0, Application.dataPath.Length - AssetsStringLength) + binaryAssetName;
-        }
 
         /// <summary>
-        /// 获取二进制资源的实际路径。
+        /// 直接从指定文件路径加载数据流。
         /// </summary>
-        /// <param name="binaryAssetName">要获取实际路径的二进制资源的名称。</param>
-        /// <param name="storageInReadOnly">二进制资源是否存储在只读区中。</param>
-        /// <param name="storageInFileSystem">二进制资源是否存储在文件系统中。</param>
-        /// <param name="relativePath">二进制资源或存储二进制资源的文件系统，相对于只读区或者读写区的相对路径。</param>
-        /// <param name="fileName">若二进制资源存储在文件系统中，则指示二进制资源在文件系统中的名称，否则此参数返回空。</param>
-        /// <returns>是否获取二进制资源的实际路径成功。</returns>
-        public bool GetBinaryPath(string binaryAssetName, out bool storageInReadOnly, out bool storageInFileSystem, out string relativePath, out string fileName)
-        {
-            throw new NotSupportedException("GetBinaryPath");
-        }
-
-        /// <summary>
-        /// 获取二进制资源的长度。
-        /// </summary>
-        /// <param name="binaryAssetName">要获取长度的二进制资源的名称。</param>
-        /// <returns>二进制资源的长度。</returns>
-        public int GetBinaryLength(string binaryAssetName)
-        {
-            string binaryPath = GetBinaryPath(binaryAssetName);
-            if (string.IsNullOrEmpty(binaryPath))
-            {
-                return -1;
-            }
-
-            return (int)new System.IO.FileInfo(binaryPath).Length;
-        }
-
-        /// <summary>
-        /// 异步加载二进制资源。
-        /// </summary>
-        /// <param name="binaryAssetName">要加载二进制资源的名称。</param>
-        /// <param name="loadBinaryCallbacks">加载二进制资源回调函数集。</param>
-        public void LoadBinary(string binaryAssetName, LoadBinaryCallbacks loadBinaryCallbacks)
-        {
-            LoadBinary(binaryAssetName, loadBinaryCallbacks, null);
-        }
-
-        /// <summary>
-        /// 异步加载二进制资源。
-        /// </summary>
-        /// <param name="binaryAssetName">要加载二进制资源的名称。</param>
-        /// <param name="loadBinaryCallbacks">加载二进制资源回调函数集。</param>
+        /// <param name="fileUri">文件路径。</param>
+        /// <param name="loadBytesCallbacks">加载数据流回调函数集。</param>
         /// <param name="userData">用户自定义数据。</param>
-        public void LoadBinary(string binaryAssetName, LoadBinaryCallbacks loadBinaryCallbacks, object userData)
+        public void LoadBytes(string fileUri, LoadBytesCallbacks loadBytesCallbacks, object userData)
         {
-            if (loadBinaryCallbacks == null)
+            if (loadBytesCallbacks == null)
             {
-                Log.Error("Load binary callbacks is invalid.");
+                Log.Error("Load Bytes callbacks is invalid.");
                 return;
             }
 
-            if (string.IsNullOrEmpty(binaryAssetName))
+            if (string.IsNullOrEmpty(fileUri))
             {
-                if (loadBinaryCallbacks.LoadBinaryFailureCallback != null)
+                if (loadBytesCallbacks.LoadBytesFailureCallback != null)
                 {
-                    loadBinaryCallbacks.LoadBinaryFailureCallback(binaryAssetName, LoadResourceStatus.NotExist, "Binary asset name is invalid.", userData);
+                    loadBytesCallbacks.LoadBytesFailureCallback(fileUri, "LoadBytes fileUri is invalid.", userData);
                 }
 
                 return;
             }
 
-            if (!binaryAssetName.StartsWith("Assets/", StringComparison.Ordinal))
-            {
-                if (loadBinaryCallbacks.LoadBinaryFailureCallback != null)
-                {
-                    loadBinaryCallbacks.LoadBinaryFailureCallback(binaryAssetName, LoadResourceStatus.NotExist, Utility.Text.Format("Binary asset name '{0}' is invalid.", binaryAssetName), userData);
-                }
+            UnityWebRequest unityWebRequest = UnityWebRequest.Get(fileUri);
 
+            UnityWebRequestAsyncOperation asyncOperation = unityWebRequest.SendWebRequest();
+
+
+            if (asyncOperation == null)
+            {
                 return;
             }
+            m_LoadByteInfos.AddLast(new LoadByteInfo(fileUri, asyncOperation, DateTime.UtcNow, loadBytesCallbacks, userData));
 
-            string binaryPath = GetBinaryPath(binaryAssetName);
-            if (binaryPath == null)
-            {
-                if (loadBinaryCallbacks.LoadBinaryFailureCallback != null)
-                {
-                    loadBinaryCallbacks.LoadBinaryFailureCallback(binaryAssetName, LoadResourceStatus.NotExist, Utility.Text.Format("Binary asset '{0}' is not exist.", binaryAssetName), userData);
-                }
-
-                return;
-            }
-
-            try
-            {
-                byte[] binaryBytes = File.ReadAllBytes(binaryPath);
-                loadBinaryCallbacks.LoadBinarySuccessCallback(binaryAssetName, binaryBytes, 0f, userData);
-            }
-            catch (Exception exception)
-            {
-                if (loadBinaryCallbacks.LoadBinaryFailureCallback != null)
-                {
-                    loadBinaryCallbacks.LoadBinaryFailureCallback(binaryAssetName, LoadResourceStatus.AssetError, exception.ToString(), userData);
-                }
-            }
         }
-
-        /// <summary>
-        /// 从文件系统中加载二进制资源。
-        /// </summary>
-        /// <param name="binaryAssetName">要加载二进制资源的名称。</param>
-        /// <returns>存储加载二进制资源的二进制流。</returns>
-        public byte[] LoadBinaryFromFileSystem(string binaryAssetName)
-        {
-            throw new NotSupportedException("LoadBinaryFromFileSystem");
-        }
-
-        /// <summary>
-        /// 从文件系统中加载二进制资源。
-        /// </summary>
-        /// <param name="binaryAssetName">要加载二进制资源的名称。</param>
-        /// <param name="buffer">存储加载二进制资源的二进制流。</param>
-        /// <returns>实际加载了多少字节。</returns>
-        public int LoadBinaryFromFileSystem(string binaryAssetName, byte[] buffer)
-        {
-            throw new NotSupportedException("LoadBinaryFromFileSystem");
-        }
-
-        /// <summary>
-        /// 从文件系统中加载二进制资源。
-        /// </summary>
-        /// <param name="binaryAssetName">要加载二进制资源的名称。</param>
-        /// <param name="buffer">存储加载二进制资源的二进制流。</param>
-        /// <param name="startIndex">存储加载二进制资源的二进制流的起始位置。</param>
-        /// <returns>实际加载了多少字节。</returns>
-        public int LoadBinaryFromFileSystem(string binaryAssetName, byte[] buffer, int startIndex)
-        {
-            throw new NotSupportedException("LoadBinaryFromFileSystem");
-        }
-
-        /// <summary>
-        /// 从文件系统中加载二进制资源。
-        /// </summary>
-        /// <param name="binaryAssetName">要加载二进制资源的名称。</param>
-        /// <param name="buffer">存储加载二进制资源的二进制流。</param>
-        /// <param name="startIndex">存储加载二进制资源的二进制流的起始位置。</param>
-        /// <param name="length">存储加载二进制资源的二进制流的长度。</param>
-        /// <returns>实际加载了多少字节。</returns>
-        public int LoadBinaryFromFileSystem(string binaryAssetName, byte[] buffer, int startIndex, int length)
-        {
-            throw new NotSupportedException("LoadBinaryFromFileSystem");
-        }
-
-        /// <summary>
-        /// 从文件系统中加载二进制资源的片段。
-        /// </summary>
-        /// <param name="binaryAssetName">要加载片段的二进制资源的名称。</param>
-        /// <param name="length">要加载片段的长度。</param>
-        /// <returns>存储加载二进制资源片段内容的二进制流。</returns>
-        public byte[] LoadBinarySegmentFromFileSystem(string binaryAssetName, int length)
-        {
-            throw new NotSupportedException("LoadBinarySegmentFromFileSystem");
-        }
-
-        /// <summary>
-        /// 从文件系统中加载二进制资源的片段。
-        /// </summary>
-        /// <param name="binaryAssetName">要加载片段的二进制资源的名称。</param>
-        /// <param name="offset">要加载片段的偏移。</param>
-        /// <param name="length">要加载片段的长度。</param>
-        /// <returns>存储加载二进制资源片段内容的二进制流。</returns>
-        public byte[] LoadBinarySegmentFromFileSystem(string binaryAssetName, int offset, int length)
-        {
-            throw new NotSupportedException("LoadBinarySegmentFromFileSystem");
-        }
-
-        /// <summary>
-        /// 从文件系统中加载二进制资源的片段。
-        /// </summary>
-        /// <param name="binaryAssetName">要加载片段的二进制资源的名称。</param>
-        /// <param name="buffer">存储加载二进制资源片段内容的二进制流。</param>
-        /// <returns>实际加载了多少字节。</returns>
-        public int LoadBinarySegmentFromFileSystem(string binaryAssetName, byte[] buffer)
-        {
-            throw new NotSupportedException("LoadBinarySegmentFromFileSystem");
-        }
-
-        /// <summary>
-        /// 从文件系统中加载二进制资源的片段。
-        /// </summary>
-        /// <param name="binaryAssetName">要加载片段的二进制资源的名称。</param>
-        /// <param name="buffer">存储加载二进制资源片段内容的二进制流。</param>
-        /// <param name="length">要加载片段的长度。</param>
-        /// <returns>实际加载了多少字节。</returns>
-        public int LoadBinarySegmentFromFileSystem(string binaryAssetName, byte[] buffer, int length)
-        {
-            throw new NotSupportedException("LoadBinarySegmentFromFileSystem");
-        }
-
-        /// <summary>
-        /// 从文件系统中加载二进制资源的片段。
-        /// </summary>
-        /// <param name="binaryAssetName">要加载片段的二进制资源的名称。</param>
-        /// <param name="buffer">存储加载二进制资源片段内容的二进制流。</param>
-        /// <param name="startIndex">存储加载二进制资源片段内容的二进制流的起始位置。</param>
-        /// <param name="length">要加载片段的长度。</param>
-        /// <returns>实际加载了多少字节。</returns>
-        public int LoadBinarySegmentFromFileSystem(string binaryAssetName, byte[] buffer, int startIndex, int length)
-        {
-            throw new NotSupportedException("LoadBinarySegmentFromFileSystem");
-        }
-
-        /// <summary>
-        /// 从文件系统中加载二进制资源的片段。
-        /// </summary>
-        /// <param name="binaryAssetName">要加载片段的二进制资源的名称。</param>
-        /// <param name="offset">要加载片段的偏移。</param>
-        /// <param name="buffer">存储加载二进制资源片段内容的二进制流。</param>
-        /// <returns>实际加载了多少字节。</returns>
-        public int LoadBinarySegmentFromFileSystem(string binaryAssetName, int offset, byte[] buffer)
-        {
-            throw new NotSupportedException("LoadBinarySegmentFromFileSystem");
-        }
-
-        /// <summary>
-        /// 从文件系统中加载二进制资源的片段。
-        /// </summary>
-        /// <param name="binaryAssetName">要加载片段的二进制资源的名称。</param>
-        /// <param name="offset">要加载片段的偏移。</param>
-        /// <param name="buffer">存储加载二进制资源片段内容的二进制流。</param>
-        /// <param name="length">要加载片段的长度。</param>
-        /// <returns>实际加载了多少字节。</returns>
-        public int LoadBinarySegmentFromFileSystem(string binaryAssetName, int offset, byte[] buffer, int length)
-        {
-            throw new NotSupportedException("LoadBinarySegmentFromFileSystem");
-        }
-
-        /// <summary>
-        /// 从文件系统中加载二进制资源的片段。
-        /// </summary>
-        /// <param name="binaryAssetName">要加载片段的二进制资源的名称。</param>
-        /// <param name="offset">要加载片段的偏移。</param>
-        /// <param name="buffer">存储加载二进制资源片段内容的二进制流。</param>
-        /// <param name="startIndex">存储加载二进制资源片段内容的二进制流的起始位置。</param>
-        /// <param name="length">要加载片段的长度。</param>
-        /// <returns>实际加载了多少字节。</returns>
-        public int LoadBinarySegmentFromFileSystem(string binaryAssetName, int offset, byte[] buffer, int startIndex, int length)
-        {
-            throw new NotSupportedException("LoadBinarySegmentFromFileSystem");
-        }
-
-
 
 
         private bool HasCachedAsset(string assetName)
@@ -1151,7 +978,67 @@ namespace UnityFramework.Runtime
             }
         }
 
+        [StructLayout(LayoutKind.Auto)]
+        private struct LoadByteInfo
+        {
+            private readonly UnityWebRequestAsyncOperation m_AsyncOperation;
+            private readonly string m_AssetName;
+            private readonly DateTime m_StartTime;
+            private readonly LoadBytesCallbacks m_LoadBytesCallbacks;
+            private readonly object m_UserData;
 
+            public LoadByteInfo(string assetName, UnityWebRequestAsyncOperation asyncOperation, DateTime startTime, LoadBytesCallbacks loadBytesCallbacks, object userData)
+            {
+                m_AssetName = assetName;
+                m_AsyncOperation = asyncOperation;
+                m_StartTime = startTime;
+                m_LoadBytesCallbacks = loadBytesCallbacks;
+                m_UserData = userData;
+            }
+
+            public string AssetName
+            {
+                get
+                {
+                    return m_AssetName;
+                }
+            }
+            public UnityWebRequestAsyncOperation AsyncOperation
+            {
+                get
+                {
+                    return m_AsyncOperation;
+                }
+            }
+
+
+
+            public DateTime StartTime
+            {
+                get
+                {
+                    return m_StartTime;
+                }
+            }
+
+
+
+            public LoadBytesCallbacks LoadBytesCallbacks
+            {
+                get
+                {
+                    return m_LoadBytesCallbacks;
+                }
+            }
+
+            public object UserData
+            {
+                get
+                {
+                    return m_UserData;
+                }
+            }
+        }
     }
 
 }

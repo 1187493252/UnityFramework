@@ -5,18 +5,19 @@
 * Description:       
 */
 
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
 using Framework;
 using Framework.Event;
 using LitJson;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -36,14 +37,8 @@ namespace UnityFramework.Runtime
             ComponentEntry.Event.Subscribe(LoadDataSuccessEventArgs.EventId, LoadDataSuccess);
             StartCoroutine(InitOperation());
 
-            //测试
-            //DataFileInfo dataFileInfo = DataFilePaths[0];
-            //ComponentEntry.Resource.LoadData(dataFileInfo.dataName, dataFileInfo.dataType, 0, new Framework.Resource.LoadDataCallbacks(LoadAssetSuccessCallback), null);
         }
-        private void LoadAssetSuccessCallback(string entityAssetName, object entityAsset, float duration, object userData)
-        {
-            Log.Info(entityAsset.ToString());
-        }
+
         public void Clear()
         {
             ComponentEntry.Event.Unsubscribe(LoadDataSuccessEventArgs.EventId, LoadDataSuccess);
@@ -88,6 +83,9 @@ namespace UnityFramework.Runtime
                     case DataType.Binary:
                         url += ".sc";
                         break;
+                    case DataType.Excel:
+                        url += ".xlsx";
+                        break;
                 }
                 UnityWebRequest request = UnityWebRequest.Get(url);
                 yield return request.SendWebRequest();
@@ -115,6 +113,11 @@ namespace UnityFramework.Runtime
                             datas = (byte[])binaryFormatter.Deserialize(stream);
                             dataContent = Encoding.Unicode.GetString(datas);
                             stream.Dispose();
+                            break;
+                        case DataType.Excel:
+                            datas = request.downloadHandler.data;
+                            List<DataTable> dataTableList = ExcelHelper.GetDataTablesFromExcel(datas);
+                            dataContent = ExcelHelper.DataTableToJson(dataTableList);
                             break;
                         default:
                             dataContent = request.downloadHandler.text;
@@ -169,6 +172,7 @@ namespace UnityFramework.Runtime
         Txt,            //Txt
         Xml,            //Xml
         Base64,         //Base64位字符串
-        Binary       //二进制
+        Binary,       //二进制
+        Excel
     }
 }

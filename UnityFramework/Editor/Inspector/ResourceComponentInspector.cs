@@ -6,8 +6,8 @@
 //------------------------------------------------------------
 #if UNITY_EDITOR
 
-using Framework;
 using System.Reflection;
+using Framework;
 using UnityEditor;
 using UnityFramework.Runtime;
 
@@ -35,7 +35,6 @@ namespace UnityFramework.Editor
         private SerializedProperty m_UpdateRetryCount = null;
         private SerializedProperty m_InstanceRoot = null;
 
-        private SerializedProperty m_LoadResourceAgentHelperCount = null;
 
         private FieldInfo m_EditorResourceModeFieldInfo = null;
 
@@ -258,8 +257,7 @@ namespace UnityFramework.Editor
                 EditorGUILayout.PropertyField(m_InstanceRoot);
 
                 m_ResourceHelperInfo.Draw();
-                //    m_LoadResourceAgentHelperInfo.Draw();
-                m_LoadResourceAgentHelperCount.intValue = EditorGUILayout.IntSlider("Load Resource Agent Helper Count", m_LoadResourceAgentHelperCount.intValue, 1, 128);
+
             }
             EditorGUI.EndDisabledGroup();
 
@@ -318,12 +316,11 @@ namespace UnityFramework.Editor
             m_GenerateReadWriteVersionListLength = serializedObject.FindProperty("m_GenerateReadWriteVersionListLength");
             m_UpdateRetryCount = serializedObject.FindProperty("m_UpdateRetryCount");
             m_InstanceRoot = serializedObject.FindProperty("m_InstanceRoot");
-            m_LoadResourceAgentHelperCount = serializedObject.FindProperty("m_LoadResourceAgentHelperCount");
+
 
             m_EditorResourceModeFieldInfo = target.GetType().GetField("m_EditorResourceMode", BindingFlags.NonPublic | BindingFlags.Instance);
 
             m_ResourceHelperInfo.Init(serializedObject);
-            //    m_LoadResourceAgentHelperInfo.Init(serializedObject);
 
             RefreshModes();
             RefreshTypeNames();
