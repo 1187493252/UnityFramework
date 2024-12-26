@@ -1,8 +1,8 @@
 # UnityFramework
 # 导入方法:
-1.在Unity的PackageManager里通过url导入
+1.在Unity的PackageManager里通过url导入(由于个人能力有限导致有些代码可能出现引用问题)
 
-2.直接下载源码导入项目
+2.直接下载源码导入项目(推荐)
 # 说明:
 本项目以GameFramework为核心,再结合本人项目经历(VR/AR)去掉/修改不适用的模块,目前有些模块功能还没实现或者临时写的单例没有遵循框架规则,后续慢慢完善
 
