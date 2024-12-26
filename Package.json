@@ -1,6 +1,6 @@
 {
   "name": "com.sc.unityframework",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "displayName": "SC.UnityFramework",
   "description": "",
   "documentationUrl": "",
@@ -20,10 +20,20 @@
       "description": "",
       "path": "Samples~/AddressableDemo"
     },
+	  {
+      "displayName": "ChoiceQuestion",
+      "description": "选择题",
+      "path": "Samples~/ChoiceQuestion"
+    },
     {
       "displayName": "ColorPalette",
       "description": "颜色选择器,调色盘",
       "path": "Samples~/ColorPalette"
+    },
+	  {
+      "displayName": "PC文件选择框",
+      "description": "PC文件选择框",
+      "path": "Samples~/EmbedEXE"
     },
     {
       "displayName": "EmojiText",
@@ -65,6 +75,11 @@
       "description": "",
       "path": "Samples~/ProtobufDemo"
     },
+	{
+      "displayName": "Question",
+      "description": "选择题",
+      "path": "Samples~/Question"
+    },
     {
       "displayName": "ScrollView",
       "description": "滑动列表",
@@ -74,6 +89,11 @@
       "displayName": "Sine",
       "description": "",
       "path": "Samples~/Sine"
+    },
+	  {
+      "displayName": "TaskDemo",
+      "description": "任务系统",
+      "path": "Samples~/Task"
     },
     {
       "displayName": "TextMeshProDemo",
@@ -94,10 +114,25 @@
       "description": "UI拖拽移动",
       "path": "Samples~/UIDrag"
     },
+	    {
+      "displayName": "UISliderControlAnimator",
+      "description": "UI滑动条控制动画",
+      "path": "Samples~/UISliderControlAnimator"
+    },
     {
       "displayName": "VideoPlay",
       "description": "Unity官方播放器",
       "path": "Samples~/VideoPlay"
+    },
+		{
+      "displayName": "Weather",
+      "description": "在线获取天气",
+      "path": "Samples~/Weather"
+    },
+		{
+      "displayName": "WebGLDemo",
+      "description": "网页小功能",
+      "path": "Samples~/WebGL"
     },
     {
       "displayName": "YooAssetDemo",
