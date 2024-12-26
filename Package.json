@@ -40,6 +40,11 @@
       "description": "",
       "path": "Samples~/HybridCLRDemo"
     },
+	  {
+      "displayName": "InnerKeyBoard",
+      "description": "键盘支持中英文",
+      "path": "Samples~/InnerKeyBoard"
+    },
     {
       "displayName": "KeyBoard",
       "description": "键盘",
@@ -51,7 +56,7 @@
       "path": "Samples~/LinkSpriteText"
     },
     {
-      "displayName": "Logo",
+      "displayName": "ZRLogo",
       "description": "中锐Logo",
       "path": "Samples~/Logo"
     },
@@ -74,6 +79,20 @@
       "displayName": "TextMeshProDemo",
       "description": "",
       "path": "Samples~/TextMeshProDemo"
+    },
+	{
+      "displayName": "TextPro",
+      "description": "",
+      "path": "Samples~/TextPro"
+    },
+	{
+      "displayName": "Touch",
+      "description": "射线选中模型移动旋转,支持PC触摸屏,安卓",
+      "path": "Samples~/Touch"
+    },{
+      "displayName": "UIDrag",
+      "description": "UI拖拽移动",
+      "path": "Samples~/UIDrag"
     },
     {
       "displayName": "VideoPlay",
