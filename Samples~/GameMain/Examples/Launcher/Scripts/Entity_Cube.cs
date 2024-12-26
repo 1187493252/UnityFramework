@@ -15,16 +15,16 @@ using UnityFramework.Runtime;
 public class Entity_Cube : EntityBase
 {
     EntityMouseInteraction entityClick;
-    protected internal override void OnInit(object userData)
-    {
-        base.OnInit(userData);
-        entityClick = GetComponent<EntityMouseInteraction>();
-        entityClick.EntityProxy.RayProxy.OnPointerEnter += OnPointerEnter;
-        entityClick.EntityProxy.RayProxy.OnPointerExit += OnPointerExit;
-        entityClick.EntityProxy.RayProxy.OnPointerClick += OnPointerClick;
+    // protected internal override void OnInit(object userData)
+    // {
+    //     base.OnInit(userData);
+    //     entityClick = GetComponent<EntityMouseInteraction>();
+    //     entityClick.EntityProxy.RayProxy.OnPointerEnter += OnPointerEnter;
+    //     entityClick.EntityProxy.RayProxy.OnPointerExit += OnPointerExit;
+    //     entityClick.EntityProxy.RayProxy.OnPointerClick += OnPointerClick;
 
 
-    }
+    // }
 
     private void OnPointerClick(object arg1, object arg2)
     {
@@ -41,10 +41,6 @@ public class Entity_Cube : EntityBase
         //entityClick.EntityProxy.HighlightProxy.StartHighlight();
     }
 
-    protected internal override void OnShow(object userData)
-    {
-        base.OnShow(userData);
-    }
-
+  
 
 }

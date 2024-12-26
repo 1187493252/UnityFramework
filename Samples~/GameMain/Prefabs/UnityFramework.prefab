@@ -858,7 +858,7 @@ MonoBehaviour:
   m_VersionHelperTypeName: 
   m_LogHelperTypeName: UnityFramework.Runtime.DefaultLogHelper
   m_CompressionHelperTypeName: 
-  m_JsonHelperTypeName: 
+  m_JsonHelperTypeName: UnityFramework.Runtime.LitJsonHelper
   m_FrameRate: 30
   m_GameSpeed: 1
   m_RunInBackground: 1

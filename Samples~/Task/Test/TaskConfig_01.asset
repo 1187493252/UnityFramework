@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3030d2502d40a5b478af42f86a381ddb, type: 3}
+  m_Name: TaskConfig_01
+  m_EditorClassIdentifier: 
+  TaskName: 1
+  TaskID: 1
+  ModuleID: 0
+  Priority: 1
+  TaskMode: 0
+  isRead: 0
+  Parent: {fileID: 0}
+  Child: {fileID: 11400000, guid: d2963449089ee8c46ac95e159032cec1, type: 2}
+  Previous: {fileID: 11400000, guid: cba1f78c94c02954faa90907ae50c673, type: 2}
+  Next: {fileID: 11400000, guid: 3d973b24c95335b43b8797e34eeff824, type: 2}
+  isCanRecord: 1
+  TaskTargetList: []
+  TaskTools:
+  - {fileID: 11400000, guid: e232f7f2fa6f4bf4fbe4be41476814e0, type: 2}
+  DelayTimeToStart: 0
+  DelayTimeToDoing: 0
+  isJumpBigOnError: 0
+  startStudyAudioKeys: []
+  startExamAudioKeys: []
+  isPlayAudioOnError: 0
+  errorAudioKeys: []
+  isPlayAudioOnSuccess: 0
+  successAudioKeys: []
+  isJustPlayAudio: 0
+  reDoTime: 10
