@@ -1,0 +1,2 @@
+功能：第一人称控制器移动、旋转、垂直升降
+PS：添加此功能需要在InputManager中添加Aixs，Verticaly，设置方式与Vertical/Horizontal一致，更改按键映射即可

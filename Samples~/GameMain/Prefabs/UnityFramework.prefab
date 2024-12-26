@@ -262,7 +262,6 @@ MonoBehaviour:
   m_ResourceHelperTypeName: UnityFramework.Runtime.DefaultResourceHelper
   m_CustomResourceHelper: {fileID: 0}
   m_LoadResourceAgentHelperTypeName: UnityFramework.Runtime.DefaultLoadResourceAgentHelper
-  m_LoadResourceAgentHelperCount: 3
 --- !u!1 &2829676932271145710
 GameObject:
   m_ObjectHideFlags: 0
@@ -859,7 +858,7 @@ MonoBehaviour:
   m_VersionHelperTypeName: 
   m_LogHelperTypeName: UnityFramework.Runtime.DefaultLogHelper
   m_CompressionHelperTypeName: 
-  m_JsonHelperTypeName: UnityFramework.Runtime.DefaultJsonHelper
+  m_JsonHelperTypeName: 
   m_FrameRate: 30
   m_GameSpeed: 1
   m_RunInBackground: 1

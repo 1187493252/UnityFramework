@@ -223,7 +223,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 450909966799755549, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: DataFilePaths.Array.size
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 450909966799755549, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: FilePaths.Array.data[0].fileName
@@ -268,6 +268,14 @@ PrefabInstance:
     - target: {fileID: 450909966799755549, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: DataFilePaths.Array.data[2].fileType
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 450909966799755549, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
+      propertyPath: DataFilePaths.Array.data[3].dataName
+      value: Cases
+      objectReference: {fileID: 0}
+    - target: {fileID: 450909966799755549, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
+      propertyPath: DataFilePaths.Array.data[3].dataType
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1783602997402638571, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: TableName.Array.size
@@ -331,11 +339,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4484336523290549285, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: m_EditorResourceMode
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4484336523290549285, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: m_JsonHelperTypeName
-      value: UnityFramework.Runtime.DefaultJsonHelper
+      value: UnityFramework.Runtime.LitJsonHelper
       objectReference: {fileID: 0}
     - target: {fileID: 5554970468386900132, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: m_SettingHelperTypeName

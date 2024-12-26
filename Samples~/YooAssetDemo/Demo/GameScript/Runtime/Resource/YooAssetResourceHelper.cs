@@ -1,12 +1,11 @@
-﻿
-using Framework;
-using Framework.Resource;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Framework;
+using Framework.Resource;
 using UnityEngine;
-
 using UnityEngine.SceneManagement;
 using YooAsset;
 
@@ -20,7 +19,7 @@ namespace UnityFramework.Runtime
         private const int DefaultPriority = 0;
 
         [SerializeField]
-        private bool m_EnableCachedAssetHandle = true;
+        private bool m_EnableCachedAsset = true;
 
         [SerializeField]
         private int m_LoadAssetCountPerFrame = 100;
@@ -46,7 +45,9 @@ namespace UnityFramework.Runtime
 
         private void Start()
         {
+
         }
+
         private void Update()
         {
             //加载资源
@@ -66,7 +67,7 @@ namespace UnityFramework.Runtime
                             if (asset == null)
                             {
                                 asset = loadAssetInfo.AssetHandle;
-                                if (m_EnableCachedAssetHandle && asset != null)
+                                if (m_EnableCachedAsset && asset != null)
                                 {
                                     m_CachedAssetHandle.Add(loadAssetInfo.AssetName, loadAssetInfo.AssetHandle);
                                 }
@@ -192,7 +193,7 @@ namespace UnityFramework.Runtime
 
         private bool HasCachedAsset(string assetName)
         {
-            if (!m_EnableCachedAssetHandle)
+            if (!m_EnableCachedAsset)
             {
                 return false;
             }
@@ -207,7 +208,7 @@ namespace UnityFramework.Runtime
 
         private AssetHandle GetCachedAssetHandle(string assetName)
         {
-            if (!m_EnableCachedAssetHandle)
+            if (!m_EnableCachedAsset)
             {
                 return null;
             }
@@ -227,8 +228,34 @@ namespace UnityFramework.Runtime
         }
 
 
+        private void RemoveCachedAsset(AssetHandle asset)
+        {
+            if (!m_EnableCachedAsset)
+            {
+                return;
+            }
+            if (asset != null)
+            {
+                foreach (var item in m_CachedAssetHandle)
+                {
+                    if (item.Value == asset)
+                    {
+                        m_CachedAssetHandle.Remove(item.Key);
 
+                        break;
+                    }
+                }
+            }
+        }
 
+        private void RemoveCachedAsset(string name)
+        {
+            if (!m_EnableCachedAsset)
+            {
+                return;
+            }
+            m_CachedAssetHandle.Remove(name);
+        }
 
 
         public override void LoadAsset(string assetName, Type assetType, int priority, LoadAssetCallbacks loadAssetCallbacks, object userData)
@@ -254,7 +281,13 @@ namespace UnityFramework.Runtime
 
         public override void UnloadAsset(object asset)
         {
-            Release(asset);
+            AssetHandle assetHandle = GetCachedAssetHandle(((UnityEngine.Object)asset).name);
+            if (assetHandle != null)
+            {
+                RemoveCachedAsset(assetHandle);
+                assetHandle.Release();
+            }
+
         }
 
         public override void LoadScene(string sceneAssetName, int priority, LoadSceneCallbacks loadSceneCallbacks, object userData)
@@ -346,25 +379,18 @@ namespace UnityFramework.Runtime
 
         }
 
-        /// <summary>
-        /// 释放资源。
-        /// </summary>
-        /// <param name="objectToRelease">要释放的资源。</param>
-        public override void Release(object objectToRelease)
-        {
-            AssetHandle assetHandle = GetCachedAssetHandle((string)objectToRelease);
-            if (assetHandle != null)
-            {
-                assetHandle.Release();
-                m_CachedAssetHandle.Remove((string)objectToRelease);
-            }
-        }
+
 
         public override void Shutdown()
         {
+            m_CachedAssetHandle.Clear();
+            m_LoadAssetInfos.Clear();
+            m_LoadSceneInfos.Clear();
+            m_UnloadSceneInfos.Clear();
+
             var package = YooAssets.GetPackage(Constant.DefaultPackage);
             var operation = package.UnloadAllAssetsAsync();
-            operation.WaitForAsyncComplete();
+            //  operation.WaitForAsyncComplete();
 
         }
 

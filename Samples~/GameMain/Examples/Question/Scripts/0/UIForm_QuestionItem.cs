@@ -130,7 +130,7 @@ namespace PCI
             else
             {
                 ComponentEntry.Task.CurrentTask.NotifyResult(true, true);
-                Hide();
+                Hide(false);
             }
 
 
@@ -144,7 +144,7 @@ namespace PCI
 
             completeObj.Show();
             closeObj.Hide();
-            Hide();
+            Hide(false);
         }
         public void RefreshUI()
         {
