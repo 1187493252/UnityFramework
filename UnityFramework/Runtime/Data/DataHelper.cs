@@ -1,4 +1,4 @@
-/*
+﻿/*
 * FileName:          DataHelper
 * CompanyName:       
 * Author:            relly
@@ -26,7 +26,7 @@ namespace UnityFramework.Runtime
     public class DataHelper : MonoBehaviour
     {
         DataComponent dataComponent;
-        [Header("StreamingAssets/Data路径")]
+        public ReadPathType ReadPathType;
         public List<DataFileInfo> DataFilePaths;
 
         public virtual void Init()
@@ -62,11 +62,23 @@ namespace UnityFramework.Runtime
         {
             string dataContent = "";
             DateTime startTime = global::System.DateTime.Now;
-
+            string path = "";
+            switch (ReadPathType)
+            {
+                case ReadPathType.StreamingAssets:
+                    path = Application.streamingAssetsPath;
+                    break;
+                case ReadPathType.PersistentData:
+                    path = Application.persistentDataPath;
+                    break;
+                case ReadPathType.TemporaryCache:
+                    path = Application.temporaryCachePath;
+                    break;
+            }
             foreach (var item in DataFilePaths)
             {
-                string url = Application.streamingAssetsPath + "/Data/" + item.dataName;
-                switch (item.dataType)
+               string  url = path + item.filePath + item.fileName;
+                switch (item.fileType)
                 {
                     case DataType.Json:
                         url += ".json";
@@ -95,13 +107,13 @@ namespace UnityFramework.Runtime
 			if (request.isHttpError || request.isNetworkError)
 #endif
                 {
-                    ComponentEntry.Event.Fire(this, LoadDataFailEventArgs.Create($"load data {item.dataName} fail : {request.error}"));
+                    ComponentEntry.Event.Fire(this, LoadDataFailEventArgs.Create($"load data {item.fileName} fail : {request.error}"));
                 }
                 else
                 {
                     byte[] datas;
 
-                    switch (item.dataType)
+                    switch (item.fileType)
                     {
                         case DataType.Base64:
                             datas = Convert.FromBase64String(request.downloadHandler.text);
@@ -126,7 +138,7 @@ namespace UnityFramework.Runtime
                     if (!dataContent.IsNullOrEmpty())
                     {
 
-                        dataComponent.AddJsonData(item.dataName, dataContent);
+                        dataComponent.AddJsonData(item.fileName, dataContent);
 
 #if !UNITY_WEBGL
                         Dictionary<string, JsonData> temp = JsonMapper.ToObject<Dictionary<string, JsonData>>(dataContent);
@@ -140,31 +152,34 @@ namespace UnityFramework.Runtime
                     }
                 }
             }
-
             DateTime endTime = global::System.DateTime.Now;
             TimeSpan duration = endTime.Subtract(startTime);
             ComponentEntry.Event.Fire(this, LoadDataSuccessEventArgs.Create($"load all data success,cout {dataComponent.DataTableCout},time {duration.TotalMilliseconds / 1000.0f:f2}s"));
 
         }
-
-
-
-
-
     }
 
+    public enum ReadPathType
+    {
+        StreamingAssets,
+        PersistentData,
+        TemporaryCache
+    }
     [Serializable]
     public class DataFileInfo
     {
         /// <summary>
-        /// 配置文件名称
+        /// 配置文件名称,不带后缀
         /// </summary>
-        public string dataName;
-
+        public string fileName;
+        /// <summary>
+        /// 文件路径
+        /// </summary>
+        public string filePath;
         /// <summary>
         /// 文件类型
         /// </summary>
-        public DataType dataType;
+        public DataType fileType;
     }
     public enum DataType
     {

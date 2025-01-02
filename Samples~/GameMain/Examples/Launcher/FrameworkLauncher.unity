@@ -242,6 +242,10 @@ PrefabInstance:
       value: Data
       objectReference: {fileID: 0}
     - target: {fileID: 450909966799755549, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
+      propertyPath: DataFilePaths.Array.data[0].filePath
+      value: /Data/
+      objectReference: {fileID: 0}
+    - target: {fileID: 450909966799755549, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: DataFilePaths.Array.data[0].fileType
       value: 0
       objectReference: {fileID: 0}
@@ -252,6 +256,10 @@ PrefabInstance:
     - target: {fileID: 450909966799755549, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: DataFilePaths.Array.data[1].fileName
       value: NetworkConfig
+      objectReference: {fileID: 0}
+    - target: {fileID: 450909966799755549, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
+      propertyPath: DataFilePaths.Array.data[1].filePath
+      value: /Data/
       objectReference: {fileID: 0}
     - target: {fileID: 450909966799755549, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: DataFilePaths.Array.data[1].fileType
@@ -266,6 +274,10 @@ PrefabInstance:
       value: Config
       objectReference: {fileID: 0}
     - target: {fileID: 450909966799755549, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
+      propertyPath: DataFilePaths.Array.data[2].filePath
+      value: /Data/
+      objectReference: {fileID: 0}
+    - target: {fileID: 450909966799755549, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: DataFilePaths.Array.data[2].fileType
       value: 0
       objectReference: {fileID: 0}
@@ -275,6 +287,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 450909966799755549, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: DataFilePaths.Array.data[3].dataType
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 450909966799755549, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
+      propertyPath: DataFilePaths.Array.data[3].fileName
+      value: Cases
+      objectReference: {fileID: 0}
+    - target: {fileID: 450909966799755549, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
+      propertyPath: DataFilePaths.Array.data[3].filePath
+      value: /Data/
+      objectReference: {fileID: 0}
+    - target: {fileID: 450909966799755549, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
+      propertyPath: DataFilePaths.Array.data[3].fileType
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1783602997402638571, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}

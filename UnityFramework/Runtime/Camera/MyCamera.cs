@@ -1,4 +1,4 @@
-/*
+﻿/*
 * FileName:          MyCamera
 * CompanyName:       杭州中锐
 * Author:            relly
@@ -140,8 +140,8 @@ public class MyCamera : MonoBehaviour
         {
             if (Input.GetTouch(0).phase == TouchPhase.Moved)
             {
-                mouseX += Input.GetAxis("Mouse X") * 左右旋转速度;
-                mouseY -= Input.GetAxis("Mouse Y") * 上下旋转速度;
+                mouseX += Input.GetAxis("Mouse X") * HorizontalRotateSpeed;
+                mouseY -= Input.GetAxis("Mouse Y") * VerticalRotateSpeed;
             }
         }
         else if (Input.touchCount > 1)
