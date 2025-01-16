@@ -1,4 +1,4 @@
-/*
+﻿/*
 * FileName:          AudioManager
 * CompanyName:  
 * Author:            relly
@@ -6,9 +6,11 @@
 *                    
 */
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace UnityFramework.Runtime
 {
@@ -210,8 +212,7 @@ namespace UnityFramework.Runtime
             }
             else
             {
-                actionDic.Add(audioSource.clip.length, delegate
-                {
+                actionDic.Add(audioSource.clip.length, delegate {
                     PlayAudio(_fileNames, audioSource, _delayPlay, endAction);
                 });
             }
@@ -243,8 +244,7 @@ namespace UnityFramework.Runtime
             }
             else
             {
-                actionDic.Add(audioSource.clip.length, delegate
-                {
+                actionDic.Add(audioSource.clip.length, delegate {
                     PlayAudio(_fileId, audioSource, _delayPlay, endAction);
                 });
             }
@@ -377,6 +377,47 @@ namespace UnityFramework.Runtime
         {
             AudioClip clip = GetAudioClip(_filename);
             PlayAudio(clip, DefaultAudioSource, delayPlay, actionDic);
+        }
+
+        public void PlayAudioByDefault(int id, float delayPlay = 0, global::System.Action endAction = null)
+        {
+            StartCoroutine(PlayAudioByDefaultAudioSource(id, delayPlay, endAction));
+        }
+
+        IEnumerator PlayAudioByDefaultAudioSource(int id, float delayPlay = 0, global::System.Action endAction = null)
+        {
+            AudioClip clip = GetAudioClip(id);
+            if (clip == null)
+            {
+                AudioInfo audioInfo = GetAudioInfoById(id);
+                string audiopath = Application.streamingAssetsPath + audioInfo.Path + ".wav";
+
+                UnityWebRequest request = UnityWebRequestMultimedia.GetAudioClip(audiopath, AudioType.WAV);
+                yield return request.SendWebRequest();
+#if UNITY_2020_1_OR_NEWER
+                if (request.result == UnityWebRequest.Result.ProtocolError || request.result == UnityWebRequest.Result.ConnectionError)
+#else
+			                if (request.isHttpError || request.isNetworkError)
+#endif
+                {
+                    Debug.LogError($"load audio {id} fail : {request.error}");
+                }
+                else
+                {
+                    clip = DownloadHandlerAudioClip.GetContent(request);
+                    audioInfo.Clip = clip;
+                }
+            }
+            if (clip)
+            {
+                Dictionary<float, Action> actionDic = new Dictionary<float, Action>
+                {
+                  {clip.length,endAction}
+                };
+                PlayAudio(clip, DefaultAudioSource, 0, actionDic);
+            }
+
+            yield return null;
         }
 
         /// <summary>

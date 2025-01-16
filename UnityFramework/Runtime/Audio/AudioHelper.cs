@@ -1,4 +1,4 @@
-/*
+﻿/*
 * FileName:          AudioHelper
 * CompanyName:       
 * Author:            relly
@@ -6,11 +6,10 @@
 * 
 */
 
-using Framework;
-using Framework.Event;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Framework.Event;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -42,6 +41,8 @@ namespace UnityFramework.Runtime
         [Header("仅限ConfigLoadMode:DataCache")]
         public List<AudioClip> ClipsList = new List<AudioClip> { };
 
+        [Header("是否初始化加载所有Audio")]
+        public bool InitLoadAllAudio = false;
         public virtual void Init()
         {
             audioComponent = ComponentEntry.Audio;
@@ -123,31 +124,36 @@ namespace UnityFramework.Runtime
                     string path = item.Path + name;
                     string textContent = item.TextContent;
                     AudioClip clip = null;
-                    switch (ResourceLoadMode)
+                    if (InitLoadAllAudio)
                     {
-                        case ResourceLoadMode.Resource:
-                            clip = ComponentEntry.Resource.LoadAsync<AudioClip>(path, ResourceLoadMode);
-                            break;
-                        case ResourceLoadMode.StreamingAssets:
-                        case ResourceLoadMode.WebRequest:
-                            path = Application.streamingAssetsPath + "/" + path + ".wav";
-                            UnityWebRequest request = UnityWebRequestMultimedia.GetAudioClip(path, AudioType.WAV);
-                            yield return request.SendWebRequest();
+                        switch (ResourceLoadMode)
+                        {
+                            case ResourceLoadMode.Resource:
+                                clip = ComponentEntry.Resource.LoadAsync<AudioClip>(path, ResourceLoadMode);
+                                break;
+                            case ResourceLoadMode.StreamingAssets:
+                            case ResourceLoadMode.WebRequest:
+                                string audiopath = Application.streamingAssetsPath + path + ".wav";
+
+                                UnityWebRequest request = UnityWebRequestMultimedia.GetAudioClip(audiopath, AudioType.WAV);
+                                yield return request.SendWebRequest();
 #if UNITY_2020_1_OR_NEWER
-                            if (request.result == UnityWebRequest.Result.ProtocolError || request.result == UnityWebRequest.Result.ConnectionError)
+                                if (request.result == UnityWebRequest.Result.ProtocolError || request.result == UnityWebRequest.Result.ConnectionError)
 #else
 			                if (request.isHttpError || request.isNetworkError)
 #endif
-                            {
-                                ComponentEntry.Event.Fire(this, LoadAudioInfoFailEventArgs.Create($"load audio {name} fail : {request.error}"));
-                            }
-                            else
-                            {
-                                clip = DownloadHandlerAudioClip.GetContent(request);
-                            }
-                            request.Dispose();
-                            break;
+                                {
+                                    ComponentEntry.Event.Fire(this, LoadAudioInfoFailEventArgs.Create($"load audio {name} fail : {request.error}"));
+                                }
+                                else
+                                {
+                                    clip = DownloadHandlerAudioClip.GetContent(request);
+                                }
+                                request.Dispose();
+                                break;
+                        }
                     }
+
                     AudioInfo audioInfo = new AudioInfo
                     {
                         Id = id,
