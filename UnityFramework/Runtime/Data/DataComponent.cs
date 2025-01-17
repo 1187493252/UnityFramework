@@ -1,4 +1,4 @@
-/*
+﻿/*
 * FileName:          DataComponent
 * CompanyName:       
 * Author:            relly
@@ -8,12 +8,9 @@
 *                    3.仅当2失效时,web平台不支持IO以文件名为父类,先反序列化成父类再获取List<表名>,每次需要自定义解析方法
 */
 
-using LitJson;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using LitJson;
 using UnityEngine;
 
 namespace UnityFramework.Runtime
@@ -59,6 +56,11 @@ namespace UnityFramework.Runtime
             {
                 helper.Init();
             }
+
+        }
+
+        private void Start()
+        {
 
         }
 

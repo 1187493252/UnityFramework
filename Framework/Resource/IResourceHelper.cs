@@ -1,4 +1,4 @@
-/*
+﻿/*
 * FileName:          IResourceHelper
 * CompanyName:  
 * Author:            
@@ -39,7 +39,7 @@ namespace Framework.Resource
         /// <param name="fileUri">文件路径。</param>
         /// <param name="loadBytesCallbacks">加载数据流回调函数集。</param>
         /// <param name="userData">用户自定义数据。</param>
-        void LoadBytes(string fileUri, LoadBytesCallbacks loadBytesCallbacks, object userData);
+        void LoadBytes(string fileUri, LoadBinaryCallbacks loadBytesCallbacks, object userData);
 
         /// <summary>
         /// 异步加载场景。

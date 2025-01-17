@@ -1,4 +1,4 @@
-/*
+﻿/*
 * FileName:          ResourceManager
 * CompanyName:       
 * Author:            relly
@@ -6,18 +6,7 @@
 */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using Framework;
-using Framework.Resource;
-using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Framework.Resource
 {
@@ -516,11 +505,11 @@ namespace Framework.Resource
         /// 直接从指定文件路径加载数据流。
         /// </summary>
         /// <param name="fileUri">文件路径。</param>
-        /// <param name="loadBytesCallbacks">加载数据流回调函数集。</param>
+        /// <param name="loadBinaryCallbacks">加载数据流回调函数集。</param>
         /// <param name="userData">用户自定义数据。</param>
-        public void LoadBytes(string fileUri, LoadBytesCallbacks loadBytesCallbacks, object userData)
+        public void LoadBinary(string fileUri, LoadBinaryCallbacks loadBinaryCallbacks, object userData)
         {
-            if (loadBytesCallbacks == null)
+            if (loadBinaryCallbacks == null)
             {
                 throw new FrameworkException("Load bytes callbacks is invalid.");
 
@@ -528,15 +517,15 @@ namespace Framework.Resource
 
             if (string.IsNullOrEmpty(fileUri))
             {
-                if (loadBytesCallbacks.LoadBytesFailureCallback != null)
+                if (loadBinaryCallbacks.LoadBinaryFailureCallback != null)
                 {
-                    loadBytesCallbacks.LoadBytesFailureCallback(fileUri, "FileUri is invalid.", userData);
+                    loadBinaryCallbacks.LoadBinaryFailureCallback(fileUri, LoadResourceStatus.NotExist, "FileUri is invalid.", userData);
                 }
 
                 return;
             }
 
-            m_ResourceHelper.LoadBytes(fileUri, loadBytesCallbacks, userData);
+            m_ResourceHelper.LoadBytes(fileUri, loadBinaryCallbacks, userData);
         }
 
         internal override void Shutdown()

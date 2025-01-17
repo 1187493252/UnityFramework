@@ -1,6 +1,5 @@
-
+﻿
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Framework;
@@ -211,11 +210,11 @@ namespace UnityFramework.Runtime
 
                         if (!isError)
                         {
-                            float elapseSeconds = (float)(DateTime.UtcNow - loadByteInfo.StartTime).TotalSeconds; loadByteInfo.LoadBytesCallbacks.LoadBytesSuccessCallback(unityWebRequest.url, bytes, elapseSeconds, loadByteInfo.UserData);
+                            float elapseSeconds = (float)(DateTime.UtcNow - loadByteInfo.StartTime).TotalSeconds; loadByteInfo.LoadBinaryCallbacks.LoadBinarySuccessCallback(unityWebRequest.url, bytes, elapseSeconds, loadByteInfo.UserData);
                         }
-                        else if (loadByteInfo.LoadBytesCallbacks.LoadBytesFailureCallback != null)
+                        else if (loadByteInfo.LoadBinaryCallbacks.LoadBinaryFailureCallback != null)
                         {
-                            loadByteInfo.LoadBytesCallbacks.LoadBytesFailureCallback(unityWebRequest.url, errorMessage, loadByteInfo.UserData);
+                            loadByteInfo.LoadBinaryCallbacks.LoadBinaryFailureCallback(unityWebRequest.url, LoadResourceStatus.NotExist, errorMessage, loadByteInfo.UserData);
                         }
                         LinkedListNode<LoadByteInfo> next = current.Next;
                         m_LoadByteInfos.Remove(loadByteInfo);
@@ -343,7 +342,7 @@ namespace UnityFramework.Runtime
         /// <param name="fileUri">文件路径。</param>
         /// <param name="loadBytesCallbacks">加载数据流回调函数集。</param>
         /// <param name="userData">用户自定义数据。</param>
-        public override void LoadBytes(string fileUri, LoadBytesCallbacks loadBytesCallbacks, object userData)
+        public override void LoadBytes(string fileUri, LoadBinaryCallbacks loadBytesCallbacks, object userData)
         {
             if (loadBytesCallbacks == null)
             {
@@ -353,9 +352,9 @@ namespace UnityFramework.Runtime
 
             if (string.IsNullOrEmpty(fileUri))
             {
-                if (loadBytesCallbacks.LoadBytesFailureCallback != null)
+                if (loadBytesCallbacks.LoadBinaryFailureCallback != null)
                 {
-                    loadBytesCallbacks.LoadBytesFailureCallback(fileUri, "LoadBytes fileUri is invalid.", userData);
+                    loadBytesCallbacks.LoadBinaryFailureCallback(fileUri, LoadResourceStatus.NotExist, "LoadBytes fileUri is invalid.", userData);
                 }
 
                 return;
@@ -653,15 +652,15 @@ namespace UnityFramework.Runtime
             private readonly UnityWebRequestAsyncOperation m_AsyncOperation;
             private readonly string m_AssetName;
             private readonly DateTime m_StartTime;
-            private readonly LoadBytesCallbacks m_LoadBytesCallbacks;
+            private readonly LoadBinaryCallbacks m_LoadBinaryCallbacks;
             private readonly object m_UserData;
 
-            public LoadByteInfo(string assetName, UnityWebRequestAsyncOperation asyncOperation, DateTime startTime, LoadBytesCallbacks loadBytesCallbacks, object userData)
+            public LoadByteInfo(string assetName, UnityWebRequestAsyncOperation asyncOperation, DateTime startTime, LoadBinaryCallbacks loadBytesCallbacks, object userData)
             {
                 m_AssetName = assetName;
                 m_AsyncOperation = asyncOperation;
                 m_StartTime = startTime;
-                m_LoadBytesCallbacks = loadBytesCallbacks;
+                m_LoadBinaryCallbacks = loadBytesCallbacks;
                 m_UserData = userData;
             }
 
@@ -692,11 +691,11 @@ namespace UnityFramework.Runtime
 
 
 
-            public LoadBytesCallbacks LoadBytesCallbacks
+            public LoadBinaryCallbacks LoadBinaryCallbacks
             {
                 get
                 {
-                    return m_LoadBytesCallbacks;
+                    return m_LoadBinaryCallbacks;
                 }
             }
 

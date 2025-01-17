@@ -1,4 +1,4 @@
-/*
+﻿/*
 * FileName:          ResourceComponent
 * CompanyName:       
 * Author:            relly
@@ -6,10 +6,6 @@
 */
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
 using Framework;
 using Framework.Resource;
 using UnityEngine;
@@ -518,9 +514,9 @@ namespace UnityFramework.Runtime
         /// <param name="fileUri">文件路径。</param>
         /// <param name="loadBytesCallbacks">加载数据流回调函数集。</param>
         /// <param name="userData">用户自定义数据。</param>
-        public void LoadBytes(string fileUri, LoadBytesCallbacks loadBytesCallbacks, object userData)
+        public void LoadBytes(string fileUri, LoadBinaryCallbacks loadBytesCallbacks, object userData)
         {
-            m_ResourceManager.LoadBytes(fileUri, loadBytesCallbacks, userData);
+            m_ResourceManager.LoadBinary(fileUri, loadBytesCallbacks, userData);
         }
 
 

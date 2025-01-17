@@ -1,14 +1,12 @@
-/*
+﻿/*
 * FileName:          CoroutineComponent
 * CompanyName:       
 * Author:            relly
 * Description:       
 */
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -31,6 +29,10 @@ namespace UnityFramework.Runtime
         {
             base.Awake();
             StopAllDelay();
+        }
+        private void Start()
+        {
+
         }
 
         public string DelayExecute(float delayTime, UnityAction callBack)
