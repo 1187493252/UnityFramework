@@ -41,7 +41,7 @@ namespace UnityFramework.Runtime
         private FrameworkLinkedList<LoadSceneInfo> m_LoadSceneInfos = null;
         private FrameworkLinkedList<UnloadSceneInfo> m_UnloadSceneInfos = null;
 
-        private FrameworkLinkedList<LoadByteInfo> m_LoadByteInfos = null;
+        private FrameworkLinkedList<LoadBinaryInfo> m_LoadBinaryInfos = null;
 
 
         /// <summary>
@@ -308,12 +308,12 @@ namespace UnityFramework.Runtime
             }
 
 
-            if (m_LoadByteInfos.Count > 0)
+            if (m_LoadBinaryInfos.Count > 0)
             {
-                LinkedListNode<LoadByteInfo> current = m_LoadByteInfos.First;
+                LinkedListNode<LoadBinaryInfo> current = m_LoadBinaryInfos.First;
                 while (current != null)
                 {
-                    LoadByteInfo loadByteInfo = current.Value;
+                    LoadBinaryInfo loadByteInfo = current.Value;
                     UnityWebRequest unityWebRequest = loadByteInfo.AsyncOperation.webRequest;
                     if (loadByteInfo.AsyncOperation.isDone)
                     {
@@ -340,8 +340,8 @@ namespace UnityFramework.Runtime
                         {
                             loadByteInfo.LoadBinaryCallbacks.LoadBinaryFailureCallback(unityWebRequest.url, LoadResourceStatus.NotExist, errorMessage, loadByteInfo.UserData);
                         }
-                        LinkedListNode<LoadByteInfo> next = current.Next;
-                        m_LoadByteInfos.Remove(loadByteInfo);
+                        LinkedListNode<LoadBinaryInfo> next = current.Next;
+                        m_LoadBinaryInfos.Remove(loadByteInfo);
                         current = next;
                     }
                     else
@@ -734,7 +734,7 @@ namespace UnityFramework.Runtime
             {
                 return;
             }
-            m_LoadByteInfos.AddLast(new LoadByteInfo(fileUri, asyncOperation, DateTime.UtcNow, loadBytesCallbacks, userData));
+            m_LoadBinaryInfos.AddLast(new LoadBinaryInfo(fileUri, asyncOperation, DateTime.UtcNow, loadBytesCallbacks, userData));
 
         }
 
@@ -974,7 +974,7 @@ namespace UnityFramework.Runtime
         }
 
         [StructLayout(LayoutKind.Auto)]
-        private struct LoadByteInfo
+        private struct LoadBinaryInfo
         {
             private readonly UnityWebRequestAsyncOperation m_AsyncOperation;
             private readonly string m_AssetName;
@@ -982,7 +982,7 @@ namespace UnityFramework.Runtime
             private readonly LoadBinaryCallbacks m_LoadBinaryCallbacks;
             private readonly object m_UserData;
 
-            public LoadByteInfo(string assetName, UnityWebRequestAsyncOperation asyncOperation, DateTime startTime, LoadBinaryCallbacks loadBytesCallbacks, object userData)
+            public LoadBinaryInfo(string assetName, UnityWebRequestAsyncOperation asyncOperation, DateTime startTime, LoadBinaryCallbacks loadBytesCallbacks, object userData)
             {
                 m_AssetName = assetName;
                 m_AsyncOperation = asyncOperation;
