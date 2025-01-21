@@ -48,7 +48,7 @@ namespace UnityFramework.Runtime
     }
 
     [DisallowMultipleComponent]
-    public partial class AudioComponent : UnityFrameworkComponent
+    public sealed partial class AudioComponent : UnityFrameworkComponent
     {
         /// <summary>
         /// 当前音量,初始化每个播放器的声音

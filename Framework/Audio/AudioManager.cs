@@ -11,7 +11,7 @@ using Framework.Resource;
 
 namespace Framework.Audio
 {
-    internal sealed partial class AudioManager : FrameworkModule, IAudioManager
+    internal sealed partial class AudioManager : FrameworkModule//, IAudioManager
     {
         private readonly Dictionary<string, AudioGroup> m_AudioGroups;
         private readonly List<int> m_AudiosBeingLoaded;

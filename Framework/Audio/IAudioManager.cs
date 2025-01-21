@@ -20,7 +20,7 @@ namespace Framework.Audio
         /// <summary>
         /// 获取声音组数量。
         /// </summary>
-        int SoundGroupCount
+        int AudioGroupCount
         {
             get;
         }
@@ -69,7 +69,7 @@ namespace Framework.Audio
         /// </summary>
         /// <param name="audioGroupName">声音组名称。</param>
         /// <returns>要获取的声音组。</returns>
-        IAudioGroup GetSoundGroup(string audioGroupName);
+        IAudioGroup GetAudioGroup(string audioGroupName);
 
         /// <summary>
         /// 获取所有声音组。
@@ -126,7 +126,7 @@ namespace Framework.Audio
         /// </summary>
         /// <param name="serialId">声音序列编号。</param>
         /// <returns>是否正在加载声音。</returns>
-        bool IsAudioLoading(int serialId);
+        bool IsLoadingAudio(int serialId);
 
         /// <summary>
         /// 播放声音。
