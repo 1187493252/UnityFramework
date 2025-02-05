@@ -9,8 +9,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Framework;
+using Framework.Audio;
+using Framework.Resource;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 namespace UnityFramework.Runtime
 {
@@ -80,7 +84,53 @@ namespace UnityFramework.Runtime
         /// </summary>
         private Dictionary<string, AudioSource> mAudioSourceDic = new Dictionary<string, AudioSource>();
 
+        //------------------
+        private const int DefaultPriority = 0;
 
+        private IAudioManager m_AudioManager = null;
+        private EventComponent m_EventComponent = null;
+        [SerializeField]
+        private bool m_EnablePlayAudioUpdateEvent = false;
+
+        [SerializeField]
+        private bool m_EnablePlayAudioDependencyAssetEvent = false;
+        [SerializeField]
+        private Transform m_InstanceRoot = null;
+
+        [SerializeField]
+        private string m_AudioHelperTypeName = "UnityFramework.Runtime.DefaultAudioHelper";
+
+        [SerializeField]
+        private AudioHelperBase m_CustomAudioHelper = null;
+
+        [SerializeField]
+        private string m_AudioGroupHelperTypeName = "UnityFramework.Runtime.DefaultAudioGroupHelper";
+
+        [SerializeField]
+        private AudioGroupHelperBase m_CustomAudioGroupHelper = null;
+
+        [SerializeField]
+        private string m_AudioAgentHelperTypeName = "UnityFramework.Runtime.DefaultAudioAgentHelper";
+
+        [SerializeField]
+        private AudioAgentHelperBase m_CustomAudioAgentHelper = null;
+
+        [SerializeField]
+        private AudioGroup[] m_AudioGroups = null;
+
+        /// <summary>
+        /// 获取声音组数量。
+        /// </summary>
+        public int AudioGroupCount
+        {
+            get
+            {
+                return m_AudioManager.AudioGroupCount;
+            }
+        }
+
+
+        //-------------------------
         public int AudioInfoCout
         {
             get
@@ -150,7 +200,88 @@ namespace UnityFramework.Runtime
         protected override void Awake()
         {
             base.Awake();
+
+            m_AudioManager = FrameworkEntry.GetModule<IAudioManager>();
+            if (m_AudioManager == null)
+            {
+                Log.Fatal("Audio manager is invalid.");
+                return;
+            }
+
+            m_AudioManager.PlayAudioSuccess += OnPlayAudioSuccess;
+            m_AudioManager.PlayAudioFailure += OnPlayAudioFailure;
+
+            if (m_EnablePlayAudioUpdateEvent)
+            {
+                m_AudioManager.PlayAudioUpdate += OnPlayAudioUpdate;
+            }
+
+            if (m_EnablePlayAudioDependencyAssetEvent)
+            {
+                m_AudioManager.PlayAudioDependencyAsset += OnPlayAudioDependencyAsset;
+            }
+            SceneManager.sceneLoaded += OnSceneLoaded;
+            SceneManager.sceneUnloaded += OnSceneUnloaded;
+
         }
+        private void Start()
+        {
+            BaseComponent baseComponent = UnityFrameworkEntry.GetComponent<BaseComponent>();
+            if (baseComponent == null)
+            {
+                Log.Fatal("Base component is invalid.");
+                return;
+            }
+
+            m_EventComponent = UnityFrameworkEntry.GetComponent<EventComponent>();
+            if (m_EventComponent == null)
+            {
+                Log.Fatal("Event component is invalid.");
+                return;
+            }
+
+            if (baseComponent.EditorResourceMode)
+            {
+                m_AudioManager.SetResourceManager(baseComponent.EditorResourceHelper);
+            }
+            else
+            {
+                m_AudioManager.SetResourceManager(FrameworkEntry.GetModule<IResourceManager>());
+            }
+
+            AudioHelperBase audioHelper = Helper.CreateHelper(m_AudioHelperTypeName, m_CustomAudioHelper);
+            if (audioHelper == null)
+            {
+                Log.Error("Can not create audio helper.");
+                return;
+            }
+
+            audioHelper.name = "Audio Helper";
+            Transform transform = audioHelper.transform;
+            transform.SetParent(this.transform);
+            transform.localScale = Vector3.one;
+
+            m_AudioManager.SetAudioHelper(audioHelper);
+
+            if (m_InstanceRoot == null)
+            {
+                m_InstanceRoot = new GameObject("Sound Instances").transform;
+                m_InstanceRoot.SetParent(gameObject.transform);
+                m_InstanceRoot.localScale = Vector3.one;
+            }
+
+            for (int i = 0; i < m_AudioGroups.Length; i++)
+            {
+                if (!AddAudioGroup(m_AudioGroups[i].Name, m_AudioGroups[i].AvoidBeingReplacedBySamePriority, m_AudioGroups[i].Mute, m_AudioGroups[i].Volume, m_AudioGroups[i].AgentHelperCount))
+                {
+                    Log.Warning("Add audio group '{0}' failure.", m_AudioGroups[i].Name);
+                    continue;
+                }
+            }
+        }
+
+
+
         public void Init()
         {
             ClearAll();
@@ -1050,6 +1181,8 @@ namespace UnityFramework.Runtime
         }
         private void OnDestroy()
         {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+            SceneManager.sceneUnloaded -= OnSceneUnloaded;
             ClearAll();
         }
         private void OnApplicationQuit()
@@ -1057,6 +1190,454 @@ namespace UnityFramework.Runtime
             ClearAll();
         }
 
+        //------------------
+
+
+        /// <summary>
+        /// 是否存在指定声音组。
+        /// </summary>
+        /// <param name="audioGroupName">声音组名称。</param>
+        /// <returns>指定声音组是否存在。</returns>
+        public bool HasAudioGroup(string audioGroupName)
+        {
+            return m_AudioManager.HasAudioGroup(audioGroupName);
+        }
+
+        /// <summary>
+        /// 获取指定声音组。
+        /// </summary>
+        /// <param name="audioGroupName">声音组名称。</param>
+        /// <returns>要获取的声音组。</returns>
+        public IAudioGroup GetAudioGroup(string audioGroupName)
+        {
+            return m_AudioManager.GetAudioGroup(audioGroupName);
+        }
+
+        /// <summary>
+        /// 获取所有声音组。
+        /// </summary>
+        /// <returns>所有声音组。</returns>
+        public IAudioGroup[] GetAllAudioGroups()
+        {
+            return m_AudioManager.GetAllAudioGroups();
+        }
+
+        /// <summary>
+        /// 获取所有声音组。
+        /// </summary>
+        /// <param name="results">所有声音组。</param>
+        public void GetAllAudioGroups(List<IAudioGroup> results)
+        {
+            m_AudioManager.GetAllAudioGroups(results);
+        }
+
+        /// <summary>
+        /// 增加声音组。
+        /// </summary>
+        /// <param name="audioGroupName">声音组名称。</param>
+        /// <param name="audioAgentHelperCount">声音代理辅助器数量。</param>
+        /// <returns>是否增加声音组成功。</returns>
+        public bool AddAudioGroup(string audioGroupName, int audioAgentHelperCount)
+        {
+            return AddAudioGroup(audioGroupName, false, false, 1f, audioAgentHelperCount);
+        }
+
+        /// <summary>
+        /// 增加声音组。
+        /// </summary>
+        /// <param name="audioGroupName">声音组名称。</param>
+        /// <param name="audioGroupAvoidBeingReplacedBySamePriority">声音组中的声音是否避免被同优先级声音替换。</param>
+        /// <param name="audioGroupMute">声音组是否静音。</param>
+        /// <param name="audioGroupVolume">声音组音量。</param>
+        /// <param name="audioAgentHelperCount">声音代理辅助器数量。</param>
+        /// <returns>是否增加声音组成功。</returns>
+        public bool AddAudioGroup(string audioGroupName, bool audioGroupAvoidBeingReplacedBySamePriority, bool audioGroupMute, float audioGroupVolume, int audioAgentHelperCount)
+        {
+            if (m_AudioManager.HasAudioGroup(audioGroupName))
+            {
+                return false;
+            }
+
+            AudioGroupHelperBase audioGroupHelper = Helper.CreateHelper(m_AudioGroupHelperTypeName, m_CustomAudioGroupHelper, AudioGroupCount);
+            if (audioGroupHelper == null)
+            {
+                Log.Error("Can not create audio group helper.");
+                return false;
+            }
+
+            audioGroupHelper.name = Framework.Utility.Text.Format("Audio Group - {0}", audioGroupName);
+            Transform transform = audioGroupHelper.transform;
+            transform.SetParent(m_InstanceRoot);
+            transform.localScale = Vector3.one;
+
+
+
+            if (!m_AudioManager.AddAudioGroup(audioGroupName, audioGroupAvoidBeingReplacedBySamePriority, audioGroupMute, audioGroupVolume, audioGroupHelper))
+            {
+                return false;
+            }
+
+            for (int i = 0; i < audioAgentHelperCount; i++)
+            {
+                if (!AddAudioAgentHelper(audioGroupName, audioGroupHelper, i))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// 获取所有正在加载声音的序列编号。
+        /// </summary>
+        /// <returns>所有正在加载声音的序列编号。</returns>
+        public int[] GetAllLoadingAudioSerialIds()
+        {
+            return m_AudioManager.GetAllLoadingAudioSerialIds();
+        }
+
+        /// <summary>
+        /// 获取所有正在加载声音的序列编号。
+        /// </summary>
+        /// <param name="results">所有正在加载声音的序列编号。</param>
+        public void GetAllLoadingAudioSerialIds(List<int> results)
+        {
+            m_AudioManager.GetAllLoadingAudioSerialIds(results);
+        }
+
+        /// <summary>
+        /// 是否正在加载声音。
+        /// </summary>
+        /// <param name="serialId">声音序列编号。</param>
+        /// <returns>是否正在加载声音。</returns>
+        public bool IsLoadingAudio(int serialId)
+        {
+            return m_AudioManager.IsLoadingAudio(serialId);
+        }
+
+        /// <summary>
+        /// 播放声音。
+        /// </summary>
+        /// <param name="audioAssetName">声音资源名称。</param>
+        /// <param name="audioGroupName">声音组名称。</param>
+        /// <returns>声音的序列编号。</returns>
+        public int PlayAudio(string audioAssetName, string audioGroupName)
+        {
+            return PlayAudio(audioAssetName, audioGroupName, DefaultPriority, null, null, null);
+        }
+
+        /// <summary>
+        /// 播放声音。
+        /// </summary>
+        /// <param name="audioAssetName">声音资源名称。</param>
+        /// <param name="audioGroupName">声音组名称。</param>
+        /// <param name="priority">加载声音资源的优先级。</param>
+        /// <returns>声音的序列编号。</returns>
+        public int PlayAudio(string audioAssetName, string audioGroupName, int priority)
+        {
+            return PlayAudio(audioAssetName, audioGroupName, priority, null, null, null);
+        }
+
+        /// <summary>
+        /// 播放声音。
+        /// </summary>
+        /// <param name="audioAssetName">声音资源名称。</param>
+        /// <param name="audioGroupName">声音组名称。</param>
+        /// <param name="playAudioParams">播放声音参数。</param>
+        /// <returns>声音的序列编号。</returns>
+        public int PlayAudio(string audioAssetName, string audioGroupName, PlayAudioParams playAudioParams)
+        {
+            return PlayAudio(audioAssetName, audioGroupName, DefaultPriority, playAudioParams, null, null);
+        }
+
+        /// <summary>
+        /// 播放声音。
+        /// </summary>
+        /// <param name="audioAssetName">声音资源名称。</param>
+        /// <param name="audioGroupName">声音组名称。</param>
+        /// <param name="bindingEntity">声音绑定的实体。</param>
+        /// <returns>声音的序列编号。</returns>
+        public int PlayAudio(string audioAssetName, string audioGroupName, Entity bindingEntity)
+        {
+            return PlayAudio(audioAssetName, audioGroupName, DefaultPriority, null, bindingEntity, null);
+        }
+
+        /// <summary>
+        /// 播放声音。
+        /// </summary>
+        /// <param name="audioAssetName">声音资源名称。</param>
+        /// <param name="audioGroupName">声音组名称。</param>
+        /// <param name="worldPosition">声音所在的世界坐标。</param>
+        /// <returns>声音的序列编号。</returns>
+        public int PlayAudio(string audioAssetName, string audioGroupName, Vector3 worldPosition)
+        {
+            return PlayAudio(audioAssetName, audioGroupName, DefaultPriority, null, worldPosition, null);
+        }
+
+        /// <summary>
+        /// 播放声音。
+        /// </summary>
+        /// <param name="audioAssetName">声音资源名称。</param>
+        /// <param name="audioGroupName">声音组名称。</param>
+        /// <param name="userData">用户自定义数据。</param>
+        /// <returns>声音的序列编号。</returns>
+        public int PlayAudio(string audioAssetName, string audioGroupName, object userData)
+        {
+            return PlayAudio(audioAssetName, audioGroupName, DefaultPriority, null, null, userData);
+        }
+
+        /// <summary>
+        /// 播放声音。
+        /// </summary>
+        /// <param name="audioAssetName">声音资源名称。</param>
+        /// <param name="audioGroupName">声音组名称。</param>
+        /// <param name="priority">加载声音资源的优先级。</param>
+        /// <param name="playAudioParams">播放声音参数。</param>
+        /// <returns>声音的序列编号。</returns>
+        public int PlayAudio(string audioAssetName, string audioGroupName, int priority, PlayAudioParams playAudioParams)
+        {
+            return PlayAudio(audioAssetName, audioGroupName, priority, playAudioParams, null, null);
+        }
+
+        /// <summary>
+        /// 播放声音。
+        /// </summary>
+        /// <param name="audioAssetName">声音资源名称。</param>
+        /// <param name="audioGroupName">声音组名称。</param>
+        /// <param name="priority">加载声音资源的优先级。</param>
+        /// <param name="playAudioParams">播放声音参数。</param>
+        /// <param name="userData">用户自定义数据。</param>
+        /// <returns>声音的序列编号。</returns>
+        public int PlayAudio(string audioAssetName, string audioGroupName, int priority, PlayAudioParams playAudioParams, object userData)
+        {
+            return PlayAudio(audioAssetName, audioGroupName, priority, playAudioParams, null, userData);
+        }
+
+        /// <summary>
+        /// 播放声音。
+        /// </summary>
+        /// <param name="audioAssetName">声音资源名称。</param>
+        /// <param name="audioGroupName">声音组名称。</param>
+        /// <param name="priority">加载声音资源的优先级。</param>
+        /// <param name="playAudioParams">播放声音参数。</param>
+        /// <param name="bindingEntity">声音绑定的实体。</param>
+        /// <returns>声音的序列编号。</returns>
+        public int PlayAudio(string audioAssetName, string audioGroupName, int priority, PlayAudioParams playAudioParams, Entity bindingEntity)
+        {
+            return PlayAudio(audioAssetName, audioGroupName, priority, playAudioParams, bindingEntity, null);
+        }
+
+        /// <summary>
+        /// 播放声音。
+        /// </summary>
+        /// <param name="audioAssetName">声音资源名称。</param>
+        /// <param name="audioGroupName">声音组名称。</param>
+        /// <param name="priority">加载声音资源的优先级。</param>
+        /// <param name="playAudioParams">播放声音参数。</param>
+        /// <param name="bindingEntity">声音绑定的实体。</param>
+        /// <param name="userData">用户自定义数据。</param>
+        /// <returns>声音的序列编号。</returns>
+        public int PlayAudio(string audioAssetName, string audioGroupName, int priority, PlayAudioParams playAudioParams, Entity bindingEntity, object userData)
+        {
+            return m_AudioManager.PlayAudio(audioAssetName, audioGroupName, priority, playAudioParams, PlayAudioInfo.Create(bindingEntity, Vector3.zero, userData));
+        }
+
+        /// <summary>
+        /// 播放声音。
+        /// </summary>
+        /// <param name="audioAssetName">声音资源名称。</param>
+        /// <param name="audioGroupName">声音组名称。</param>
+        /// <param name="priority">加载声音资源的优先级。</param>
+        /// <param name="playAudioParams">播放声音参数。</param>
+        /// <param name="worldPosition">声音所在的世界坐标。</param>
+        /// <returns>声音的序列编号。</returns>
+        public int PlayAudio(string audioAssetName, string audioGroupName, int priority, PlayAudioParams playAudioParams, Vector3 worldPosition)
+        {
+            return PlayAudio(audioAssetName, audioGroupName, priority, playAudioParams, worldPosition, null);
+        }
+
+        /// <summary>
+        /// 播放声音。
+        /// </summary>
+        /// <param name="audioAssetName">声音资源名称。</param>
+        /// <param name="audioGroupName">声音组名称。</param>
+        /// <param name="priority">加载声音资源的优先级。</param>
+        /// <param name="playAudioParams">播放声音参数。</param>
+        /// <param name="worldPosition">声音所在的世界坐标。</param>
+        /// <param name="userData">用户自定义数据。</param>
+        /// <returns>声音的序列编号。</returns>
+        public int PlayAudio(string audioAssetName, string audioGroupName, int priority, PlayAudioParams playAudioParams, Vector3 worldPosition, object userData)
+        {
+            return m_AudioManager.PlayAudio(audioAssetName, audioGroupName, priority, playAudioParams, PlayAudioInfo.Create(null, worldPosition, userData));
+        }
+
+        /// <summary>
+        /// 停止播放声音。
+        /// </summary>
+        /// <param name="serialId">要停止播放声音的序列编号。</param>
+        /// <returns>是否停止播放声音成功。</returns>
+        //public bool StopAudio(int serialId)
+        //{
+        //    return m_AudioManager.StopAudio(serialId);
+        //}
+
+        /// <summary>
+        /// 停止播放声音。
+        /// </summary>
+        /// <param name="serialId">要停止播放声音的序列编号。</param>
+        /// <param name="fadeOutSeconds">声音淡出时间，以秒为单位。</param>
+        /// <returns>是否停止播放声音成功。</returns>
+        public bool StopAudio(int serialId, float fadeOutSeconds)
+        {
+            return m_AudioManager.StopAudio(serialId, fadeOutSeconds);
+        }
+
+        /// <summary>
+        /// 停止所有已加载的声音。
+        /// </summary>
+        public void StopAllLoadedAudios()
+        {
+            m_AudioManager.StopAllLoadedAudios();
+        }
+
+        /// <summary>
+        /// 停止所有已加载的声音。
+        /// </summary>
+        /// <param name="fadeOutSeconds">声音淡出时间，以秒为单位。</param>
+        public void StopAllLoadedAudios(float fadeOutSeconds)
+        {
+            m_AudioManager.StopAllLoadedAudios(fadeOutSeconds);
+        }
+
+        /// <summary>
+        /// 停止所有正在加载的声音。
+        /// </summary>
+        public void StopAllLoadingAudios()
+        {
+            m_AudioManager.StopAllLoadingAudios();
+        }
+
+        /// <summary>
+        /// 暂停播放声音。
+        /// </summary>
+        /// <param name="serialId">要暂停播放声音的序列编号。</param>
+        public void PauseAudio(int serialId)
+        {
+            m_AudioManager.PauseAudio(serialId);
+        }
+
+        /// <summary>
+        /// 暂停播放声音。
+        /// </summary>
+        /// <param name="serialId">要暂停播放声音的序列编号。</param>
+        /// <param name="fadeOutSeconds">声音淡出时间，以秒为单位。</param>
+        public void PauseAudio(int serialId, float fadeOutSeconds)
+        {
+            m_AudioManager.PauseAudio(serialId, fadeOutSeconds);
+        }
+
+        /// <summary>
+        /// 恢复播放声音。
+        /// </summary>
+        /// <param name="serialId">要恢复播放声音的序列编号。</param>
+        public void ResumeAudio(int serialId)
+        {
+            m_AudioManager.ResumeAudio(serialId);
+        }
+
+        /// <summary>
+        /// 恢复播放声音。
+        /// </summary>
+        /// <param name="serialId">要恢复播放声音的序列编号。</param>
+        /// <param name="fadeInSeconds">声音淡入时间，以秒为单位。</param>
+        public void ResumeAudio(int serialId, float fadeInSeconds)
+        {
+            m_AudioManager.ResumeAudio(serialId, fadeInSeconds);
+        }
+
+        /// <summary>
+        /// 增加声音代理辅助器。
+        /// </summary>
+        /// <param name="audioGroupName">声音组名称。</param>
+        /// <param name="audioGroupHelper">声音组辅助器。</param>
+        /// <param name="index">声音代理辅助器索引。</param>
+        /// <returns>是否增加声音代理辅助器成功。</returns>
+        private bool AddAudioAgentHelper(string audioGroupName, AudioGroupHelperBase audioGroupHelper, int index)
+        {
+            AudioAgentHelperBase audioAgentHelper = Helper.CreateHelper(m_AudioAgentHelperTypeName, m_CustomAudioAgentHelper, index);
+            if (audioAgentHelper == null)
+            {
+                Log.Error("Can not create audio agent helper.");
+                return false;
+            }
+
+            audioAgentHelper.name = Framework.Utility.Text.Format("Audio Agent Helper - {0} - {1}", audioGroupName, index.ToString());
+            Transform transform = audioAgentHelper.transform;
+            transform.SetParent(audioGroupHelper.transform);
+            transform.localScale = Vector3.one;
+
+            m_AudioManager.AddAudioAgentHelper(audioGroupName, audioAgentHelper);
+
+            return true;
+        }
+
+
+        private void OnPlayAudioSuccess(object sender, Framework.Audio.PlayAudioSuccessEventArgs e)
+        {
+            PlayAudioInfo playAudioInfo = (PlayAudioInfo)e.UserData;
+            if (playAudioInfo != null)
+            {
+                AudioAgentHelperBase audioAgentHelper = (AudioAgentHelperBase)e.AudioAgent.Helper;
+                if (playAudioInfo.BindingEntity != null)
+                {
+                    audioAgentHelper.SetBindingEntity(playAudioInfo.BindingEntity);
+                }
+                else
+                {
+                    audioAgentHelper.SetWorldPosition(playAudioInfo.WorldPosition);
+                }
+            }
+
+            m_EventComponent.Fire(this, PlayAudioSuccessEventArgs.Create(e));
+        }
+
+        private void OnPlayAudioFailure(object sender, Framework.Audio.PlayAudioFailureEventArgs e)
+        {
+            string logMessage = Framework.Utility.Text.Format("Play audio failure, asset name '{0}', audio group name '{1}', error code '{2}', error message '{3}'.", e.AudioAssetName, e.AudioGroupName, e.ErrorCode.ToString(), e.ErrorMessage);
+            if (e.ErrorCode == PlayAudioErrorCode.IgnoredDueToLowPriority)
+            {
+                Log.Info(logMessage);
+            }
+            else
+            {
+                Log.Warning(logMessage);
+            }
+
+            m_EventComponent.Fire(this, PlayAudioFailureEventArgs.Create(e));
+        }
+
+        private void OnPlayAudioUpdate(object sender, Framework.Audio.PlayAudioUpdateEventArgs e)
+        {
+            m_EventComponent.Fire(this, PlayAudioUpdateEventArgs.Create(e));
+        }
+
+        private void OnPlayAudioDependencyAsset(object sender, Framework.Audio.PlayAudioDependencyAssetEventArgs e)
+        {
+            m_EventComponent.Fire(this, PlayAudioDependencyAssetEventArgs.Create(e));
+        }
+
+
+
+
+
+        private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+        {
+        }
+
+        private void OnSceneUnloaded(Scene scene)
+        {
+        }
     }
 
 }
