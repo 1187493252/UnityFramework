@@ -1,9 +1,12 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 
 public class FreeCamera : MonoBehaviour
 {
     public float camSens = 0.1f;
+    public float camRoate = 0.5f;
+
+
     public float camSpeed = 1.0f;
     public float fov = 60.0f;
 
@@ -31,6 +34,7 @@ public class FreeCamera : MonoBehaviour
         camTheta = mainCamera.transform.rotation.eulerAngles.y;
         angVel = new Vector2(0, 0);
     }
+
 
     protected void Update()
     {
@@ -95,7 +99,8 @@ public class FreeCamera : MonoBehaviour
         if (Input.GetMouseButton(0))
             angVel += new Vector2(lastMouse.x, lastMouse.y);
 
-        angVel *= 0.94f;
+        angVel *= camRoate;
+
         camPhi += angVel.x;
         camTheta += angVel.y;
         lastMouse = Input.mousePosition;
