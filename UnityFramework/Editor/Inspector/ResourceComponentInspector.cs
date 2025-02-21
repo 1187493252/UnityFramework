@@ -1,4 +1,4 @@
-//------------------------------------------------------------
+﻿//------------------------------------------------------------
 // Game Framework
 // Copyright © 2013-2021 Jiang Yin. All rights reserved.
 // Homepage: https://gameframework.cn/
@@ -16,7 +16,7 @@ namespace UnityFramework.Editor
     [CustomEditor(typeof(ResourceComponent))]
     internal sealed class ResourceComponentInspector : UnityFrameworkInspector
     {
-        private static readonly string[] ResourceModeNames = new string[] { "Package", "Updatable", "Updatable While Playing" };
+        private static readonly string[] ResourceModeNames = new string[] { "Unspecified", "Package", "Updatable", "Updatable While Playing" };
 
         private SerializedProperty m_ResourceMode = null;
         private SerializedProperty m_ReadWritePathType = null;
@@ -69,7 +69,7 @@ namespace UnityFramework.Editor
                     if (selectedIndex != m_ResourceModeIndex)
                     {
                         m_ResourceModeIndex = selectedIndex;
-                        m_ResourceMode.enumValueIndex = selectedIndex + 1;
+                        m_ResourceMode.enumValueIndex = selectedIndex;
                     }
                 }
 

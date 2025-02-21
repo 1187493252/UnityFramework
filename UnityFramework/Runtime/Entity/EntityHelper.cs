@@ -1,15 +1,15 @@
-/*
+﻿/*
 * FileName:          EntityHelper
 * CompanyName:       
 * Author:            relly
 * Description:       
 */
 
-using Framework;
-using Framework.Event;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Framework.Event;
+using Framework.Resource;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -17,8 +17,9 @@ namespace UnityFramework.Runtime
 {
     public class EntityHelper : MonoBehaviour
     {
+        [SerializeField]
         [Header("资源加载模式")]
-        public ResourceLoadMode ResourceLoadMode;
+        private ResourceMode m_ResourceMode;
         [Header("配置表名称:同类型的表格不能同名")]
         public List<string> TableName = new List<string>();
         EntityComponent entityComponent;
@@ -75,13 +76,14 @@ namespace UnityFramework.Runtime
                     string path = item.Path + name;
 
                     GameObject entity = null;
-                    switch (ResourceLoadMode)
+                    switch (m_ResourceMode)
                     {
-                        case ResourceLoadMode.Resource:
-                            entity = ComponentEntry.Resource.Load<GameObject>(path, ResourceLoadMode);
+                        case ResourceMode.Unspecified:
+                            entity = ComponentEntry.Resource.Load<GameObject>(path, m_ResourceMode);
                             break;
-                        case ResourceLoadMode.StreamingAssets:
-                        case ResourceLoadMode.WebRequest:
+                        case ResourceMode.Package:
+                        case ResourceMode.Updatable:
+                        case ResourceMode.UpdatableWhilePlaying:
                             path = Application.streamingAssetsPath + "/" + path;
                             UnityWebRequest request = UnityWebRequestAssetBundle.GetAssetBundle(path);
                             yield return request.SendWebRequest();

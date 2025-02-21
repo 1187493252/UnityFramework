@@ -12,15 +12,7 @@ using UnityEngine;
 
 namespace UnityFramework.Runtime
 {
-    /// <summary>
-    /// 资源加载模式
-    /// </summary>
-    public enum ResourceLoadMode
-    {
-        Resource,
-        StreamingAssets,
-        WebRequest//服务器
-    }
+
 
     [DisallowMultipleComponent]
     public class ResourceComponent : UnityFrameworkComponent
@@ -522,16 +514,17 @@ namespace UnityFramework.Runtime
 
 
         //--------------------------------------
-        public T Load<T>(string path, ResourceLoadMode resourceLoadMode) where T : UnityEngine.Object
+        public T Load<T>(string path, ResourceMode resourceLoadMode) where T : UnityEngine.Object
         {
             T res = default;
             switch (resourceLoadMode)
             {
-                case ResourceLoadMode.Resource:
+                case ResourceMode.Unspecified:
                     res = Resources.Load<T>(path);
                     break;
-                case ResourceLoadMode.StreamingAssets:
-                case ResourceLoadMode.WebRequest:
+                case ResourceMode.Package:
+                case ResourceMode.Updatable:
+                case ResourceMode.UpdatableWhilePlaying:
                     ComponentEntry.WebRequest.RequestGet(path);
 
                     break;
@@ -541,17 +534,18 @@ namespace UnityFramework.Runtime
 
             return res;
         }
-        public T LoadAsync<T>(string path, ResourceLoadMode resourceLoadMode) where T : UnityEngine.Object
+        public T LoadAsync<T>(string path, ResourceMode resourceLoadMode) where T : UnityEngine.Object
         {
             T res = default;
 
             switch (resourceLoadMode)
             {
-                case ResourceLoadMode.Resource:
+                case ResourceMode.Unspecified:
                     res = (T)Resources.LoadAsync<T>(path).asset;
                     break;
-                case ResourceLoadMode.StreamingAssets:
-                case ResourceLoadMode.WebRequest:
+                case ResourceMode.Package:
+                case ResourceMode.Updatable:
+                case ResourceMode.UpdatableWhilePlaying:
 
                     break;
                 default:

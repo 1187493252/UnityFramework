@@ -10,6 +10,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Framework.Event;
+using Framework.Resource;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -33,8 +34,9 @@ namespace UnityFramework.Runtime
     {
         [Header("配置加载模式")]
         public AudioLoadMode AudioLoadMode;
+        [SerializeField]
         [Header("资源加载模式")]
-        public ResourceLoadMode ResourceLoadMode;
+        private ResourceMode m_ResourceMode;
         [Header("配置表名称:同类型的表格不能同名")]
         public List<string> TableName = new List<string>();
         AudioComponent audioComponent;
@@ -126,13 +128,15 @@ namespace UnityFramework.Runtime
                     AudioClip clip = null;
                     if (InitLoadAllAudio)
                     {
-                        switch (ResourceLoadMode)
+                        switch (m_ResourceMode)
                         {
-                            case ResourceLoadMode.Resource:
-                                clip = ComponentEntry.Resource.LoadAsync<AudioClip>(path, ResourceLoadMode);
+                            case ResourceMode.Unspecified:
+
+                                clip = ComponentEntry.Resource.LoadAsync<AudioClip>(path, m_ResourceMode);
                                 break;
-                            case ResourceLoadMode.StreamingAssets:
-                            case ResourceLoadMode.WebRequest:
+                            case ResourceMode.Package:
+                            case ResourceMode.Updatable:
+                            case ResourceMode.UpdatableWhilePlaying:
                                 string audiopath = Application.streamingAssetsPath + path + ".wav";
 
                                 UnityWebRequest request = UnityWebRequestMultimedia.GetAudioClip(audiopath, AudioType.WAV);

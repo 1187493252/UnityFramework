@@ -1,4 +1,4 @@
-/*
+﻿/*
 * FileName:          ResourceMode
 * CompanyName:       
 * Author:            relly
