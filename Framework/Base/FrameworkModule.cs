@@ -1,15 +1,10 @@
-/*
+﻿/*
 * FileName:          FrameworkModule
 * CompanyName:       
 * Author:            relly
 * Description:       
 * 
 */
-
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace Framework
 {
