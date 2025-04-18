@@ -1,4 +1,4 @@
-
+﻿
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -374,7 +374,7 @@ namespace UnityFramework.Runtime
         /// <param name="fileUri">文件路径。</param>
         /// <param name="loadBytesCallbacks">加载数据流回调函数集。</param>
         /// <param name="userData">用户自定义数据。</param>
-        public override void LoadBytes(string fileUri, LoadBytesCallbacks loadBytesCallbacks, object userData)
+        public override void LoadBytes(string fileUri, LoadBinaryCallbacks loadBytesCallbacks, object userData)
         {
 
         }

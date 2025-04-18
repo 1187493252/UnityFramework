@@ -302,6 +302,10 @@ PrefabInstance:
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1783602997402638571, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
+      propertyPath: m_ResourceMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1783602997402638571, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: TableName.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -339,6 +343,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3443161207624890340, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
       propertyPath: ConfigLoadMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3443161207624890340, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
+      propertyPath: InitLoadAllAudio
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3443161207624890340, guid: 848a209f8b2011045bb5510bcfbf017b, type: 3}
