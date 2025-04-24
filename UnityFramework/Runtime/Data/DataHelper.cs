@@ -10,14 +10,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
-using Framework;
 using Framework.Event;
 using LitJson;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -70,6 +66,9 @@ namespace UnityFramework.Runtime
                     break;
                 case ReadPathType.PersistentData:
                     path = Application.persistentDataPath;
+#if UNITY_IOS || UNITY_ANDROID
+                path = "file://" + path;
+#endif
                     break;
                 case ReadPathType.TemporaryCache:
                     path = Application.temporaryCachePath;
@@ -77,7 +76,8 @@ namespace UnityFramework.Runtime
             }
             foreach (var item in DataFilePaths)
             {
-               string  url = path + item.filePath + item.fileName;
+                string url = path + item.filePath + item.fileName;
+
                 switch (item.fileType)
                 {
                     case DataType.Json:
