@@ -1,4 +1,4 @@
-/*
+﻿/*
 * FileName:          UIInputField
 * CompanyName:  
 * Author:            
@@ -6,13 +6,7 @@
 * 
 */
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
-using UnityFramework;
 
 
 namespace UnityFramework.UI
@@ -62,6 +56,16 @@ namespace UnityFramework.UI
         protected virtual void EndEvent(string _content)
         {
 
+        }
+
+        /// <summary>
+        /// 设置显示/隐藏明文还是*号
+        /// </summary>
+        /// <param name="boolean"></param>
+        public void SetContentTypePassword(bool boolean)
+        {
+            component.contentType = boolean ? InputField.ContentType.Password : InputField.ContentType.Standard;
+            component.Select();
         }
     }
 }

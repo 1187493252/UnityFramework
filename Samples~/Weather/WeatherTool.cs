@@ -1,4 +1,4 @@
-/*
+﻿/*
 * FileName:          WeatherTool
 * CompanyName:       
 * Author:            relly
@@ -88,7 +88,7 @@ public class WeatherTool : MonoBehaviour
             transform.localScale = Vector3.one;
             transform.name = CityName[i];
             transform.GetComponentInChildren<Text>().text = CityName[i];
-            SetBtnSelectedState setBtnSelectedState = transform.GetComponentInChildren<SetBtnSelectedState>();
+            SetBtnStateOnly setBtnSelectedState = transform.GetComponentInChildren<SetBtnStateOnly>();
             setBtnSelectedState.root = CityParent;
             if (i == 0)
             {
