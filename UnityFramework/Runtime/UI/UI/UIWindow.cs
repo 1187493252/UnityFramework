@@ -15,7 +15,8 @@ public class UIWindow : MonoBehaviour
 {
     private EventSystem eventSystem;
     private GraphicRaycaster graphicRaycaster;
-    public UnityEvent onClose;
+    public UnityEvent ClickedOnUI;
+    public UnityEvent UnClickedOnUI;
     private void Awake()
     {
         // 获取 EventSystem 和 GraphicRaycaster
@@ -28,24 +29,29 @@ public class UIWindow : MonoBehaviour
 
     }
 
+
     private void Update()
     {
 #if UNITY_STANDALONE || UNITY_EDITOR || UNITY_WEBGL
-        // 检测鼠标左键点击
-        if (Input.GetMouseButtonDown(0))
-        {
-            Vector2 mousePosition = Input.mousePosition;
-
+        HandleMouseRaycast();
 #elif UNITY_IOS || UNITY_ANDROID
   
-         Touch touch0 = Input.GetTouch(0);
-        // 检测触摸是否在 UI 上
-        if (EventSystem.current.IsPointerOverGameObject(touch0.fingerId))
-        {
-            Vector2 mousePosition =touch0.position;
+  HandleTouchRaycast();
 
 #endif
 
+
+    }
+    void HandleTouchRaycast()
+    {
+        if (Input.touchCount == 1)
+        {
+            Touch touch0 = Input.GetTouch(0);
+            if (EventSystem.current.IsPointerOverGameObject(touch0.fingerId))
+            {
+                return; // 如果触摸在 UI 上，则不处理相机逻辑
+            }
+            Vector2 mousePosition = touch0.position;
             // 创建 PointerEventData 并执行射线检测
             PointerEventData pointerEventData = new PointerEventData(eventSystem);
             pointerEventData.position = mousePosition;
@@ -53,6 +59,16 @@ public class UIWindow : MonoBehaviour
             List<RaycastResult> results = new List<RaycastResult>();
             graphicRaycaster.Raycast(pointerEventData, results);
 
+            bool clickedUI = RectTransformUtility.RectangleContainsScreenPoint(GetComponent<RectTransform>(), pointerEventData.position, pointerEventData.pressEventCamera);
+            if (!clickedUI)
+            {
+                UnClickedOnUI?.Invoke();
+            }
+            else
+            {
+                ClickedOnUI?.Invoke();
+            }
+            return;
             // 检查结果
             bool clickedOnUI = false;
 
@@ -66,18 +82,66 @@ public class UIWindow : MonoBehaviour
             }
 
             // 如果没有点击到 UI 窗口或其子元素，关闭 UI 窗口
-            if (!clickedOnUI)
+            if (!clickedUI)
             {
-                CloseUIWindow(this.gameObject);
+                UnClickedOnUI?.Invoke();
+            }
+            else
+            {
+                ClickedOnUI?.Invoke();
+            }
+        }
+    }
+    void HandleMouseRaycast()
+    {
+        // 检测鼠标左键点击
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            {
+                return;
+            }
+            Vector2 mousePosition = Input.mousePosition;
+            // 创建 PointerEventData 并执行射线检测
+            PointerEventData pointerEventData = new PointerEventData(eventSystem);
+            pointerEventData.position = mousePosition;
+
+            List<RaycastResult> results = new List<RaycastResult>();
+            graphicRaycaster.Raycast(pointerEventData, results);
+
+            bool clickedUI = RectTransformUtility.RectangleContainsScreenPoint(GetComponent<RectTransform>(), pointerEventData.position, pointerEventData.pressEventCamera);
+            if (!clickedUI)
+            {
+                UnClickedOnUI?.Invoke();
+            }
+            else
+            {
+                ClickedOnUI?.Invoke();
+            }
+            return;
+            // 检查结果
+            bool clickedOnUI = false;
+
+            foreach (RaycastResult result in results)
+            {
+                if (result.gameObject.transform.IsChildOf(this.transform))
+                {
+                    clickedOnUI = true;
+                    break;
+                }
+            }
+
+            // 如果没有点击到 UI 窗口或其子元素，关闭 UI 窗口
+            if (!clickedUI)
+            {
+                UnClickedOnUI?.Invoke();
+            }
+            else
+            {
+                ClickedOnUI?.Invoke();
             }
         }
     }
 
 
-    public void CloseUIWindow(GameObject uiWindow)
-    {
-        // 关闭 UI 窗口
-        uiWindow.SetActive(false);
-        onClose?.Invoke();
-    }
 }

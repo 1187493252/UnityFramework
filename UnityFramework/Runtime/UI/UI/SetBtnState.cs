@@ -2,7 +2,7 @@
 * FileName:          SetBtnState
 * CompanyName:       
 * Author:            relly
-* Description:       按钮的选中状态设置,只控制自身
+* Description:       
 */
 
 using UnityEngine;
@@ -41,10 +41,10 @@ public class SetBtnState : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public bool IsStartSelected;
     public bool IsStartSelectedEvent;
+    bool isSelected;
     public UnityEvent SelectedEvent;
     public UnityEvent UnSelectedEvent;
 
-    bool isSelected;
 
     private void Awake()
     {
@@ -58,15 +58,7 @@ public class SetBtnState : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         }
         button = GetComponentInChildren<Button>();
         button.onClick.AddListener(delegate {
-            isSelected = !isSelected;
-            if (isSelected)
-            {
-                SetSelectedState(true);
-            }
-            else
-            {
-                SetNormalState(true);
-            }
+            BtnClick();
         });
 
         if (IsStartSelected)
@@ -86,7 +78,19 @@ public class SetBtnState : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
 
     }
-    public void SetNormalState(bool executeEvent = false, bool setIsSelectedValue = true)
+    public void BtnClick()
+    {
+        isSelected = !isSelected;
+        if (isSelected)
+        {
+            SetSelectedState(true);
+        }
+        else
+        {
+            SetNormalState(true);
+        }
+    }
+    public void SetNormalState(bool executeEvent = false)
     {
         if (normalbg)
         {
@@ -101,22 +105,15 @@ public class SetBtnState : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         if (text)
         {
             text.color = normalColor;
-            if (normalContent != "")
-            {
-                text.text = normalContent;
-            }
+            text.text = normalContent;
         }
         if (executeEvent)
         {
             UnSelectedEvent.Invoke();
         }
-        if (setIsSelectedValue)
-        {
-            isSelected = false;
-        }
-
+        isSelected = false;
     }
-    public void SetSelectedState(bool executeEvent = false, bool setIsSelectedValue = true)
+    public void SetSelectedState(bool executeEvent = false)
     {
         if (normalbg)
         {
@@ -135,22 +132,14 @@ public class SetBtnState : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         if (text)
         {
             text.color = selectedColor;
-            if (selectedContent != "")
-            {
-                text.text = selectedContent;
-            }
+            text.text = selectedContent;
 
         }
         if (executeEvent)
         {
             SelectedEvent.Invoke();
         }
-
-        if (setIsSelectedValue)
-        {
-            isSelected = true;
-        }
-
+        isSelected = true;
 
     }
 
@@ -159,11 +148,7 @@ public class SetBtnState : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     {
         if (IsOpenHover)
         {
-            if (!isSelected)
-            {
-                SetSelectedState(false, false);
-
-            }
+            SetSelectedState();
         }
 
     }
@@ -172,11 +157,7 @@ public class SetBtnState : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     {
         if (IsOpenHover)
         {
-            if (!isSelected)
-            {
-                SetNormalState(false, false);
-
-            }
+            SetNormalState();
         }
     }
 }

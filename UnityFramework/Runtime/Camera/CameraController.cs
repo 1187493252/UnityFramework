@@ -92,6 +92,11 @@ public class CameraController : MonoBehaviour
     {
 
     }
+    /// <summary>
+    /// 摄像机聚焦模型
+    /// </summary>
+    /// <param name="newTarget"></param>
+    /// <param name="distance"></param>
     public void FocusOnModel(Transform newTarget, float distance)
     {
         if (newTarget == null)
@@ -101,13 +106,23 @@ public class CameraController : MonoBehaviour
         }
 
         target.position = newTarget.position; // 直接将 target 的位置设置为模型的位置
-        target.rotation = newTarget.rotation; // 直接将 target 的旋转设置为模型的旋转
 
         currentDistance = distance;
         currentDistance = Mathf.Clamp(currentDistance, minDistance, maxDistance);
         //   currentRotation = new Vector2(transform.eulerAngles.y, transform.eulerAngles.x);
-        //  UpdateCameraPosition();
         transform.position = target.position - transform.forward * currentDistance;
+    }
+
+    public void FocusOnModel(Vector3 pos, Vector3 eulerAngles, float distance)
+    {
+
+        target.position = pos; // 直接将 target 的位置设置为模型的位置
+
+        currentDistance = distance;
+        currentDistance = Mathf.Clamp(currentDistance, minDistance, maxDistance);
+        currentRotation = new Vector2(eulerAngles.y, eulerAngles.x);
+        UpdateCameraPosition();
+
     }
 
     private void UpdateCameraPosition()
@@ -340,6 +355,10 @@ public class CameraController : MonoBehaviour
             if (EventSystem.current.IsPointerOverGameObject(touch0.fingerId))
             {
                 return; // 如果触摸在 UI 上，则不处理相机逻辑
+            }
+            if (touch0.deltaPosition != Vector2.zero)
+            {
+                return;
             }
             if (touch0.phase == TouchPhase.Ended)
             {
