@@ -135,8 +135,7 @@ namespace UnityFramework.Runtime
                                 clip = ComponentEntry.Resource.LoadAsync<AudioClip>(path, m_ResourceMode);
                                 break;
                             case ResourceMode.Package:
-                            case ResourceMode.Updatable:
-                            case ResourceMode.UpdatableWhilePlaying:
+
                                 string audiopath = Application.streamingAssetsPath + path + ".wav";
 
                                 UnityWebRequest request = UnityWebRequestMultimedia.GetAudioClip(audiopath, AudioType.WAV);
@@ -154,6 +153,28 @@ namespace UnityFramework.Runtime
                                     clip = DownloadHandlerAudioClip.GetContent(request);
                                 }
                                 request.Dispose();
+                                break;
+                            case ResourceMode.Updatable:
+                            case ResourceMode.UpdatableWhilePlaying:
+                                string audiopath1 = Application.persistentDataPath + path + ".wav";
+#if UNITY_IOS || UNITY_ANDROID
+                audiopath1 = "file://" + audiopath1;
+#endif
+                                UnityWebRequest request1 = UnityWebRequestMultimedia.GetAudioClip(audiopath1, AudioType.WAV);
+                                yield return request1.SendWebRequest();
+#if UNITY_2020_1_OR_NEWER
+                                if (request1.result == UnityWebRequest.Result.ProtocolError || request1.result == UnityWebRequest.Result.ConnectionError)
+#else
+			                if (request.isHttpError || request.isNetworkError)
+#endif
+                                {
+                                    ComponentEntry.Event.Fire(this, LoadAudioInfoFailEventArgs.Create($"load audio {name} fail : {request1.error}"));
+                                }
+                                else
+                                {
+                                    clip = DownloadHandlerAudioClip.GetContent(request1);
+                                }
+                                request1.Dispose();
                                 break;
                         }
                     }
