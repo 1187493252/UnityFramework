@@ -1,6 +1,6 @@
 # UnityFramework
 # 导入方法:
-1.在Unity的PackageManager里通过url导入(由于个人能力有限导致有些代码可能出现引用问题)
+1.在Unity的PackageManager里通过url导入(由于个人能力有限导致有些代码可能出现引用问题),需要导入Samples/GameMain,里面包含必要的插件及脚本
 
 2.直接下载源码导入项目(推荐)
 # 说明:
