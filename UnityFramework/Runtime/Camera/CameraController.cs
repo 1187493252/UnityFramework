@@ -314,9 +314,18 @@ public class CameraController : MonoBehaviour
         return false;
 
     }
+    Vector2 lastPosition;
 
     private void HandleMouseRaycast()
     {
+        if (Input.GetMouseButtonDown(0))
+        {
+            lastPosition = Input.mousePosition;
+        }
+        if (((Vector2)Input.mousePosition - lastPosition) != Vector2.zero)
+        {
+            return;
+        }
 
         if (Input.GetMouseButtonUp(0))
         {
