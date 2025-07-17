@@ -2,8 +2,8 @@
   "name": "com.sc.unityframework",
   "version": "1.0.2",
   "displayName": "SC.UnityFramework",
-  "description": "",
-  "documentationUrl": "",
+  "description": "需要导入示例Samples/GameMain,里面包含必要的插件及脚本",
+  "documentationUrl": "https://github.com/1187493252/UnityFramework/blob/main/README.md",
   "relatedPackages": {},
   "dependencies": {
     "com.unity.textmeshpro": "3.0.0",
