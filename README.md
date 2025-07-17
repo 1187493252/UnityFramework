@@ -1,8 +1,8 @@
 # UnityFramework
 # 导入方法:
-1.在Unity的PackageManager里通过url导入(由于个人能力有限导致有些代码可能出现引用问题),需要导入Samples/GameMain,里面包含必要的插件及脚本
+1.在Unity的PackageManager里通过url下载,需要导入示例Samples/GameMain,里面包含必要的插件及脚本
 
-2.直接下载源码导入项目(推荐)
+2.直接下载源码,根据报错导入对应的插件，例如LitJson，YooAsset等
 # 说明:
 本项目以GameFramework为核心,再结合本人项目经历(VR/AR)去掉/修改不适用的模块,目前有些模块功能还没实现或者临时写的单例没有遵循框架规则,后续慢慢完善
 
@@ -34,40 +34,3 @@
 
 14.WebRequest用于与后台接口交互http
 
-#源Unity项目增加Hook文件pre-commit
-
-#功能:在提交前将Samples文件夹的文件及文件夹复制到Samples~ 文件夹里,提交Samples~ 文件夹里的文件
-
-#项目已忽略Samples文件夹,通过修改其他文件触发hook,从而提交Samples文件夹的修改
-
-#pre-commit代码
-
-#!/bin/sh
-
-#指定源文件夹和目标文件夹
-
-SOURCE_FOLDER="Samples"
-
-TARGET_FOLDER="Samples~"
-
-#确保目标文件夹存在
-
-mkdir -p "$TARGET_FOLDER"
-
-#清空目标文件夹中的所有文件和子文件夹
-
-rm -rf "$TARGET_FOLDER"/*
-
-#复制源文件夹及其内容到目标文件夹
-
-cp -r "$SOURCE_FOLDER"/. "$TARGET_FOLDER"/
-
-#添加目标文件夹中的所有文件和子文件夹到暂存区
-
-git add "$TARGET_FOLDER"
-
-#提交信息（可选）
-
-#COMMIT_MESSAGE="Auto-update files in target folder"
-
-#git commit -m "$COMMIT_MESSAGE" -- "$TARGET_FOLDER"
