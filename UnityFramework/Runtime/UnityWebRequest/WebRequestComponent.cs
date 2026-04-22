@@ -908,15 +908,21 @@ namespace UnityFramework.Runtime
         /// <param name="url">接口地址</param>
         /// <param name="headerDic">头文件字典</param>
         /// <param name="paramsDic">参数字典</param>
-        /// <param name="textCallBack">文本内容回调</param>
-        /// <param name="dataCallBack">二进制回调</param>
+        /// <param name="successCallBack">成功回调</param>
         /// <param name="failCallBack">请求失败回调</param>
         /// <returns></returns>
         public void RequestGet(string url, Dictionary<string, string> headerDic = null, Dictionary<string, string> paramsDic = null, Action<string, byte[]> successCallBack = null, Action<string> failCallBack = null)
         { StartCoroutine(UnityWebRequestGet(url, headerDic, paramsDic, successCallBack, failCallBack)); }
 
 
-
+        /// <summary>
+        /// UnityWebRequest Post请求
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="paramsDic"></param>
+        /// <param name="headerDic"></param>
+        /// <param name="successCallBack"></param>
+        /// <param name="failCallBack"></param>
         public void RequestPost(string url, Dictionary<string, string> paramsDic = null, Dictionary<string, string> headerDic = null, Action<string, byte[]> successCallBack = null, Action<string> failCallBack = null)
         { StartCoroutine(UnityWebRequestPost(url, paramsDic, headerDic, successCallBack, failCallBack)); }
 
@@ -924,11 +930,10 @@ namespace UnityFramework.Runtime
         /// UnityWebRequest Post请求
         /// </summary>
         /// <param name="url">接口地址</param>
-        /// <param name="requestParam">请求参数</param>
+        /// <param name="postData">请求参数</param>
         /// <param name="mimeType">MIME类型</param>
         /// <param name="headerDic">头文件字典</param>
-        /// <param name="textCallBack">文本内容回调</param>
-        /// <param name="dataCallBack">二进制回调</param>
+        /// <param name="successCallBack">成功回调</param>
         /// <param name="failCallBack">请求失败回调</param>
         /// <returns></returns>
         public void RequestPost(string url, string postData, MIMEType mimeType = MIMEType.Json, Dictionary<string, string> headerDic = null, Action<string, byte[]> successCallBack = null, Action<string> failCallBack = null)
@@ -969,8 +974,7 @@ namespace UnityFramework.Runtime
         /// <param name="requestParam">请求参数</param>
         /// <param name="mimeType">MIME类型</param>
         /// <param name="headerDic">头文件字典</param>
-        /// <param name="textCallBack">文本内容回调</param>
-        /// <param name="dataCallBack">二进制回调</param>
+        /// <param name="successCallBack">成功回调</param>
         /// <param name="failCallBack">请求失败回调</param>
         /// <returns></returns>
         public void RequestPut(string url, string requestParam, MIMEType mimeType = MIMEType.Json, Dictionary<string, string> headerDic = null, Action<string, byte[]> successCallBack = null, Action<string> failCallBack = null)
