@@ -917,6 +917,8 @@ namespace UnityFramework.Runtime
 
 
 
+        public void RequestPost(string url, Dictionary<string, string> paramsDic = null, Dictionary<string, string> headerDic = null, Action<string, byte[]> successCallBack = null, Action<string> failCallBack = null)
+        { StartCoroutine(UnityWebRequestPost(url, paramsDic, headerDic, successCallBack, failCallBack)); }
 
         /// <summary>
         /// UnityWebRequest Post请求
@@ -929,21 +931,20 @@ namespace UnityFramework.Runtime
         /// <param name="dataCallBack">二进制回调</param>
         /// <param name="failCallBack">请求失败回调</param>
         /// <returns></returns>
-        public void RequestPost(string url, string requestParam, MIMEType mimeType = MIMEType.Json, Dictionary<string, string> headerDic = null, Action<string, byte[]> successCallBack = null, Action<string> failCallBack = null)
-        { StartCoroutine(UnityWebRequestPost(url, requestParam, mimeType, headerDic, successCallBack, failCallBack)); }
+        public void RequestPost(string url, string postData, MIMEType mimeType = MIMEType.Json, Dictionary<string, string> headerDic = null, Action<string, byte[]> successCallBack = null, Action<string> failCallBack = null)
+        { StartCoroutine(UnityWebRequestPost(url, postData, mimeType, headerDic, successCallBack, failCallBack)); }
 
         /// <summary>
         /// UnityWebRequest Post请求
         /// </summary>
         /// <param name="url">接口地址</param>
-        /// <param name="formDic">表单参数键值对</param>
+        /// <param name="form">表单参数</param>
         /// <param name="headerDic">头文件字典</param>
-        /// <param name="textCallBack">文本内容回调</param>
-        /// <param name="dataCallBack">二进制回调</param>
+        /// <param name="successCallBack">成功回调</param>
         /// <param name="failCallBack">请求失败回调</param>
         /// <returns></returns>
-        public void RequestPost(string url, Dictionary<string, string> formDic, Dictionary<string, string> headerDic = null, Action<string, byte[]> successCallBack = null, Action<string> failCallBack = null)
-        { StartCoroutine(UnityWebRequestPost(url, formDic, headerDic, successCallBack, failCallBack)); }
+        public void RequestPost(string url, WWWForm form, Dictionary<string, string> headerDic = null, Action<string, byte[]> successCallBack = null, Action<string> failCallBack = null)
+        { StartCoroutine(UnityWebRequestPost(url, form, headerDic, successCallBack, failCallBack)); }
 
 
         /// <summary>
@@ -1012,7 +1013,7 @@ namespace UnityFramework.Runtime
                 tempUrl = url;
             }
 
-            UnityWebRequest request = UnityWebRequest.Get(tempUrl);
+            UnityWebRequest request = UnityWebRequest.Get(NormalizeUrlForUnityWebRequest(tempUrl));
 
             if (headerDic != null && headerDic.Count >= 1)
             {
@@ -1046,14 +1047,33 @@ namespace UnityFramework.Runtime
             }
         }
 
-        IEnumerator UnityWebRequestPost(string url, string requestParam, MIMEType mimeType = MIMEType.Json, Dictionary<string, string> headerDic = null, Action<string, byte[]> successCallBack = null, Action<string> failCallBack = null)
+
+        IEnumerator UnityWebRequestPost(string url, Dictionary<string, string> paramsDic = null, Dictionary<string, string> headerDic = null, Action<string, byte[]> successCallBack = null, Action<string> failCallBack = null)
         {
-            byte[] bytes = Encoding.UTF8.GetBytes(requestParam);
-            UnityWebRequest request = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPOST)
+            string tempUrl;
+            if (paramsDic != null && paramsDic.Count >= 1)
             {
-                uploadHandler = new UploadHandlerRaw(bytes),
-                downloadHandler = new DownloadHandlerBuffer()
-            };
+                StringBuilder builder = new StringBuilder();
+                builder.Append(url);
+                builder.Append("?");
+                int i = 0;
+                foreach (var item in paramsDic)
+                {
+                    if (i > 0)
+                        builder.Append("&");
+                    builder.AppendFormat("{0}={1}", item.Key, item.Value);
+                    i++;
+                }
+
+                tempUrl = builder.ToString();
+            }
+            else
+            {
+                tempUrl = url;
+            }
+
+            string requestUrl = NormalizeUrlForUnityWebRequest(tempUrl);
+            UnityWebRequest request = UnityWebRequest.Post(requestUrl, "", "application/json");
 
             if (headerDic != null && headerDic.Count >= 1)
             {
@@ -1063,10 +1083,53 @@ namespace UnityFramework.Runtime
                 }
             }
 
+            if (paramsDic != null && paramsDic.Count >= 1)
+            { request.SetRequestHeader("Content-Type", "application/x-www-form-urlencoded"); }
+
+            yield return request.SendWebRequest();
+
+
+#if UNITY_2020_1_OR_NEWER
+            if (request.result == UnityWebRequest.Result.ProtocolError || request.result == UnityWebRequest.Result.ConnectionError)
+#else
+			if (request.isHttpError || request.isNetworkError)
+#endif
+            {
+                Debug.LogError(request.error);
+                failCallBack?.Invoke(request.error);
+            }
+            else
+            {
+                string text = request.downloadHandler.text;
+                byte[] data = request.downloadHandler.data;
+
+                successCallBack?.Invoke(text, data);
+            }
+        }
+
+
+        IEnumerator UnityWebRequestPost(string url, string postData, MIMEType mimeType = MIMEType.Json, Dictionary<string, string> headerDic = null, Action<string, byte[]> successCallBack = null, Action<string> failCallBack = null)
+        {
+
+            string contentType = "";
             switch (mimeType)
             {
-                case MIMEType.Json: request.SetRequestHeader("Content-Type", "application/json;charset=utf-8"); break;
-                case MIMEType.Xml: request.SetRequestHeader("Content-Type", "application/xml;charset=utf-8"); break;
+                case MIMEType.Json:
+                    contentType = "application/json;charset=utf-8";
+                    break;
+                case MIMEType.Xml:
+                    contentType = "application/xml;charset=utf-8";
+                    break;
+            }
+            UnityWebRequest request = UnityWebRequest.Post(NormalizeUrlForUnityWebRequest(url), postData, contentType);
+
+
+            if (headerDic != null && headerDic.Count >= 1)
+            {
+                foreach (var item in headerDic)
+                {
+                    request.SetRequestHeader(item.Key, item.Value);
+                }
             }
 
             yield return request.SendWebRequest();
@@ -1083,13 +1146,9 @@ namespace UnityFramework.Runtime
             }
         }
 
-        IEnumerator UnityWebRequestPost(string url, Dictionary<string, string> formDic, Dictionary<string, string> headerDic = null, Action<string, byte[]> successCallBack = null, Action<string> failCallBack = null)
+        IEnumerator UnityWebRequestPost(string url, WWWForm form, Dictionary<string, string> headerDic = null, Action<string, byte[]> successCallBack = null, Action<string> failCallBack = null)
         {
-            WWWForm form = new WWWForm();
-
-            foreach (var item in formDic) { form.AddField(item.Key, item.Value); }
-
-            UnityWebRequest request = UnityWebRequest.Post(url, form);
+            UnityWebRequest request = UnityWebRequest.Post(NormalizeUrlForUnityWebRequest(url), form);
             if (headerDic != null && headerDic.Count >= 1)
             {
                 foreach (var item in headerDic)
@@ -1097,7 +1156,7 @@ namespace UnityFramework.Runtime
                     request.SetRequestHeader(item.Key, item.Value);
                 }
             }
-            request.SetRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
+            //  request.SetRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             yield return request.SendWebRequest();
             if (request.isHttpError || request.isNetworkError)
             {
@@ -1116,9 +1175,7 @@ namespace UnityFramework.Runtime
 
         IEnumerator UnityWebRequestPost(string url, List<IMultipartFormSection> multipartFormSections, Dictionary<string, string> headerDic = null, Action<string, byte[]> successCallBack = null, Action<string> failCallBack = null)
         {
-
-
-            UnityWebRequest request = UnityWebRequest.Post(url, multipartFormSections);
+            UnityWebRequest request = UnityWebRequest.Post(NormalizeUrlForUnityWebRequest(url), multipartFormSections);
             if (headerDic != null && headerDic.Count >= 1)
             {
                 foreach (var item in headerDic)
@@ -1126,7 +1183,7 @@ namespace UnityFramework.Runtime
                     request.SetRequestHeader(item.Key, item.Value);
                 }
             }
-            request.SetRequestHeader("Content-Type", "multipart/form-data");
+            // request.SetRequestHeader("Content-Type", "multipart/form-data");
             yield return request.SendWebRequest();
             if (request.isHttpError || request.isNetworkError)
             {
@@ -1145,7 +1202,7 @@ namespace UnityFramework.Runtime
         IEnumerator UnityWebRequestPut(string url, string requestParam, MIMEType mimeType = MIMEType.Json, Dictionary<string, string> headerDic = null, Action<string, byte[]> successCallBack = null, Action<string> failCallBack = null)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(requestParam);
-            UnityWebRequest request = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPUT)
+            UnityWebRequest request = new UnityWebRequest(NormalizeUrlForUnityWebRequest(url), UnityWebRequest.kHttpVerbPUT)
             {
                 uploadHandler = new UploadHandlerRaw(bytes),
                 downloadHandler = new DownloadHandlerBuffer()
@@ -1182,7 +1239,7 @@ namespace UnityFramework.Runtime
         IEnumerator UnityWebRequestDelete(string url, string requestParam, MIMEType mimeType = MIMEType.Json, Dictionary<string, string> headerDic = null, Action<string, byte[]> successCallBack = null, Action<string> failCallBack = null)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(requestParam);
-            UnityWebRequest request = new UnityWebRequest(url, UnityWebRequest.kHttpVerbDELETE)
+            UnityWebRequest request = new UnityWebRequest(NormalizeUrlForUnityWebRequest(url), UnityWebRequest.kHttpVerbDELETE)
             {
                 uploadHandler = new UploadHandlerRaw(bytes),
                 downloadHandler = new DownloadHandlerBuffer()
@@ -1217,5 +1274,31 @@ namespace UnityFramework.Runtime
         }
 
         #endregion
+
+
+        private string NormalizeUrlForUnityWebRequest(string url)
+        {
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                return url;
+            }
+
+            string regularUrl = Utility.Path.GetRegularPath(url);
+            if (regularUrl.Contains("://"))
+            {
+                return regularUrl;
+            }
+
+            bool isWindowsAbsolutePath = regularUrl.Length >= 3 && char.IsLetter(regularUrl[0]) && regularUrl[1] == ':' && regularUrl[2] == '/';
+            bool isUnixAbsolutePath = regularUrl.StartsWith("/");
+            if (!isWindowsAbsolutePath && !isUnixAbsolutePath)
+            {
+                return regularUrl;
+            }
+
+            return Utility.Path.GetRemotePath(regularUrl);
+        }
     }
+
+
 }
