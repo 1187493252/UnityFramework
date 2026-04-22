@@ -1,8 +1,8 @@
 /*
 * FileName:          WebRequestComponent
-* CompanyName:       
+* CompanyName:
 * Author:            relly
-* Description:       
+* Description:
 */
 
 
@@ -23,7 +23,7 @@ namespace UnityFramework.Runtime
 {
     /// <summary>
     /// MIME类型
-    /// </summary> 
+    /// </summary>
     public enum MIMEType
     {
         Json,           //json
@@ -912,8 +912,8 @@ namespace UnityFramework.Runtime
         /// <param name="dataCallBack">二进制回调</param>
         /// <param name="failCallBack">请求失败回调</param>
         /// <returns></returns>
-        public void RequestGet(string url, Dictionary<string, string> headerDic = null, Dictionary<string, string> paramsDic = null, Action<string, byte[]> callBack = null, Action failCallBack = null)
-        { StartCoroutine(UnityWebRequestGet(url, headerDic, paramsDic, callBack, failCallBack)); }
+        public void RequestGet(string url, Dictionary<string, string> headerDic = null, Dictionary<string, string> paramsDic = null, Action<string, byte[]> successCallBack = null, Action<string> failCallBack = null)
+        { StartCoroutine(UnityWebRequestGet(url, headerDic, paramsDic, successCallBack, failCallBack)); }
 
 
 
@@ -929,8 +929,8 @@ namespace UnityFramework.Runtime
         /// <param name="dataCallBack">二进制回调</param>
         /// <param name="failCallBack">请求失败回调</param>
         /// <returns></returns>
-        public void RequestPost(string url, string requestParam, MIMEType mimeType = MIMEType.Json, Dictionary<string, string> headerDic = null, Action<string> textCallBack = null, Action<byte[]> dataCallBack = null, Action failCallBack = null)
-        { StartCoroutine(UnityWebRequestPost(url, requestParam, mimeType, headerDic, textCallBack, dataCallBack, failCallBack)); }
+        public void RequestPost(string url, string requestParam, MIMEType mimeType = MIMEType.Json, Dictionary<string, string> headerDic = null, Action<string, byte[]> successCallBack = null, Action<string> failCallBack = null)
+        { StartCoroutine(UnityWebRequestPost(url, requestParam, mimeType, headerDic, successCallBack, failCallBack)); }
 
         /// <summary>
         /// UnityWebRequest Post请求
@@ -942,8 +942,24 @@ namespace UnityFramework.Runtime
         /// <param name="dataCallBack">二进制回调</param>
         /// <param name="failCallBack">请求失败回调</param>
         /// <returns></returns>
-        public void RequestPost(string url, Dictionary<string, string> formDic, Dictionary<string, string> headerDic = null, Action<string> textCallBack = null, Action<byte[]> dataCallBack = null, Action failCallBack = null)
-        { StartCoroutine(UnityWebRequestPost(url, formDic, headerDic, textCallBack, dataCallBack, failCallBack)); }
+        public void RequestPost(string url, Dictionary<string, string> formDic, Dictionary<string, string> headerDic = null, Action<string, byte[]> successCallBack = null, Action<string> failCallBack = null)
+        { StartCoroutine(UnityWebRequestPost(url, formDic, headerDic, successCallBack, failCallBack)); }
+
+
+        /// <summary>
+        /// 发送 POST 请求（multipart/form-data 格式）的公开方法
+        /// </summary>
+        /// <param name="url">请求的目标 URL</param>
+        /// <param name="multipartFormSections">多部分表单数据</param>
+        /// <param name="headerDic">可选的请求头字典</param>
+        /// <param name="successCallBack">成功回调，参数为响应文本和响应数据</param>
+        /// <param name="failCallBack">失败回调，参数为错误信息</param>
+        public void RequestPost(string url, List<IMultipartFormSection> multipartFormSections, Dictionary<string, string> headerDic = null, Action<string, byte[]> successCallBack = null, Action<string> failCallBack = null)
+        {
+            // 启动协程执行 UnityWebRequestPost 方法
+            StartCoroutine(UnityWebRequestPost(url, multipartFormSections, headerDic, successCallBack, failCallBack));
+        }
+
 
         /// <summary>
         /// UnityWebRequest Put请求
@@ -956,8 +972,8 @@ namespace UnityFramework.Runtime
         /// <param name="dataCallBack">二进制回调</param>
         /// <param name="failCallBack">请求失败回调</param>
         /// <returns></returns>
-        public void RequestPut(string url, string requestParam, MIMEType mimeType = MIMEType.Json, Dictionary<string, string> headerDic = null, Action<string> textCallBack = null, Action<byte[]> dataCallBack = null, Action failCallBack = null)
-        { StartCoroutine(UnityWebRequestPut(url, requestParam, mimeType, headerDic, textCallBack, dataCallBack, failCallBack)); }
+        public void RequestPut(string url, string requestParam, MIMEType mimeType = MIMEType.Json, Dictionary<string, string> headerDic = null, Action<string, byte[]> successCallBack = null, Action<string> failCallBack = null)
+        { StartCoroutine(UnityWebRequestPut(url, requestParam, mimeType, headerDic, successCallBack, failCallBack)); }
 
         /// <summary>
         /// UnityWebRequest Delete请求
@@ -966,14 +982,13 @@ namespace UnityFramework.Runtime
         /// <param name="requestParam">请求参数</param>
         /// <param name="mimeType">MIME类型</param>
         /// <param name="headerDic">头文件字典</param>
-        /// <param name="textCallBack">文本内容回调</param>
-        /// <param name="dataCallBack">二进制回调</param>
+        /// <param name="successCallBack">成功回调</param>
         /// <param name="failCallBack">请求失败回调</param>
         /// <returns></returns>
-        public void RequestDelete(string url, string requestParam, MIMEType mimeType = MIMEType.Json, Dictionary<string, string> headerDic = null, Action<string> textCallBack = null, Action<byte[]> dataCallBack = null, Action failCallBack = null)
-        { StartCoroutine(UnityWebRequestDelete(url, requestParam, mimeType, headerDic, textCallBack, dataCallBack, failCallBack)); }
+        public void RequestDelete(string url, string requestParam, MIMEType mimeType = MIMEType.Json, Dictionary<string, string> headerDic = null, Action<string, byte[]> successCallBack = null, Action<string> failCallBack = null)
+        { StartCoroutine(UnityWebRequestDelete(url, requestParam, mimeType, headerDic, successCallBack, failCallBack)); }
 
-        IEnumerator UnityWebRequestGet(string url, Dictionary<string, string> headerDic = null, Dictionary<string, string> paramsDic = null, Action<string, byte[]> callBack = null, Action failCallBack = null)
+        IEnumerator UnityWebRequestGet(string url, Dictionary<string, string> headerDic = null, Dictionary<string, string> paramsDic = null, Action<string, byte[]> successCallBack = null, Action<string> failCallBack = null)
         {
             string tempUrl;
             if (paramsDic != null && paramsDic.Count >= 1)
@@ -1020,18 +1035,18 @@ namespace UnityFramework.Runtime
 #endif
             {
                 Debug.LogError(request.error);
-                failCallBack?.Invoke();
+                failCallBack?.Invoke(request.error);
             }
             else
             {
                 string text = request.downloadHandler.text;
                 byte[] data = request.downloadHandler.data;
 
-                callBack?.Invoke(text, data);
+                successCallBack?.Invoke(text, data);
             }
         }
 
-        IEnumerator UnityWebRequestPost(string url, string requestParam, MIMEType mimeType = MIMEType.Json, Dictionary<string, string> headerDic = null, Action<string> textCallBack = null, Action<byte[]> dataCallBack = null, Action failCallBack = null)
+        IEnumerator UnityWebRequestPost(string url, string requestParam, MIMEType mimeType = MIMEType.Json, Dictionary<string, string> headerDic = null, Action<string, byte[]> successCallBack = null, Action<string> failCallBack = null)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(requestParam);
             UnityWebRequest request = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPOST)
@@ -1058,18 +1073,17 @@ namespace UnityFramework.Runtime
             if (request.isHttpError || request.isNetworkError)
             {
                 Debug.LogError(request.error);
-                failCallBack?.Invoke();
+                failCallBack?.Invoke(request.error);
             }
             else
             {
                 string text = request.downloadHandler.text;
                 byte[] data = request.downloadHandler.data;
-                textCallBack?.Invoke(text);
-                dataCallBack?.Invoke(data);
+                successCallBack?.Invoke(text, data);
             }
         }
 
-        IEnumerator UnityWebRequestPost(string url, Dictionary<string, string> formDic, Dictionary<string, string> headerDic = null, Action<string> textCallBack = null, Action<byte[]> dataCallBack = null, Action failCallBack = null)
+        IEnumerator UnityWebRequestPost(string url, Dictionary<string, string> formDic, Dictionary<string, string> headerDic = null, Action<string, byte[]> successCallBack = null, Action<string> failCallBack = null)
         {
             WWWForm form = new WWWForm();
 
@@ -1088,18 +1102,47 @@ namespace UnityFramework.Runtime
             if (request.isHttpError || request.isNetworkError)
             {
                 Debug.LogError(request.error);
-                failCallBack?.Invoke();
+                failCallBack?.Invoke(request.error);
             }
             else
             {
                 string text = request.downloadHandler.text;
                 byte[] data = request.downloadHandler.data;
-                textCallBack?.Invoke(text);
-                dataCallBack?.Invoke(data);
+                successCallBack?.Invoke(text, data);
             }
         }
 
-        IEnumerator UnityWebRequestPut(string url, string requestParam, MIMEType mimeType = MIMEType.Json, Dictionary<string, string> headerDic = null, Action<string> textCallBack = null, Action<byte[]> dataCallBack = null, Action failCallBack = null)
+
+
+        IEnumerator UnityWebRequestPost(string url, List<IMultipartFormSection> multipartFormSections, Dictionary<string, string> headerDic = null, Action<string, byte[]> successCallBack = null, Action<string> failCallBack = null)
+        {
+
+
+            UnityWebRequest request = UnityWebRequest.Post(url, multipartFormSections);
+            if (headerDic != null && headerDic.Count >= 1)
+            {
+                foreach (var item in headerDic)
+                {
+                    request.SetRequestHeader(item.Key, item.Value);
+                }
+            }
+            request.SetRequestHeader("Content-Type", "multipart/form-data");
+            yield return request.SendWebRequest();
+            if (request.isHttpError || request.isNetworkError)
+            {
+                Debug.LogError(request.error);
+                failCallBack?.Invoke(request.error);
+            }
+            else
+            {
+                string text = request.downloadHandler.text;
+                byte[] data = request.downloadHandler.data;
+                successCallBack?.Invoke(text, data);
+            }
+        }
+
+
+        IEnumerator UnityWebRequestPut(string url, string requestParam, MIMEType mimeType = MIMEType.Json, Dictionary<string, string> headerDic = null, Action<string, byte[]> successCallBack = null, Action<string> failCallBack = null)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(requestParam);
             UnityWebRequest request = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPUT)
@@ -1126,18 +1169,17 @@ namespace UnityFramework.Runtime
             if (request.isHttpError || request.isNetworkError)
             {
                 Debug.LogError(request.error);
-                failCallBack?.Invoke();
+                failCallBack?.Invoke(request.error);
             }
             else
             {
                 string text = request.downloadHandler.text;
                 byte[] data = request.downloadHandler.data;
-                textCallBack?.Invoke(text);
-                dataCallBack?.Invoke(data);
+                successCallBack?.Invoke(text, data);
             }
         }
 
-        IEnumerator UnityWebRequestDelete(string url, string requestParam, MIMEType mimeType = MIMEType.Json, Dictionary<string, string> headerDic = null, Action<string> textCallBack = null, Action<byte[]> dataCallBack = null, Action failCallBack = null)
+        IEnumerator UnityWebRequestDelete(string url, string requestParam, MIMEType mimeType = MIMEType.Json, Dictionary<string, string> headerDic = null, Action<string, byte[]> successCallBack = null, Action<string> failCallBack = null)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(requestParam);
             UnityWebRequest request = new UnityWebRequest(url, UnityWebRequest.kHttpVerbDELETE)
@@ -1164,18 +1206,16 @@ namespace UnityFramework.Runtime
             if (request.isHttpError || request.isNetworkError)
             {
                 Debug.LogError(request.error);
-                failCallBack?.Invoke();
+                failCallBack?.Invoke(request.error);
             }
             else
             {
                 string text = request.downloadHandler.text;
                 byte[] data = request.downloadHandler.data;
-                textCallBack?.Invoke(text);
-                dataCallBack?.Invoke(data);
+                successCallBack?.Invoke(text, data);
             }
         }
 
         #endregion
     }
 }
-
