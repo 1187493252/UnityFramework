@@ -1,9 +1,9 @@
 /*
 * FileName:          CreateCustomScript
-* CompanyName:  
+* CompanyName:
 * Author:            relly
 * Description:       创建自定义脚本带窗口
-* 
+*
 */
 #if UNITY_EDITOR
 
@@ -198,7 +198,7 @@ namespace UnityFramework.Editor
 
             var assetPath = $"{GetSelectedPathOrFallback()}/{scriptName}.cs";
             var filePath = Application.dataPath.Replace("Assets", assetPath);
-            File.WriteAllText(assetPath, sb.ToString(), Encoding.UTF8);
+            File.WriteAllText(assetPath, sb.ToString(), new UTF8Encoding(false));
 
             //AssetDatabase.ImportAsset(assetPath);
             AssetDatabase.Refresh();
@@ -296,7 +296,7 @@ namespace UnityFramework.Editor
 
             var assetPath = string.Format("{0}/{1}{2}", GetSelectedPathOrFallback(), scriptName, ".cs");
             var filePath = Application.dataPath.Replace("Assets", assetPath);
-            File.WriteAllText(filePath, codeSrc, Encoding.UTF8);
+            File.WriteAllText(filePath, codeSrc, new UTF8Encoding(false));
 
 
             AssetDatabase.ImportAsset(assetPath);
